@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Menu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="AddMenu.css">
+</head>
+<body>
+    <!-- top bar -->
+    <section class="hero is-small" id="top">
+        <div class="hero-body is-flex">
+            <div class="container">
+                <h6 class="title is-size-4 has-text-centered has-text-weight-bold">
+                    <b>Tamra Cookbook</b>
+                </h6>
+            </div>
+            <form action="">
+                <input class="input" type="text" placeholder="Search Menu ..." id="search" name="search">
+                <button class="button" type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </section>
+    
+    <div class="columns is-max-desktop" id="inside">
+        
+        <!------------------------ side menu bar --------------------------------->
+
+        <aside class="column is-one-fifth has-background-white pl-6 pr-6">
+                <figure class="image mr-auto ml-auto pt-5">
+                    <img src="/img/logo_cookbook.png" class="mr-auto ml-auto mt-5" style="width: 250px; margin-bottom: 100px;">
+                </figure>
+                <div class="menu"> 
+                    <ul class="menu-list"> 
+                        <li class="menu-item has-text-centered mb-5">
+                            <a href="Home.html" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'" onmouseout="this.style.color = '#f4eea9'"><b>Home</b></a></li>
+                        <li class="menu-item has-text-centered mb-5 ml-6" style="background-color: #f4eea9; width: 110%;">
+                            <a href="AddMenu.html" style="color: #064635;"><b>Add My Menu</b></a></li>
+                        <li class="menu-item has-text-centered mb-5">
+                            <a href="Favorite.html" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'" onmouseout="this.style.color = '#f4eea9'"><b>Favorite</b></a></li>
+                        <li class="menu-item has-text-centered mb-5">
+                            <a href="MyMENU.html" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'" onmouseout="this.style.color = '#f4eea9'"><b>My Menu</b></a></li><br>
+                        <li class="menu-item has-text-centered mt-6">
+                            <a href="SignIn.html" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'" onmouseout="this.style.color = '#f4eea9'"><b>Log out</b></a></li>
+                    </ul>
+                </div>
+        </aside>
+        <!------------------------------ Add Menu -------------------------------------->
+        <div class="column pr-5 pl-5" id="list_menu">
+            <!-------------- foodName -------------------->
+            <div class="column is-6 mr-4 p-6" id="leftPage">
+                <!-- กรอก ชื่ออาหาร -->
+                <input class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName" id="menuName" v-model="name">
+
+                <!-- กรอก วัตถุดิบ -->
+                <div class="container is-flex">
+                    <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant" id="menuIngrediant" v-model="ingrediant">
+                    <button class="button mt-3 ml-5" @click="addMaterial" style="width:100px; background-color: #F0BB62;">Add material</button>
+                </div>
+                <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
+                    <ol class="p-5">
+                        <li v-for="(item, index) in list_material">{{item}}</li>
+                    </ol>
+                </div>
+
+                <!-- กรอก วิธีทำอาหาร -->
+                <div class="container is-flex">
+                    <input class="input mt-3 is-warning" type="text" placeholder="วิธีทำ" name="menuMethod" id="menuMethod" v-model="howTo">
+                    <button class="button mt-3 ml-5" @click="addMethods" style="width:100px; background-color: #F0BB62;">Add method</button>
+                </div>
+                <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
+                    <ol class="p-5">
+                        <li v-for="(item2, index) in list_methods">{{item2}}</li>
+                    </ol>
+                </div>
+            </div>
+            <!--------------- foodCategory ----------------->
+            <div class="column p-6" id="rightPage">
+                <!-- menu image -->
+                <label class="image is-2by1 container p-6" for="file" id="imageBox">
+                    <img :src="image" style="border-radius: 30px;">
+                    <input type="file" accept="image/*" name="image" id="file" @change="loadImg" style="display: none;">
+                    <span class="icon is-large" id="aboutImg" :style="{display: iconDisplay}">
+                        <i class="fas fa-images is-large" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                        <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse Image</p>
+                    </span>
+                </label>
+                <!-- dropdown -->
+                <div class="p-5">
+                    <div class="mt-3 is-flex">
+                        <label class="label">Menu Nation</label>
+                        <select v-model="category">
+                            <option v-for="(nation, index) in category_nation">{{nation}}</option>
+                        </select>
+                    </div><br>
+                    <div class="mt-3 is-flex">
+                        <label class="label">Type Cooking</label>
+                        <select v-model="method">
+                            <option v-for="(typecook, index) in category_typecook">{{typecook}}</option>
+                        </select>
+                    </div><br>
+                    <div class="mt-3 is-flex">
+                        <label class="label">Type Meat</label>
+                        <select v-model="meat">
+                            <option v-for="(typemeat, index) in category_meat">{{typemeat}}</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- spending time -->
+                <div class="is-flex mt-5" id="spendTime">
+                    <div class="container mr-4 ml-6">
+                        <input class="input has-text-centered" type="number" id="day" v-model="days">
+                        <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
+                    </div>
+                    <div class="container mr-4 ml-4">
+                        <input class="input has-text-centered" type="number" id="hour" v-model="hours">
+                        <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
+                    </div>
+                    <div class="container ml-4 mr-6">
+                        <input class="input has-text-centered" type="number" id="minute" v-model="minutes">
+                        <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
+                    </div>
+                </div>
+                <!-- add menu button -->
+                <button class="button" @click="addMenu()" id="addMenuButton" style="color: #064635; width: 200px;"><b>Add Menu</b></button>
+                
+            </div>
+        </div>
+    </div>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="./Allmenu.js"></script>
+</body>
+</html>

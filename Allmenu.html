@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>allmenu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="Favorite.css">
+    
+</head>
+<body>
+    <!-- top bar -->
+    <section class="hero is-small" id="top">
+        <div class="hero-body is-flex">
+            <div class="container">
+                <h6 class="title is-size-4 has-text-centered has-text-weight-bold">
+                    <b>Tamra Cookbook</b>
+                </h6>
+            </div>
+            <form action="">
+                <input class="input" type="text" placeholder="Search Menu ..." id="search" name="search">
+                <button class="button" type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </section>
+    
+    <div class="columns is-max-desktop inside" id="list_menu">
+        
+        <!------------------------ side menu bar --------------------------------->
+
+        <aside class="column is-one-fifth has-background-white pl-6 pr-6">
+            <figure class="image mr-auto ml-auto pt-5">
+                <img src="/img/logo_cookbook.png" class="mr-auto ml-auto mt-5" style="width: 250px; margin-bottom: 100px;">
+            </figure>
+            <div class="menu"> 
+                <ul class="menu-list"> 
+                    <li class="menu-item has-text-centered mb-5"><a class="has-text-white" href="Home.html">Home</a></li>
+                    <li class="menu-item has-text-centered mb-5"><a class="has-text-white" href="AddMenu.html">Add My Menu</a></li>
+                    <li class="menu-item has-text-centered mb-5"><a class="has-text-white" href="Favorite.html">Favorite</a></li>
+                    <li class="menu-item has-text-centered mb-5"><a class="has-text-white" href="MyMENU.html">My Menu</a></li><br>
+                    <li class="menu-item has-text-centered mt-6"><a class="has-text-white">Log out</a></li>
+                </ul>
+            </div>
+        </aside>
+        <!---------------------------------------------- category ------------------------------------------------->
+        
+        <div class="column list-fav-menu">
+
+            <!-- start form menu  -->
+            <table class="table is-fullwidth" id="fav-menu" v-for="(menu,index) in test"
+                :class="[{'has-background-warning-light' : menu.is_favorite}]" @click="select_menu = true, index_menu = index">  <!-- select_menu = true,  -->
+                <tr>
+                    <td rowspan="4" style="width: 128px">
+                        <figure class="image is-128x128"  style="border: 5px solid var(--cream-l);">
+                            <img :src="menu.image" style="height: 100%; object-fit:contain;"/>
+                        </figure>
+                    </td>
+                    <td>ชื่อเมนู : {{menu.name}} </td>
+                    <td rowspan="2">
+                        <div class="icon is-size-4" @click.stop="isFavorite(menu)">
+                            <!-- star ทึบ -->
+                            <span class="icon" key="true" v-if="menu.is_favorite == true" >
+                                <i class="fas fa-star has-text-warning"></i>
+                            </span>
+                            <!-- star ใส -->
+                            <span key="false"  v-if="menu.is_favorite == false">
+                                <i class="far fa-star has-text-warning"></i>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>meat : {{menu.meat}}</td>
+                </tr>
+                <tr>
+                    <td>category : {{menu.category}} food</td>
+                </tr>
+                <tr>
+                    <td>Method : {{menu.method}}</td>
+                </tr>
+                
+            </table>
+            <!-- end form menu -->
+        </div>
+
+
+        <!-- show-select-fav-menu -->
+
+        <div class="column show-select-fav-menu">
+            <!-- select menu false -->
+            <p style="text-align: center; margin-top: 50%" v-if="select_menu == false">
+                select Select Your Menu To Show
+            </p>
+            <!-- select menu true -->
+            <div v-if="select_menu == true">
+                <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3" style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:1;"><p>{{test[index_menu].name}}</p></div>
+                <figure class="image is-2by1 ml-6 mr-6 mt-3">
+                    <img :src="test[index_menu].image"
+                        style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                </figure>
+                <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1" style="background-color: var(--yellow-l); border-radius:10px;"><p class="ml-5">Category : <b>{{test[index_menu].category}} food</b> </p></div>
+                <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1" style="background-color: var(--yellow-l); border-radius:10px;"><p class="ml-5">Method : <b>{{test[index_menu].method}}</b></p></div>
+                <!-- วัตถุดิบ -->
+                <div class="has-text-left m-1 mt-4"
+                    style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                    <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
+                    <ol class="ml-6 mb-3 mr-6">
+                        <li v-for="item in test[index_menu].material">{{item}}</li>
+                    </ol>
+                </div>
+                <!-- วิธีทำ -->
+                <div class="has-text-left m-1 mt-5"
+                    style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                    <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
+                    <ol class="ml-6 mb-3 mr-6">
+                        <li v-for="item in test[index_menu].methods">{{item}}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="./Allmenu.js"></script>
+    <!-- vue script ------------------------------------------- -->
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Montserrat+Alternates&display=swap');
+html, body{
+    --yellow: #F0BB62;
+    --cream: #f4eea9;
+    --darkgreen: #064635;
+    --lightgreen: #519259;
+    --black: #000;
+    --white: #fff;
+    background-color: var(--darkgreen);
+    overflow: hidden;
+    font-family: 'Montserrat Alternates', sans-serif;
+}
+/* left side --------------------------------------*/
+.square{
+    width: 40vw;
+    height: 95vh;
+    background-color: var(--lightgreen);
+    position: absolute;
+    bottom: 0;
+    left: 35px;
+}
+.sign-label{
+    margin-top: 12%;
+}
+.form{
+    background-color: var(--cream);
+    width: 30vw;
+    height: 80vh;
+    padding: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 30px;
+}
+.field{
+    margin-top: 30px;
+}
+#signInButton{
+    background-color: var(--darkgreen);
+    color: var(--white);
+    width: 100%;
+    margin-top: 50px;
+    /* margin-bottom: 10px; */
+}
+#signInButton:hover{
+    background-color: var(--yellow);
+    color: var(--darkgreen);
+}
+.input-info{
+    width: 25vw;
+}
+/* contain label & input box */
+.container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    margin-top: 13%;
+}
+#label{
+    margin-bottom: 15%;
+}
+
+/* right side ---------------------------------------*/
+#tomyamImg{
+   width: 75%;
+   position: absolute;
+   right: -25%;
+   top: -55%;
+}
+#welcome{
+    color: var(--white);
+    position: absolute;
+    top: 45%;
+    left: 48%;
+    font-size: 5vw;
+}
+#describe{
+    color: var(--white);
+    position: absolute;
+    top: 75%;
+    left: 48%;
+    font-size: 1.5vw;
+}
+#chefHat{
+    width: 8vw;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+}
