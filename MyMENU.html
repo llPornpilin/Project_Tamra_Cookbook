@@ -104,18 +104,18 @@
                 <label style="margin-left: 10px;">ชื่อเมนู : </label>
                 <input class="input mt-1 is-warning" type="text" name="menuName" id="menuName" v-model="name">
                 <!-- menu image -->
-                <label class="image is-2by1 container p-6 mt-6" for="file" id="imageBox">
+                <label class="image is-2by1 container mt-6" for="file" id="imageBox">
                     <img :src="products[index_menu].image" style="border-radius: 30px;">
                     <input type="file" accept="image/*" name="image" id="file" @change="loadImg" style="display: none;">
-                    <span class="icon is-large" id="aboutImg" :style="{display: iconDisplay}">
+                    <!-- <span class="icon is-large" id="aboutImg" :style="{display: iconDisplay}">
                         <i class="fas fa-images is-large" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
                         <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse Image</p>
-                    </span>
+                    </span> -->
                 </label>
                 <!-- กรอก วัตถุดิบ -->
                 <div class="container is-flex">
-                    <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant" id="menuIngrediant" v-model="ingrediant">
-                    <button class="button mt-3 ml-5" @click="addMaterial_mymenu(index_menu)" style="width:100px; background-color: #F0BB62;">Add material</button>
+                    <input class="input mt-6 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant" id="menuIngrediant" v-model="ingrediant">
+                    <button class="button mt-6 ml-5" @click="addMaterial_mymenu(index_menu)" style="width:100px; background-color: #F0BB62;">Add material</button>
                 </div>
                 <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
                     <ol class="p-5">

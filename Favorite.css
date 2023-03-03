@@ -186,11 +186,27 @@ select{
     background-color: var(--cream);
     border: 2.5px solid var(--darkgreen);
 }
-/* #addMenuButton{
+#addMenuButton{
     background-color: var(--yellow);
     border: 2.5px solid var(--darkgreen);
     margin-top: 30px;
     width: 200px;
-    position: absolute;
-    left: 74%;
-} */
+    position: relative;
+    /* top: 0; */
+    left: 38%;
+}
+.textarea::-webkit-scrollbar {
+    width: 15px;
+}
+  
+/* Track */
+.textarea::-webkit-scrollbar-track {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Handle */
+.textarea::-webkit-scrollbar-thumb {
+    background: var(--yellow); 
+    border-radius: 10px;
+}

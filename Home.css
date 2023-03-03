@@ -117,6 +117,12 @@ aside{
     border-top-right-radius: 70px;
     border-top-left-radius: 70px;
 }
+#typeCooking .card:hover{
+    background-color: var(--yellow);
+}
+#typeMeat .card:hover{
+    background-color: var(--yellow);
+}
 /* each type */
 .type{
     background-color: #f6f6f6;

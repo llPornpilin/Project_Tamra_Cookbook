@@ -121,18 +121,18 @@ select{
 
 /* scroll bar */
 /* width */
-textarea::-webkit-scrollbar {
+.textarea::-webkit-scrollbar {
     width: 15px;
 }
   
 /* Track */
-textarea::-webkit-scrollbar-track {
+.textarea::-webkit-scrollbar-track {
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 /* Handle */
-textarea::-webkit-scrollbar-thumb {
+.textarea::-webkit-scrollbar-thumb {
     background: var(--yellow); 
     border-radius: 10px;
 }
