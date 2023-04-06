@@ -54,19 +54,19 @@
                 <div class="p-5">
                     <div class="mt-3 is-flex">
                         <label class="label">Menu Nation</label>
-                        <select v-model="category">
+                        <select v-model="category" name="menuCategory">
                             <option v-for="(nation, index) in category_nation">{{nation}}</option>
                         </select>
                     </div><br>
                     <div class="mt-3 is-flex">
                         <label class="label">Type Cooking</label>
-                        <select v-model="method">
+                        <select v-model="method" name="menuTypeCook">
                             <option v-for="(typecook, index) in category_typecook">{{typecook}}</option>
                         </select>
                     </div><br>
                     <div class="mt-3 is-flex">
                         <label class="label">Type Meat</label>
-                        <select v-model="meat">
+                        <select v-model="meat" name="menuTypeMeat">
                             <option v-for="(typemeat, index) in category_meat">{{typemeat}}</option>
                         </select>
                     </div>
@@ -74,15 +74,15 @@
                 <!-- spending time -->
                 <div class="is-flex mt-5" id="spendTime">
                     <div class="container mr-4 ml-6">
-                        <input class="input has-text-centered" type="number" id="day" v-model="days">
+                        <input class="input has-text-centered" type="number" id="day" v-model="days" name="menuDay">
                         <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
                     </div>
                     <div class="container mr-4 ml-4">
-                        <input class="input has-text-centered" type="number" id="hour" v-model="hours">
+                        <input class="input has-text-centered" type="number" id="hour" v-model="hours" name="menuHour">
                         <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
                     </div>
                     <div class="container ml-4 mr-6">
-                        <input class="input has-text-centered" type="number" id="minute" v-model="minutes">
+                        <input class="input has-text-centered" type="number" id="minute" v-model="minutes" name="menuMinute">
                         <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
                     </div>
                 </div>

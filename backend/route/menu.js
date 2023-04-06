@@ -23,7 +23,7 @@ const router = express.Router();
 // const upload = multer({ storage: storage });
 
 //Insert code here
-router.post("/mymenu",async function (req, res, next) {
+router.post("/mymenu",multer().none(), async function (req, res, next) {
     // const file = req.file;
     // if (!file) {
     //   const error = new Error("Please upload a file");
@@ -32,18 +32,25 @@ router.post("/mymenu",async function (req, res, next) {
     // }
 
     const menuName = req.body.menuName;
+    // const menuIngrediant = req.body.menuIngrediant;
+    // const menuMethod = req.body.menuMethod;
+    // const image = req.body.image;
+    // const menuCategory = req.body.menuCategory;
+    // const menuTypeCook = req.body.menuTypeCook;
+    // const menuTypeMeat = req.body.menuTypeMeat;
+    // const menuDay = req.body.menuDay;
+    // const menuHour = req.body.menuHour;
+    // const menuMinute = req.body.menuMinute;
 
-    const conn = await  pool.getConnection()
-    await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+    const conn = await  pool.getConnection();
+    // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
     try {
       //insert เข้าตาราง menu
-      let menu = await conn.query(
+      const menu = await conn.query(
         "INSERT INTO menu(user_id, category_id, menu_name, menu_ingredient, menu_method, menu_duration, menu_image) VALUES(?, ?, ?, ?, ?, ?, ?);",
-        [1, 1, 'menuName', 'ingredient', 'method', 23, 'image']
+        [1, 1, menuName, 'menuIngrediant', 'method', 23, 'image']
       )
-
-      console.log(menu)
       // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
       await conn.commit()
       // res.send("success!");
