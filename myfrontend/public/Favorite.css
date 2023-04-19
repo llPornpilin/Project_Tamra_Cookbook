@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Montserrat+Alternates&display=swap');
+/* * { border: 1px solid red; } */
+/* html{
+    height: 100%;
+    overflow: hidden;
+} */
+body{
+    --yellow: #F0BB62;
+    --yellow-l: #f0bc62ca;
+    --cream: #f4eea9;
+    --cream-l: #f1ebae9a;
+    --darkgreen: #064635;
+    --lightgreen: #519259;
+    --black: #000;
+    --white: #fff;
+    --height1: 920px;
+    --font1: 'Lobster Two', cursive;
+    --font2: 'Montserrat Alternates', sans-serif;
+    background-color: var(--cream);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font2);
+}
+#top{
+    background-color: var(--yellow);
+}
+.inside{
+    margin: 0px; 
+    box-sizing: border-box;
+    padding: 40px;
+}
+/* side menu bar */
+aside{
+    box-shadow: none;
+    margin-right: 40px;
+    border-radius: 30px;
+    padding: 50px;
+    overflow: hidden;
+}
+.menu-item{
+    background-color: var(--darkgreen);
+    border-radius: 70px;
+}
+.menu-item:hover{
+    background-color: var(--cream);
+    transform: translateX(15px);
+}
+.menu-item a:hover{
+    background-color: var(--cream);
+    border-radius: 70px;
+}
+#search{
+    width: 20%;
+    border-radius: 15px;
+    position: absolute;
+    right: 50px;
+    top: 18px;
+}
+#searchButton{
+    border: none;
+    border-radius: 15px;
+    position: absolute;
+    right: 50px;
+    top: 18px;
+    background-color: var(--cream);
+}
+/* middle page ----------------------------------------- */
+.list-fav-menu {
+    background-color: var(--yellow);
+    border-radius: 30px;
+    height: var(--height1);
+    overflow-y: scroll;
+}
+    /* i_star-------------------- */
+    #i_star_1,#i_star_2,#i_star_3,#i_star_4,#i_star_5,#i_star_6{
+        color: gainsboro;
+        font-size: 20px;
+    }
+    /* scrollbar----------------- */
+        /* width */
+        .list-fav-menu::-webkit-scrollbar {
+            width: 20px;
+        }
+        /* Track */
+        .list-fav-menu::-webkit-scrollbar-track {
+            margin-top: 40px;
+            margin-bottom: 40px;
+            border-radius: 100px;
+        }
+        /* Handle */
+        .list-fav-menu::-webkit-scrollbar-thumb {
+            background: var(--cream);
+            border-radius: 100px;
+            border: 5px solid transparent;
+            background-clip: content-box;
+        }
+    /* table column---------------- */
+        #fav-menu {
+        background-color: #fff;
+        margin-left: 5px;
+        margin-right: -5px;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+
+    #icon_pen{
+        color: var(--lightgreen);
+        border-radius: 10px;
+        background: var(--cream);
+    }
+    #icon_pen:hover{
+        color: var(--yellow);
+    }
+
+    #icon_trash{
+        color: var(--lightgreen);
+        margin-left: 10px;
+    }
+    #icon_trash:hover{
+        color: var(--yellow);
+    }
+
+
+/* back page ----------------------------------------- */
+.show-select-fav-menu {
+    background-color: var(--white);
+    border-radius: 30px;
+    height: var(--height1);
+    overflow-y: scroll;
+
+}
+/* scrollbar----------------- */
+        /* width */
+        .show-select-fav-menu::-webkit-scrollbar {
+            width: 20px;
+        }
+        /* Track */
+        .show-select-fav-menu::-webkit-scrollbar-track {
+            margin-top: 40px;
+            margin-bottom: 40px;
+            border-radius: 100px;
+        }
+        /* Handle */
+        .show-select-fav-menu::-webkit-scrollbar-thumb {
+            background: var(--yellow);
+            border-radius: 100px;
+            border: 5px solid transparent;
+            background-clip: content-box;
+        }
+
+
+/* edit-menu */
+#menuIngrediant, #menuMethod, #showIngrediant, #showMethod{
+    resize: none;
+    overflow-y: scroll;
+    border-radius: 20px;
+    border: 2px solid var(--yellow);
+}
+#menuName{
+    border-radius: 20px;
+    border: 2px solid var(--yellow);
+}
+#imageBox{
+    width: 90%;
+    height: 45%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: var(--cream);
+    border-radius: 30px;
+    border-style: dashed;
+    border-color: var(--yellow);
+}
+select{
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: var(--darkgreen);
+    color: #f4eea9;
+    height: 35px;
+    padding-left: 20px;
+}
+/* ------spending time--------- */
+#day, #hour, #minute{
+    background-color: var(--cream);
+    border: 2.5px solid var(--darkgreen);
+}
+#addMenuButton{
+    background-color: var(--yellow);
+    border: 2.5px solid var(--darkgreen);
+    margin-top: 30px;
+    width: 200px;
+    position: relative;
+    /* top: 0; */
+    left: 38%;
+}
+.textarea::-webkit-scrollbar {
+    width: 15px;
+}
+  
+/* Track */
+.textarea::-webkit-scrollbar-track {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Handle */
+.textarea::-webkit-scrollbar-thumb {
+    background: var(--yellow); 
+    border-radius: 10px;
+}

@@ -1,4 +1,5 @@
 var app = new Vue({
+    
     el: '#cate',
     data: {
         checkActive1: false,
