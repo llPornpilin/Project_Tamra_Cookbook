@@ -3,9 +3,9 @@ const router = express.Router()
 
 // const pool = require("../config");
 
-router.get('/', function(req, res, next) {
-    res.render('HomePage') // ------------------แก้ path /home + แก้จาก Home เป็น HomePage------------------------
-})
+// router.get('/', function(req, res, next) {
+//     res.render('HomePage') // ------------------แก้ path /home + แก้จาก Home เป็น HomePage------------------------
+// })
 
 router.get('/addmenu', function(req, res, next) {
     res.render('Addmenu')
