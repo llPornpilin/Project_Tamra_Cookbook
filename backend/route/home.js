@@ -22,21 +22,15 @@ const router = express.Router();
 //กำหนดตัวแปรสำหรับเรียกใช้งาน
 // const upload = multer({ storage: storage });
 
-//Insert code here
-router.get("/", multer().none(), async function (req, res, next) {
-    // const file = req.file;
-    // if (!file) {
-    //   const error = new Error("Please upload a file");
-    //   error.httpStatusCode = 400;
-    //   return next(error);
-    // }
 
+//nations
+router.get("/nations", async function (req, res, next) {
     const conn = await pool.getConnection();
     // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
     try {
       //select category ออกมา ในหน้า home
-      const [rows, cols] = await conn.query("SELECT * FROM category;")
+      const [rows, cols] = await conn.query("SELECT * FROM category_nation;")
       return res.json(rows);
 
     } catch (err) {
@@ -48,5 +42,46 @@ router.get("/", multer().none(), async function (req, res, next) {
       conn.release();
     }
   }
+)
+//cooking
+router.get("/cooking", async function (req, res, next) {
+  const conn = await pool.getConnection();
+  // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+
+  try {
+    //select category ออกมา ในหน้า home
+    const [rows, cols] = await conn.query("SELECT * FROM category_cooking;")
+    return res.json(rows);
+
+  } catch (err) {
+    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
+    await conn.rollback();
+    next(err);
+  } finally {
+    console.log('finally')
+    conn.release();
+  }
+}
+)
+
+//meat
+router.get("/meats", async function (req, res, next) {
+  const conn = await pool.getConnection();
+  // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+
+  try {
+    //select category ออกมา ในหน้า home
+    const [rows, cols] = await conn.query("SELECT * FROM category_meat;")
+    return res.json(rows);
+
+  } catch (err) {
+    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
+    await conn.rollback();
+    next(err);
+  } finally {
+    console.log('finally')
+    conn.release();
+  }
+}
 )
 exports.router = router;
