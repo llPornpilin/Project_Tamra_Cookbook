@@ -117,11 +117,13 @@ export default {
         };
     },
     created() {
+        // console.log(this.$route.params.category_type)
+        // console.log(this.$route.params.category_id)
         axios
-            .get("http://localhost:3000/allmenu")
+            .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
             .then((response) => {
                 this.menus = response.data;
-                // console.log(this.menus);
+                console.log(this.menus);
                 console.log(response.data)
             })
             .catch((err) => {
@@ -130,7 +132,7 @@ export default {
     },
     methods: {
         showMenu(id) {
-            axios.get('http://localhost:3000/allmenu/' + id
+            axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
                 console.log("มาแล้ว", response.data)
                 this.showonemenu = response.data;

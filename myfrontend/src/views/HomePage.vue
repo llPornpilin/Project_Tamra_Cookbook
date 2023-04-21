@@ -10,7 +10,8 @@
                 <div class="column is-12 has-background-white p-5 category" id="nation">
                     <!-- food -->
                     <div class="card pt-5 pr-2 pl-2 mr-5 cate-type-1 nation" id="cate1"
-                        v-for="(nation, index) in category_nation" :key="index" @click="nextPage(nation.nation_name)">
+                        v-for="(nation, index) in category[0]" :key="index"
+                        @click="$router.push({name: 'CategoryMenu', params: {category_id: nation.nation_id, category_type: 'category_nation'}})">
                         <div class="card-img pl-4 pr-4">
                             <figure class="image is-96x96 mr-auto ml-auto">
                                 <img class="food_img" :src="nation.nation_image" alt="Placeholder image">
@@ -30,8 +31,8 @@
 
                 <div class="column is-12 p-5 category mt-4" id="typeCooking">
                     <!-- each type -->
-                    <div class="card pt-5 mr-5 type" v-for="(typecook, index) in category_cooking" :key="index"
-                        @click="nextPage(typecook.cooking_name)">
+                    <div class="card pt-5 mr-5 type" v-for="(typecook, index) in category[1]" :key="index"
+                        @click="$router.push({name: 'CategoryMenu', params: {category_id: typecook.cooking_id, category_type: 'category_cooking'}})">
                         <div class="card-img pl-5 pr-5">
                             <figure class="image is-128x128 mr-auto ml-auto">
                                 <img class="is-rounded type-img" :src="typecook.cooking_image" alt="Placeholder image">
@@ -48,8 +49,8 @@
 
                 <div class="column is-12 p-5 category " id="typeMeat">
                     <!-- each type -->
-                    <div class="card pt-5 mr-5 type" v-for="(typemeat, index) in category_meat" :key="index"
-                        @click="nextPage(typemeat.meat_name)">
+                    <div class="card pt-5 mr-5 type" v-for="(typemeat, index) in category[2]" :key="index"
+                    @click="$router.push({name: 'CategoryMenu', params: {category_id: typemeat.meat_id, category_type: 'category_meat'}})">
                         <div class="card-img pl-5 pr-5">
                             <figure class="image is-128x128 mr-auto ml-auto">
                                 <img class="is-rounded type-img" :src="typemeat.meat_image" alt="Placeholder image">
@@ -78,43 +79,54 @@ export default {
     },
     data() {
         return {
-            category_nation: null, // add menu variable
-            category_meat: null, // add menu variable
-            category_cooking: null, // add menu variable
+            category: null,
+            // category_nation: null, // add menu variable
+            // category_meat: null, // add menu variable
+            // category_cooking: null, // add menu variable
         };
     },
     created() {
         console.log("start")
+        axios
+            .get("http://localhost:3000/")
+            .then((response) => {
+                this.category = response.data;
+                console.log(this.category);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
         //nations
-        axios
-            .get("http://localhost:3000/nations")
-            .then((response) => {
-                this.category_nation = response.data;
-                console.log(this.category_nation);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        //cooking
-        axios
-            .get("http://localhost:3000/cooking")
-            .then((response) => {
-                this.category_cooking = response.data;
-                console.log(this.category_cooking);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        //meats
-        axios
-            .get("http://localhost:3000/meats")
-            .then((response) => {
-                this.category_meat = response.data;
-                console.log(this.category_meat);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        // axios
+        //     .get("http://localhost:3000/nations")
+        //     .then((response) => {
+        //         this.category_nation = response.data;
+        //         console.log(this.category_nation);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        // //cooking
+        // axios
+        //     .get("http://localhost:3000/cooking")
+        //     .then((response) => {
+        //         this.category_cooking = response.data;
+        //         console.log(this.category_cooking);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        // //meats
+        // axios
+        //     .get("http://localhost:3000/meats")
+        //     .then((response) => {
+        //         this.category_meat = response.data;
+        //         console.log(this.category_meat);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
     },
     methods: {
     }

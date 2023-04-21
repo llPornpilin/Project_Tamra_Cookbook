@@ -79,14 +79,44 @@ router.get("/allmenu", async function (req, res, next) {
   }
 });
 
-router.get("/allmenu/:id", async function (req, res, next) {
+
+// แสดงเมนูใน category นั้น
+router.get("/allmenu/:category_type/:category_id", async function (req, res, next) {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+
+  try {
+    if (req.params.category_type == 'category_nation'){
+      const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+        "SELECT * FROM menus WHERE category_nation=?",[req.params.category_id]
+      );
+      return (res.json(rows))
+    }
+
+
+    // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
+    await conn.commit();
+    
+  } catch (err) {
+    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
+    await conn.rollback();
+    next(err);
+  } finally {
+    console.log("finally");
+    conn.release(); //ปิด transaction
+  }
+});
+
+
+// แสดงเมนูที่เลือกมาแสดงรายละเอียด
+
+router.get("/showmenu/:id", async function (req, res, next) {
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
   try {
     console.log(req.params.id);
 
-    //insert เข้าตาราง image
     const [rows, fields] = await conn.query(
       "SELECT * FROM menus WHERE menu_id=?",[req.params.id]
     );
