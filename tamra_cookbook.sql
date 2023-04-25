@@ -131,9 +131,9 @@ CREATE TABLE `menus` (
   `menu_duration` int NOT NULL,
   `menu_image` text NOT NULL,
   `user_id` int NOT NULL,
-  `category_nation` int NOT NULL,
-  `category_meat` int NOT NULL,
-  `category_cooking` int NOT NULL,
+  `category_nation` varchar(10) NOT NULL,
+  `category_meat` varchar(10) NOT NULL,
+  `category_cooking` varchar(10) NOT NULL,
   PRIMARY KEY (`menu_id`),
   UNIQUE KEY `menu_id_UNIQUE` (`menu_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -145,7 +145,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,'ไข่1','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',10,'1',1,1,1,1),(2,'ไข่2','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',20,'2',1,1,1,1),(3,'ไข่3','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',30,'3',1,1,1,1),(4,'ไข่4','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',40,'4',1,1,1,1),(5,'ไข่5','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',50,'5',1,1,1,1);
+INSERT INTO `menus` VALUES (1,'ไข่1','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',10,'1',1,'CH','BF','BK'),(2,'ไข่2','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',20,'2',1,'CH','BF','BO'),(3,'ไข่3','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',30,'3',1,'TH','CK','BO'),(4,'ไข่4','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',40,'4',1,'TH','FH','ST'),(5,'ไข่5','ไข่1ฟอง,ไข่1ฟอง,ไข่1ฟอง','ทอด,ทอด,ทอด',50,'5',1,'TH','MT','ST');
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 17:03:19
+-- Dump completed on 2023-04-22 19:33:06
