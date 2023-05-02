@@ -74,7 +74,7 @@
                         <div class="mt-3 is-flex">
                             <label class="label">Type Meat</label>
                             <select v-model="meat" name="menuTypeMeat">
-                                <option v-for="(typemeat, index) in category_meat" :key="index" :value="typemeat.meat_name">
+                                <option v-for="(typemeat, index) in category_meat" :key="index" :value="typemeat.meat_id">
                                     {{ typemeat.meat_name }}
                                 </option>
                             </select>

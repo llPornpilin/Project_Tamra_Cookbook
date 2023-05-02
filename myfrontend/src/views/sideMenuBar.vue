@@ -10,7 +10,7 @@
                     <a href="/home" style="color: #064635;"><b>Home</b></a>
                 </li> -->
                 <li class="menu-item has-text-centered mb-5">
-                    <a href="/home" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
+                    <a href="/" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
                         onmouseout="this.style.color = '#f4eea9'"><b>Home</b></a>
                 </li>
                 <li class="menu-item has-text-centered mb-5">

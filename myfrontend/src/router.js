@@ -15,7 +15,7 @@ const routes = [
     component: () => import('./views/AllMenu.vue') // set home as path '/'
   },
   {
-    path: '/allmenu/:id',
+    path: '/allmenu/:category_type/:category_id',
     name: 'CategoryMenu',
     component: () => import('./views/AllMenu.vue') // set home as path '/'
   },

@@ -15,7 +15,7 @@
                     <tr>
                         <td rowspan="4" style="width: 128px">
                             <figure class="image is-128x128" style="border: 5px solid var(--cream-l);">
-                                <img :src="menu.menu_image" style="height: 100%; object-fit:contain;" />
+                                <img :src="imagePath(menu.menu_image)" style="height: 100%; object-fit:contain;" />
                             </figure>
                         </td>
                         <td>ชื่อเมนู : {{ menu.menu_name }} </td>
@@ -131,6 +131,15 @@ export default {
             });
     },
     methods: {
+        imagePath(file_path){
+            if (file_path){
+                console.log("image Path = ", file_path)
+                return "http://localhost:3000/uploads/" + file_path
+            }
+            else{
+                return "https://bulma.io/images/placeholders/640x360.png"
+            }
+        },
         showMenu(id) {
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
