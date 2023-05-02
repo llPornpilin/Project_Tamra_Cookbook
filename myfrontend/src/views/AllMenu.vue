@@ -19,7 +19,7 @@
                                                 alt="Placeholder image"  style="height: 100%; object-fit:contain;">
                             </figure>
                         </td>
-                        <td>ชื่อเมนู : {{ menu.menu_name }} </td>
+                        <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
                         <td rowspan="2">
                             <div class="icon is-size-4" @click.stop="isFavorite(menu)">
                                 <!-- star ทึบ -->
@@ -34,13 +34,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>meat : {{ menu.category_meat }}</td>
+                        <td><b>meat</b> : {{ menu.category_meat }}</td>
+                    </tr>   
+                    <tr>
+                        <td><b>category</b> : {{ menu.category_nation }} food</td>
                     </tr>
                     <tr>
-                        <td>category : {{ menu.category_nation }} food</td>
-                    </tr>
-                    <tr>
-                        <td>Method : {{ menu.category_cooking }}</td>
+                        <td><b>Method</b> : {{ menu.category_cooking }}</td>
                     </tr>
 
                 </table>
@@ -72,11 +72,13 @@
                         </figure>
                         <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
                             style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5">Category : <b>{{ menu.category_nation }} food</b> </p>
+                            <p class="ml-5"><b>Nation : </b>{{ menu.category_nation }} food </p>
+                            <p class="ml-5"><b>Method :</b>{{ menu.category_cooking }}</p>
+                            <p class="ml-5"><b>Meat :</b>{{ menu.category_meat }} </p>
                         </div>
                         <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
                             style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5">Method : <b>{{ menu.category_cooking }}</b></p>
+                            <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }} <b>minutes</b></p>
                         </div>
                         <!-- วัตถุดิบ -->
                         <div class="has-text-left m-1 mt-4"
@@ -117,6 +119,9 @@ export default {
             select_menu: false,
             select_show: false,
             index_menu: 0,
+            days:0,
+            hours:0,
+            minutes:0,
         };
     },
     created() {
@@ -140,55 +145,19 @@ export default {
             ).then(response => {
                 console.log("มาแล้ว", response.data)
                 this.showonemenu = response.data;
-                // const index = this.blogs.findIndex(blog => blog.id == response.data.blogId)
-                // console.log(index)
-                // this.blogs[index].like = response.data.likeNum;
+                let time = response.data[0].menu_duration
+                // console.log(response.data[0].menu_duration)
+                this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
+                this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
+                this.minutes = time % 60;
+                console.log(this.days, this.hours, this.minutes)
+
             })
                 //-------------------------------------
                 .catch(error => {
                     console.log(error.message);
                 });
         }
-        ,
-        like(id) {
-            // ยิง post ไปที่path ข้างล่าง
-            axios.post('http://localhost:3000/blogs/addlike/' + id
-            ).then(response => {
-                console.log(response.data)
-                // this.$router.go({ path: '/' }) // Success! -> redirect to home page
-                //ไม่ต้อง re แต่เป็นการทับข้อมุลทั้งหน้าใหม่
-                // axios
-                // .get("http://localhost:3000/")
-                // .then((response2) => {
-                //     this.blogs = response2.data;
-                //     console.log(this.blogs);
-                // })
-                // .catch((err) => {
-                //     console.log(err);
-                // });
-                // })
-                // ดู res ว่า ค่า id ที่ส่งเข้ามา ตรงกับ ที่blogs มีไหม ถ้ามีก็ให้ทำการทับค่าลงไป
-                const index = this.blogs.findIndex(blog => blog.id == response.data.blogId)
-                console.log(index)
-                this.blogs[index].like = response.data.likeNum;
-            })
-                //-------------------------------------
-                .catch(error => {
-                    console.log(error.message);
-                });
-        },
-        // detail(id) {
-        //     // ยิง post ไปที่path ข้างล่าง
-        //     axios.get('http://localhost:3000/blogs/' + id)
-        //     .then(response => {
-        //         console.log(response.data)
-        //         this.$router.push({ path: '/' }) // Success! -> redirect to home page
-
-        //     })
-        //         .catch(error => {
-        //             console.log(error.message);
-        //         });
-        // },
     },
     computed: {
         menu_ingredients() {
