@@ -56,7 +56,7 @@
                 </p>
                 <!-- select menu true -->
                 <div v-if="select_menu == true">
-                    <div v-for="(menu,index) in showonemenu" :key="index">
+                    <div v-for="(menu, index) in showonemenu" :key="index">
                         <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
                             style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
                             <p>{{ menu.menu_name }}</p>
@@ -187,11 +187,11 @@ export default {
         // },
     },
     computed: {
-        menu_ingredients () {
+        menu_ingredients() {
             console.log(this.menus[this.index_menu].menu_ingredients.split(","))
             return this.menus[this.index_menu].menu_ingredients.split(",");
         },
-        menu_methods () {
+        menu_methods() {
             console.log(this.menus[this.index_menu].menu_methods.split(","))
             return this.menus[this.index_menu].menu_methods.split(",");
         }

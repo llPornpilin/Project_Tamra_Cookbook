@@ -3,7 +3,7 @@ const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'Windmazzappl19',
+  password: 'MonKey3417',
   database: 'tamra_cookbook',
   waitForConnections: true,
   connectionLimit: 10,

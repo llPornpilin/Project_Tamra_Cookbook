@@ -26,6 +26,6 @@ app.use(indexRouter.router)
 app.use(userRouter.router)
 app.use(menuRouter.router)
 
-app.listen(3000, () => {
+app.listen(3000 , () => {
   console.log('Start server at port 3000.')
 })

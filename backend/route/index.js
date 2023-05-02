@@ -7,9 +7,9 @@ const router = express.Router()
 //     res.render('HomePage') // ------------------แก้ path /home + แก้จาก Home เป็น HomePage------------------------
 // })
 
-router.get('/addmenu', function(req, res, next) {
-    res.render('Addmenu')
-})
+// router.get('/addmenu', function(req, res, next) {
+//     res.render('Addmenu')
+// })
 
 // router.get('/allmenu', function(req, res, next) {
 //     res.render('Allmenu')
