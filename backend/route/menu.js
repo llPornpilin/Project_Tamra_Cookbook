@@ -164,7 +164,7 @@ router.get("/categorys", async function (req, res, next) {
 router.post("/addMenu", upload.single("images"), async function (req, res, next) {
 
   if (req.method == "POST") {
-    const file = req.files;
+    const file = req.file;
     console.log(file)
 
     if (!file) {
@@ -189,6 +189,7 @@ router.post("/addMenu", upload.single("images"), async function (req, res, next)
     const meat = req.body.meat;
 
 
+    const filename = req.file.filename;
     // Begin transaction
     const conn = await pool.getConnection();
     await conn.beginTransaction();
@@ -197,7 +198,7 @@ router.post("/addMenu", upload.single("images"), async function (req, res, next)
       let results = await conn.query(
         "INSERT INTO menus(menu_name, menu_ingredients, menu_methods, menu_duration, menu_image, user_id, category_nation, category_meat, category_cooking) " +
         "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);",
-        [menuName, menuIngredient, menuHowTo, (days * 24 * 60) + (hours * 60) + (minutes * 1), file, userId, nation, method, meat]
+        [menuName, menuIngredient, menuHowTo, (days * 24 * 60) + (hours * 60) + (minutes * 1), filename, userId, nation, method, meat]
       );
 
       console.log("results :", results)

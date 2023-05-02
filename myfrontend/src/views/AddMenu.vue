@@ -203,7 +203,7 @@ export default {
             });
             axios
                 .post("http://localhost:3000/addMenu/", formData)
-                .then(() => this.$router.push({ name: 'HomePage' }))
+                .then(() => this.$router.push({ name: 'AllMenu' }))
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
         }
