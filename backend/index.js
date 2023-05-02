@@ -6,6 +6,7 @@ var cors = require('cors')
 
 app.use(cors())
 
+app.use(express.static('static'))//+
 // set up ให้แสดง page ที่อยู่ในโฟลเดอร์ views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../frontend/views'))
