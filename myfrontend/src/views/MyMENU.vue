@@ -1,17 +1,18 @@
 <template>
     <div>
         <topbarVUE />
-        <div class="columns is-max-desktop inside">
-            <sidemenubarVUE />
+            <div class="columns is-max-desktop inside" id="list_menu">
+                <sidemenubarVUE />
 
-
+            <!---------------------------------------------- category ------------------------------------------------->
+            
             <div class="column list-fav-menu">
 
                 <!-- start form menu  -->
-                <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus"
-                    :class="[{ 'has-background-warning-light': menu.is_favorite }]"
-                    @click="showMenu(menu.menu_id), select_menu = true, index_menu = index" :key="index">
-                    <!-- select_menu = true,  -->
+                <table class="table is-fullwidth" id="fav-menu" v-for="(menu,index) in menus" :key="index"
+                :class="[{ 'has-background-warning-light': menu.is_favorite }]"
+                    @click="showMenu(menu.menu_id), select_menu = true, index_menu = index">
+                    <!-- @click="select_menu = true, index_menu = index" -->
                     <tr>
                         <td rowspan="4" style="width: 128px">
                             <figure class="image is-128x128" style="border: 5px solid var(--cream-l);">
@@ -21,14 +22,14 @@
                         </td>
                         <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
                         <td rowspan="2">
-                            <div class="icon is-size-4" @click.stop="isFavorite(menu)">
-                                <!-- star ทึบ -->
-                                <span class="icon" key="true" v-if="menu.is_favorite == true">
-                                    <i class="fas fa-star has-text-warning"></i>
+                            <div class="icon is-size-4"> <!-- @click.stop="menu.is_favorite = !menu.is_favorite" -->
+                                <!-- ดินสอ (ยังไม่กด) -->
+                                <span class="icon" id="icon_pen" @click.stop="editToggle = index; showMenu(menu.menu_id)">
+                                    <i class="fa fa-pen"></i>
                                 </span>
-                                <!-- star ใส -->
-                                <span key="false" v-if="menu.is_favorite == false">
-                                    <i class="far fa-star has-text-warning"></i>
+                                <!-- ถังขยะ (กดแล้ว) -->
+                                <span key="false" id="icon_trash" @click.stop="deleteMenu(menu.menu_id)">
+                                    <i class="fa fa-trash"></i>
                                 </span>
                             </div>
                         </td>
@@ -41,8 +42,8 @@
                     </tr>
                     <tr>
                         <td><b>Meat</b> : {{ menu.category_meat }}</td>
-                    </tr>   
-
+                    </tr>
+                    
                 </table>
                 <!-- end form menu -->
             </div>
@@ -56,8 +57,23 @@
                     select Select Your Menu To Show
                 </p>
                 <!-- select menu true -->
-                <div v-if="select_menu == true">
-                    <div v-for="(menu, index) in showonemenu" :key="index">
+
+                <div v-for="(menu, index) in showonemenu" :key="index">
+                    <!-- แสดงฟอร์ม edit ข้อมูล เมื่อกดดินสอ -->
+                    <!-- <div v-if="editToggle !== -1 && index === editToggle">
+                        <div class="content">
+                            <input v-model="showonemenu" class="input" type="text" />
+                        </div>
+                    </div> -->
+
+                    <!-- แสดงรายละเอียดเมนูเมื่อคลิกเลือก -->
+                    <div v-if="select_menu == true">
+                        <div v-if="editToggle !== -1 && index === editToggle">
+                            <div class="content">
+                                <input v-model="showonemenu" class="input" type="text" />
+                            </div>
+                        </div>
+                        
                         <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
                             style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
                             <p>{{ menu.menu_name }}</p>
@@ -97,16 +113,20 @@
                             </ol>
                         </div>
                     </div>
+                    <!-- add menu button -->
+                    <!-- <button v-if="index===editToggle" class="button" @click="updateMenu(menu.menu_id, index)" id="addMenuButton" style="color: #064635; width: 200px;"><b>Update Menu</b></button> -->
+                </div>
+
                 </div>
             </div>
         </div>
-    </div>
+    
 </template>
-  
 <script>
 import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
 import axios from "axios";
+
 export default {
     components: {
         topbarVUE,
@@ -115,20 +135,22 @@ export default {
     data() {
         return {
             menus: null, // add blogs variable
-            showonemenu: null, // show one menu 
+            showonemenu: null, // show one menu
             select_menu: false,
             select_show: false,
             index_menu: 0,
             days:0,
             hours:0,
             minutes:0,
+            editToggle: -1,
+            showeditmenu: null,
         };
     },
     created() {
         // console.log(this.$route.params.category_type)
         // console.log(this.$route.params.category_id)
         axios
-            .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
+            .get("http://localhost:3000/mymenu") // ****************** เพิ่ม params user_id *******************
             .then((response) => {
                 this.menus = response.data;
                 console.log(this.menus);
@@ -139,11 +161,14 @@ export default {
             });
     },
     methods: {
-        //เมื่อclick เลือกเมนู จะโชว์รายละเอียดเมนู
+        //เมื่อclick เลือกเมนูหรือดินสอ จะโชว์รายละเอียดเมนู
         showMenu(id) {
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
                 console.log("มาแล้ว", response.data)
+                console.log(this.editToggle)
+                console.log(this.showonemenu)
+
                 this.showonemenu = response.data;
                 let time = response.data[0].menu_duration
                 // console.log(response.data[0].menu_duration)
@@ -151,13 +176,53 @@ export default {
                 this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
                 this.minutes = time % 60;
                 console.log(this.days, this.hours, this.minutes)
-
+                // const index = this.blogs.findIndex(blog => blog.id == response.data.blogId)
+                // console.log(index)
+                // this.blogs[index].like = response.data.likeNum;
             })
                 //-------------------------------------
-                .catch(error => {
-                    console.log(error.message);
-                });
+            .catch(error => {
+                console.log(error.message);
+            });
         },
+        getMenuAgain() { // เรียกเมนูใหม่ หลังจากลบเมนู
+            axios.get("http://localhost:3000/showmenu/")
+            .then((response) => {
+                this.menus = response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
+        deleteMenu(menu_id){
+            console.log("delete menu ", menu_id)
+            axios
+            .delete('http://localhost:3000/showmenu/' + menu_id)
+            .then((response) => {
+                console.log(response)
+                this.getMenuAgain();
+            })
+            .catch((error) => {
+                alert(error.response.data.message);
+            });
+        },
+        // Update Menu
+        updateMenu(menu_id, index){
+            axios
+            .put('http://localhost:3000/showmenu/' + menu_id)
+            .then((response) => {
+                console.log(index)
+                console.log("update ", response.data)
+                this.showeditmenu = response.data; //////// add
+                // this.menus[index].menu_name = response.data.menus;
+                this.editToggle = -1;
+                this.getMenuAgain();
+            })
+            .catch((error) => {
+                alert(error.response.data.message);
+            });
+        },
+
     },
     computed: {
         menu_ingredients() {
@@ -167,7 +232,7 @@ export default {
         menu_methods() {
             console.log(this.menus[this.index_menu].menu_methods.split(","))
             return this.menus[this.index_menu].menu_methods.split(",");
-        }
+        },
     }
 };
 </script>
@@ -375,11 +440,11 @@ select {
 #addMenuButton {
     background-color: var(--yellow);
     border: 2.5px solid var(--darkgreen);
-    margin-top: 30px;
+    margin-top: 27px;
     width: 200px;
     position: relative;
     /* top: 0; */
-    left: 38%;
+    left: 1%;
 }
 
 .textarea::-webkit-scrollbar {

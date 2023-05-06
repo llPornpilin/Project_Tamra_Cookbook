@@ -24,6 +24,11 @@ const routes = [
     name: 'addmenu',
     component: () => import('./views/AddMenu.vue') // set home as path '/'
   },
+  {
+    path: '/mymenu', // *********เพิ่ม params user_id*********
+    name: 'mymenu',
+    component: () => import('./views/MyMENU.vue') // set home as path '/'
+  },
 ]
 
 const router = new VueRouter({

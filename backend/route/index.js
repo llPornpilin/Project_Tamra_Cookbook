@@ -19,9 +19,9 @@ router.get('/favorite', function(req, res, next) {
     res.render('Favorite')
 })
 
-router.get('/mymenu', function(req, res, next) {
-    res.render('MyMENU')
-})
+// router.get('/mymenu', function(req, res, next) {
+//     res.render('MyMENU')
+// })
 
 router.get('/signup', function(req, res, next) {
     res.render('SignUp')
