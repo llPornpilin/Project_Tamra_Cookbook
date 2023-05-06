@@ -47,7 +47,7 @@ router.get("/mymenu", multer().none(), async function (req, res, next) { // ****
     console.log("finally");
     conn.release(); //ปิด transaction
   }
-  }
+}
 )
 
 
@@ -124,8 +124,10 @@ router.delete("/showmenu/:id", async function (req, res, next) {
   // Begin transaction
   await conn.beginTransaction();
 
+  console.log("out", req.params.id)
+
   try {
-    const [rows2,fields2] = await conn.query("DELETE FROM `menus` WHERE `menu_id` = ?", [
+    const [rows2, fields2] = await conn.query("DELETE FROM `menus` WHERE `menu_id` = ?", [
       req.params.id,
     ]);
 
@@ -136,13 +138,13 @@ router.delete("/showmenu/:id", async function (req, res, next) {
       throw "Cannot delete the selected menu";
     }
 
-    } catch (err) {
-      console.log(err)
-      await conn.rollback();
-      return res.status(500).json(err);
-    } finally {
-      conn.release();
-    }
+  } catch (err) {
+    console.log(err)
+    await conn.rollback();
+    return res.status(500).json(err);
+  } finally {
+    conn.release();
+  }
 });
 
 // ---------------------Update Menu------------------------
@@ -154,7 +156,7 @@ router.put("/showmenu/:id", async function (req, res, next) {
 
   try {
     // Delete menu
-    const [rows2,fields2] = await conn.query("UPDATE `menus` SET menu_name=?, WHERE `menu_id` = ?", [
+    const [rows2, fields2] = await conn.query("UPDATE `menus` SET menu_name=?, WHERE `menu_id` = ?", [
       req.body.menus.menu_name, req.params.id,
     ]);
 
@@ -165,13 +167,13 @@ router.put("/showmenu/:id", async function (req, res, next) {
       throw "Cannot update the selected menu";
     }
 
-    } catch (err) {
-      console.log(err)
-      await conn.rollback();
-      return res.status(500).json(err);
-    } finally {
-      conn.release();
-    }
+  } catch (err) {
+    console.log(err)
+    await conn.rollback();
+    return res.status(500).json(err);
+  } finally {
+    conn.release();
+  }
 });
 
 // show at home page
@@ -252,5 +254,89 @@ router.post("/addMenu", upload.single("images"), async function (req, res, next)
   }
 }
 );
+
+//Edit menu
+
+router.put('/updates', upload.single("image"), async function (req, res, next) {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction();
+
+  const file = req.file;
+  console.log("file", file)
+
+  const name = req.body.name;
+  const id = req.body.id;
+
+  if (file == null) {
+    console.log("ไม่มีการเปลี่ยนflie")
+    image = "not_change";
+  } else if (!file) {
+    console.log("ไม่ได้เป็นไฟล์")
+    return res.status(400).json({ message: "Please upload a file" });
+  } else {
+    console.log("มีไฟล์ใหม่เข้ามา", req.file.filename)
+    image = req.file.filename;
+  }
+
+  console.log(" body เข้ามาแล้ว ", name, id, image)
+
+
+  try {
+    if (image == "not_change") {
+      [row, fields1] = await conn.query(
+        'UPDATE menus SET menu_name=? WHERE menu_id=?', [name, id]
+      )
+      await conn.commit()
+      console.log("PUT updates1", row)
+    } else {
+      [row, fields1] = await conn.query(
+        'UPDATE menus SET menu_name=?,menu_image=? WHERE menu_id=?', [name, image, id]
+      )
+      await conn.commit()
+      console.log("PUT updates2", row)
+    }
+
+    const [send, fields] = await conn.query('SELECT * FROM menus WHERE menu_id=?',[id])
+
+    res.json({ data: send })
+    // res.json(send)
+    console.log("send",send)
+  } catch (error) {
+    await conn.rollback();
+    res.status(500).json(error)
+    console.log(error)
+  } finally {
+    console.log('finally')
+    conn.release();
+  }
+
+})
+
+
+
+router.get('/mymenu', async function (req, res, next) {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction();
+
+  const user = 1;
+
+  try {
+    const [row, fields1] = await conn.query(
+      'SELECT * FROM menus  WHERE user_id=?', [user]
+    )
+
+    await conn.commit()
+    console.log("GET mymenu", row)
+    res.json(row)
+  } catch {
+    await conn.rollback();
+    res.status(500).json(error)
+  } finally {
+    console.log('finally')
+    conn.release();
+  }
+
+})
+
 
 exports.router = router;

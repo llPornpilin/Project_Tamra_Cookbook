@@ -186,7 +186,7 @@ export default {
             });
         },
         getMenuAgain() { // เรียกเมนูใหม่ หลังจากลบเมนู
-            axios.get("http://localhost:3000/showmenu/")
+            axios.get("http://localhost:3000/mymenu/")
             .then((response) => {
                 this.menus = response.data;
             })

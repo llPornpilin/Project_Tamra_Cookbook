@@ -6,6 +6,9 @@ var cors = require('cors')
 
 app.use(cors())
 
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 app.use(express.static('static'))//+
 // set up ให้แสดง page ที่อยู่ในโฟลเดอร์ views
 app.set('view engine', 'ejs');

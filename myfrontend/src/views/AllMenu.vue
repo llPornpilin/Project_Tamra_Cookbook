@@ -15,8 +15,8 @@
                     <tr>
                         <td rowspan="4" style="width: 128px">
                             <figure class="image is-128x128" style="border: 5px solid var(--cream-l);">
-                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image"  style="height: 100%; object-fit:contain;">
+                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                    alt="Placeholder image" style="height: 100%; object-fit:contain;">
                             </figure>
                         </td>
                         <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
@@ -34,15 +34,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><b>Nation</b> : {{ menu.category_nation }} food</td>
+                        <td><b>meat</b> : {{ menu.category_meat }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>category</b> : {{ menu.category_nation }} food</td>
                     </tr>
                     <tr>
                         <td><b>Method</b> : {{ menu.category_cooking }}</td>
                     </tr>
-                    <tr>
-                        <td><b>Meat</b> : {{ menu.category_meat }}</td>
-                    </tr>   
-
                 </table>
                 <!-- end form menu -->
             </div>
@@ -58,43 +57,88 @@
                 <!-- select menu true -->
                 <div v-if="select_menu == true">
                     <div v-for="(menu, index) in showonemenu" :key="index">
-                        <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
-                            style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
-                            <p>{{ menu.menu_name }}</p>
+                        <!-- -----------EDIT------------ -->
+                        <div v-if="index_menu === editToggle">
+                            <!-- กรอก ชื่ออาหาร -->
+                            <input class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName"
+                                id="menuName" v-model="e_menu_name">
+
+                            <!-- <figure class="image is-2by1 ml-6 mr-6 mt-3">
+                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                            </figure> -->
+
+                            <label class="image is-2by1 container p-6" for="file" id="imageBox">
+                                <!-- <img v-for="(image, index) in images" :key="index" :src="showSelectImage(image)"
+                                style="border-radius: 30px;"> -->
+                                <img :src="(e_image  == menu.menu_image) ? 'http://localhost:3000/uploads/' + e_image : showSelectImage(images[0]) "
+                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                                <input type="file" accept="image/*" name="images" id="file" @change="loadImg"
+                                    style="display: none;">
+                                <span class="icon is-large" id="aboutImg">
+                                    <i class="fas fa-images is-large"
+                                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                                    <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse
+                                        Image
+                                    </p>
+                                </span>
+                            </label>
+
+
+
+                            <button @click="saveEditMenu(menu.menu_id)" class="button is-primary">
+                                <span>Save Comment</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </button>
                         </div>
-                        <figure class="image is-2by1 ml-6 mr-6 mt-3">
-                            <img :src="menu.menu_image"
-                                style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
-                            <!-- <img :src="menu.menu_image ? 'http://localhost/3000'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image"> -->
-                            <img :src="menu.menu_image ? 'http://localhost:3000/uploads/'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image" >
-                        </figure>
-                        <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
-                            style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5"><b>Nation : </b>{{ menu.category_nation }} food </p>
-                            <p class="ml-5"><b>Method :</b>{{ menu.category_cooking }}</p>
-                            <p class="ml-5"><b>Meat :</b>{{ menu.category_meat }} </p>
-                        </div>
-                        <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
-                            style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }} <b>minutes</b></p>
-                        </div>
-                        <!-- วัตถุดิบ -->
-                        <div class="has-text-left m-1 mt-4"
-                            style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
-                            <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
-                            <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in menu_ingredients" :key="index">{{ item }}</li>
-                            </ol>
-                        </div>
-                        <!-- วิธีทำ -->
-                        <div class="has-text-left m-1 mt-5"
-                            style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
-                            <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
-                            <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in menu_methods" :key="index">{{ item }}</li>
-                            </ol>
+                        <!-- -----------SAVE------------- -->
+                        <div v-else>
+                            <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
+                                style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
+                                <p>{{ menu.menu_name }}</p>
+                            </div>
+                            <figure class="image is-2by1 ml-6 mr-6 mt-3">
+                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                            </figure>
+                            <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
+                                style="background-color: var(--yellow-l); border-radius:10px;">
+                                <p class="ml-5"><b>Nation : </b>{{ menu.category_nation }} food </p>
+                                <p class="ml-5"><b>Method :</b>{{ menu.category_cooking }}</p>
+                                <p class="ml-5"><b>Meat :</b>{{ menu.category_meat }} </p>
+                            </div>
+                            <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
+                                style="background-color: var(--yellow-l); border-radius:10px;">
+                                <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }}
+                                    <b>minutes</b>
+                                </p>
+                            </div>
+                            <!-- วัตถุดิบ -->
+                            <div class="has-text-left m-1 mt-4"
+                                style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                                <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
+                                <ol class="ml-6 mb-3 mr-6">
+                                    <li v-for="(item, index) in menu_ingredients" :key="index">{{ item }}</li>
+                                </ol>
+                            </div>
+                            <!-- วิธีทำ -->
+                            <div class="has-text-left m-1 mt-5"
+                                style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                                <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
+                                <ol class="ml-6 mb-3 mr-6">
+                                    <li v-for="(item, index) in menu_methods" :key="index">{{ item }}</li>
+                                </ol>
+                            </div>
+
+                            <!-- ปุ่ม edit -->
+                            <button @click="editMenu(index_menu, menu)" class="button is-warning">
+                                <span>Edit</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -106,7 +150,9 @@
 <script>
 import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
-import axios from "axios";
+// import axios from "axios";
+import axios from '@/plugins/axios' //+
+
 export default {
     components: {
         topbarVUE,
@@ -118,10 +164,18 @@ export default {
             showonemenu: null, // show one menu 
             select_menu: false,
             select_show: false,
+            menu_ingredients: '',
+            menu_methods: '',
             index_menu: 0,
-            days:0,
-            hours:0,
-            minutes:0,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            //------------------------
+            e_menu_name: '', //ชื่อเมนูที่กรอก
+            e_image: '', //รูปใหม่
+            images: [],
+            //------------------------
+            editToggle: -1,
         };
     },
     created() {
@@ -139,6 +193,24 @@ export default {
             });
     },
     methods: {
+        loadImg(event) {
+            console.log("click loadImg")
+            this.images = event.target.files;
+            console.log("loadImg",this.images)
+            console.log("in showSelectImage", this.images[0].name)
+            this.e_image = this.images[0].name
+        },
+        showSelectImage(images) {
+            // for preview only
+            console.log("show",images)
+            console.log("in showSelectImage", URL.createObjectURL(images))
+            return URL.createObjectURL(images);
+        },
+        editMenu(index, menu) {
+            this.editToggle = index
+            this.e_menu_name = menu.menu_name
+            this.e_image = menu.menu_image
+        },
         //เมื่อclick เลือกเมนู จะโชว์รายละเอียดเมนู
         showMenu(id) {
             axios.get('http://localhost:3000/showmenu/' + id
@@ -150,6 +222,9 @@ export default {
                 this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
                 this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
                 this.minutes = time % 60;
+                this.menu_ingredients = this.menus[this.index_menu].menu_ingredients.split(",");
+                this.menu_methods = this.menus[this.index_menu].menu_methods.split(",");
+
                 console.log(this.days, this.hours, this.minutes)
 
             })
@@ -158,17 +233,57 @@ export default {
                     console.log(error.message);
                 });
         },
-    },
-    computed: {
-        menu_ingredients() {
-            console.log(this.menus[this.index_menu].menu_ingredients.split(","))
-            return this.menus[this.index_menu].menu_ingredients.split(",");
+        getCategories(id) {
+            axios
+                .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
+                .then((response) => {
+                    this.menus = response.data;
+                    console.log(this.menus);
+                    console.log(response.data)
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            axios.get('http://localhost:3000/showmenu/' + id
+            ).then(response => {
+                console.log("มาแล้ว", response.data)
+                this.showonemenu = response.data;
+                console.log(this.showonemenu)
+                console.log(response.data[0].menu_duration)
+                let time = response.data[0].menu_duration
+                this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
+                this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
+                this.minutes = time % 60;
+                this.menu_ingredients = this.menus[this.index_menu].menu_ingredients.split(",");
+                this.menu_methods = this.menus[this.index_menu].menu_methods.split(",");
+                console.log(this.days, this.hours, this.minutes)
+
+            })
         },
-        menu_methods() {
-            console.log(this.menus[this.index_menu].menu_methods.split(","))
-            return this.menus[this.index_menu].menu_methods.split(",");
-        }
-    }
+        saveEditMenu(menuId) {
+            console.log(menuId, this.e_menu_name, this.images[0])
+
+            let formData = new FormData();
+            formData.append("name", this.e_menu_name);
+            formData.append("id", menuId);
+            if(this.images[0] == null){
+                formData.append("image", "not_change");
+            }else{
+                formData.append("image", this.images[0]);
+            }
+
+            axios.put(`http://localhost:3000/updates`, formData)
+            .then((response) => {
+                console.log("then",response.data.data[0])
+                // console.log("then",response.data.data[0])
+                this.editToggle = -1;
+                this.getCategories(response.data.data[0].menu_id);
+                // this.$router.push({ name: 'CategoryMenu' })
+            }).catch((error) => {
+                this.error = error.message;
+            })
+        },
+    },
 };
 </script>
 
