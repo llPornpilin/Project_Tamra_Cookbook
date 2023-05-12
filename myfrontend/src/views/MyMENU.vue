@@ -24,9 +24,9 @@
                         <td rowspan="2">
                             <div class="icon is-size-4"> <!-- @click.stop="menu.is_favorite = !menu.is_favorite" -->
                                 <!-- ดินสอ (ยังไม่กด) -->
-                                <span class="icon" id="icon_pen" @click.stop="editToggle = index; showMenu(menu.menu_id)">
+                                <!-- <span class="icon" id="icon_pen" @click.stop="editMenu(menu, index)">
                                     <i class="fa fa-pen"></i>
-                                </span>
+                                </span> -->
                                 <!-- ถังขยะ (กดแล้ว) -->
                                 <span key="false" id="icon_trash" @click.stop="deleteMenu(menu.menu_id)">
                                     <i class="fa fa-trash"></i>
@@ -59,21 +59,21 @@
                 <!-- select menu true -->
 
                 <div v-for="(menu, index) in showonemenu" :key="index">
-                    <!-- แสดงฟอร์ม edit ข้อมูล เมื่อกดดินสอ -->
-                    <!-- <div v-if="editToggle !== -1 && index === editToggle">
-                        <div class="content">
-                            <input v-model="showonemenu" class="input" type="text" />
-                        </div>
-                    </div> -->
-
                     <!-- แสดงรายละเอียดเมนูเมื่อคลิกเลือก -->
                     <div v-if="select_menu == true">
-                        <div v-if="editToggle !== -1 && index === editToggle">
+                        <div v-if="index_menu === editToggle">
                             <div class="content">
-                                <input v-model="showonemenu" class="input" type="text" />
+                                <input v-model="edit_name" class="input" type="text" />
+                                <button @click="saveMenu(menu.menu_id)" class="button is-primary">
+                                    <span>Save</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                         
+                    <div v-else>
                         <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
                             style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
                             <p>{{ menu.menu_name }}</p>
@@ -112,7 +112,16 @@
                                 <li v-for="(item, index) in menu_methods" :key="index">{{ item }}</li>
                             </ol>
                         </div>
+                        <!-- ปุ่ม edit -->
+                        <button @click="editMenu(menu, index_menu)" class="button is-warning">
+                            <span>Edit</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </button>
+
                     </div>
+                </div>
                     <!-- add menu button -->
                     <!-- <button v-if="index===editToggle" class="button" @click="updateMenu(menu.menu_id, index)" id="addMenuButton" style="color: #064635; width: 200px;"><b>Update Menu</b></button> -->
                 </div>
@@ -144,6 +153,7 @@ export default {
             minutes:0,
             editToggle: -1,
             showeditmenu: null,
+            edit_name: "",
         };
     },
     created() {
@@ -166,7 +176,7 @@ export default {
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
                 console.log("มาแล้ว", response.data)
-                console.log(this.editToggle)
+                console.log("Toggle ", this.editToggle)
                 console.log(this.showonemenu)
 
                 this.showonemenu = response.data;
@@ -185,14 +195,31 @@ export default {
                 console.log(error.message);
             });
         },
-        getMenuAgain() { // เรียกเมนูใหม่ หลังจากลบเมนู
+        getMenuAgain(id) { // เรียกเมนูใหม่ หลังจากลบเมนู
             axios.get("http://localhost:3000/mymenu/")
             .then((response) => {
                 this.menus = response.data;
+                
             })
             .catch((err) => {
                 console.log(err);
             });
+
+            axios.get('http://localhost:3000/showmenu/' + id
+            ).then(response => {
+                console.log("มาแล้ว", response.data)
+                console.log("Toggle ", this.editToggle)
+                console.log(this.showonemenu)
+
+                this.showonemenu = response.data;
+                let time = response.data[0].menu_duration
+                // console.log(response.data[0].menu_duration)
+                this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
+                this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
+                this.minutes = time % 60;
+                console.log(this.days, this.hours, this.minutes)
+
+            })
         },
         deleteMenu(menu_id){
             console.log("delete menu ", menu_id)
@@ -206,22 +233,25 @@ export default {
                 alert(error.response.data.message);
             });
         },
-        // Update Menu
-        updateMenu(menu_id, index){
-            axios
-            .put('http://localhost:3000/showmenu/' + menu_id)
-            .then((response) => {
-                console.log(index)
-                console.log("update ", response.data)
-                this.showeditmenu = response.data; //////// add
-                // this.menus[index].menu_name = response.data.menus;
-                this.editToggle = -1;
-                this.getMenuAgain();
-            })
-            .catch((error) => {
-                alert(error.response.data.message);
-            });
+        // edit Menu
+        editMenu(menu, index){
+            this.editToggle = index
+            this.edit_name = menu.menu_name
         },
+        saveMenu(menu_id){
+            let formData = new FormData();
+            formData.append("name", this.edit_name);
+            formData.append("id", menu_id);
+
+            axios.put(`http://localhost:3000/updates`, formData)
+                .then((response) => {
+                    console.log("thenn ", response.data.data[0].menu_id)
+                    this.editToggle = -1;
+                    this.getMenuAgain(response.data.data[0].menu_id)
+                }).catch((error) => {
+                    this.error = error.message;
+            })
+        }
 
     },
     computed: {
