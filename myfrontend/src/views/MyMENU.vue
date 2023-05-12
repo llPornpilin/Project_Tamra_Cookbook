@@ -82,7 +82,7 @@
                                 <div class="p-5">
                                     <div class="mt-3 is-flex">
                                         <label class="label">Menu Nation</label>
-                                        <select v-model="nation" name="menuCategory">
+                                        <select v-model="select_nation" name="menuCategory">
                                             <option v-for="(nation, index) in category_nation" :key="index"
                                                 :value="nation.nation_id">{{
                                                     nation.nation_name }}
@@ -91,7 +91,7 @@
                                     </div><br>
                                     <div class="mt-3 is-flex">
                                         <label class="label">Type Cooking</label>
-                                        <select v-model="method" name="menuTypeCook">
+                                        <select v-model="select_cooking" name="menuTypeCook">
                                             <option v-for="(typecook, index) in category_cooking" :key="index"
                                                 :value="typecook.cooking_id">{{ typecook.cooking_name
                                                 }}</option>
@@ -99,7 +99,7 @@
                                     </div><br>
                                     <div class="mt-3 is-flex">
                                         <label class="label">Type Meat</label>
-                                        <select v-model="meat" name="menuTypeMeat">
+                                        <select v-model="select_meat" name="menuTypeMeat">
                                             <option v-for="(typemeat, index) in category_meat" :key="index"
                                                 :value="typemeat.meat_id">
                                                 {{ typemeat.meat_name }}
@@ -200,6 +200,12 @@ export default {
             edit_name: "",
             edit_image: "",
             images: [],
+            category_nation: null,
+            category_cooking: null,
+            category_meat: null,
+            select_nation: "",
+            select_cooking: "",
+            select_meat: "",
         };
     },
     created() {
@@ -295,6 +301,23 @@ export default {
             this.editToggle = index
             this.edit_name = menu.menu_name
             this.edit_image = menu.menu_image
+            this.select_nation = menu.category_nation
+            this.select_cooking = menu.category_cooking
+            this.select_meat= menu.category_meat
+            console.log("nationnn ", this.select_nation)
+            axios
+            .get("http://localhost:3000/categorys/")
+            .then((response) => {
+                this.category_nation = response.data[0];
+                this.category_cooking = response.data[1];
+                this.category_meat = response.data[2];
+                console.log("front", this.category_nation);
+                console.log("front", this.category_meat);
+                console.log("front", this.category_cooking);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
         },
         saveMenu(menu_id){
             let formData = new FormData();
@@ -305,6 +328,9 @@ export default {
             } else {
                 formData.append("image", this.images[0]);
             }
+            formData.append("nation", this.select_nation)
+            formData.append("cooking", this.select_cooking)
+            formData.append("meat", this.select_meat)
 
             axios.put(`http://localhost:3000/updates`, formData)
                 .then((response) => {
