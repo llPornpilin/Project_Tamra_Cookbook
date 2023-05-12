@@ -125,6 +125,32 @@
                                     </div>
                                 </div>
 
+                                <!-- edit วัตถุดิบ -->
+                                <div class="container is-flex">
+                                    <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant"
+                                        id="menuIngrediant" v-model="ingredient">
+                                    <button class="button mt-3 ml-5" @click.prevent="addMaterial"
+                                        style="width:100px; background-color: #F0BB62;">Add material</button>
+                                </div>
+                                <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
+                                    <ol class="p-5">
+                                        <li v-for="(item, index) in computedMaterials" :key="index">{{ item }}</li>
+                                    </ol>
+                                </div>
+
+                                <!-- กรอก วิธีทำอาหาร -->
+                                <div class="container is-flex">
+                                    <input class="input mt-3 is-warning" type="text" placeholder="วิธีทำ" name="menuMethod"
+                                        id="menuMethod" v-model="howTo">
+                                    <button class="button mt-3 ml-5" @click.prevent="addMethods"
+                                        style="width:100px; background-color: #F0BB62;">Add method</button>
+                                </div>
+                                <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
+                                    <ol class="p-5">
+                                        <li v-for="(item2, index) in computedMethods" :key="index">{{ item2 }}</li>
+                                    </ol>
+                                </div>
+
                                 <button @click="saveMenu(menu.menu_id)" class="button is-primary">
                                     <span>Save</span>
                                     <span class="icon is-small">
@@ -162,7 +188,7 @@
                             style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
                             <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
                             <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in menu_ingredients" :key="index">{{ item }}</li>
+                                <li v-for="(item, index) in computedMaterials" :key="index">{{ item }}</li>
                             </ol>
                         </div>
                         <!-- วิธีทำ -->
@@ -170,7 +196,7 @@
                             style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
                             <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
                             <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in menu_methods" :key="index">{{ item }}</li>
+                                <li v-for="(item, index) in computedMethods" :key="index">{{ item }}</li>
                             </ol>
                         </div>
                         <!-- ปุ่ม edit -->
@@ -226,6 +252,11 @@ export default {
             select_cooking: "",
             select_meat: "",
 
+            ingredient: "",
+            howTo: "",
+            listMethods: [],
+            listMaterials: [],
+
 
         };
     },
@@ -258,6 +289,9 @@ export default {
                 this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
                 this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
                 this.minutes = time % 60;
+
+                this.listMaterials = this.menus[this.index_menu].menu_ingredients.split(",");
+                this.listMethods = this.menus[this.index_menu].menu_methods.split(",");
                 console.log(this.days, this.hours, this.minutes)
             })
                 //-------------------------------------
@@ -317,6 +351,18 @@ export default {
             console.log("in showSelectImage", URL.createObjectURL(images))
             return URL.createObjectURL(images);
         },
+        // กดเพิ่ม วัตถุดิบ 
+        addMaterial() {
+            console.log("click addMaterial")
+            this.listMaterials.push(this.ingredient);
+            this.ingredient = "";
+        },
+        // กดเพิ่ม วิธีทำ
+        addMethods() {
+            console.log("click addMethods")
+            this.listMethods.push(this.howTo);
+            this.howTo = "";
+        },
         // edit Menu
         editMenu(menu, index){
             this.editToggle = index
@@ -324,7 +370,9 @@ export default {
             this.edit_image = menu.menu_image
             this.select_nation = menu.category_nation
             this.select_cooking = menu.category_cooking
-            this.select_meat= menu.category_meat
+            this.select_meat = menu.category_meat
+            this.listMaterials = menu.menu_ingredients.split(",");
+            this.listMethods = menu.menu_methods.split(",");
             console.log("nationnn ", this.select_nation)
             axios
             .get("http://localhost:3000/categorys/")
@@ -352,7 +400,9 @@ export default {
             formData.append("nation", this.select_nation)
             formData.append("cooking", this.select_cooking)
             formData.append("meat", this.select_meat)
-            formData.append("menu_duration", (this.days*1440)+(this.hours*60)+this.minutes)
+            formData.append("duration", (this.days*1440)+(this.hours*60)+this.minutes)
+            formData.append("ingredients",this.listMaterials)
+            formData.append("methods",this.listMethods)
 
             axios.put(`http://localhost:3000/updates`, formData)
                 .then((response) => {
@@ -365,16 +415,18 @@ export default {
         }
 
     },
+
+
     computed: {
-        menu_ingredients() {
-            console.log(this.menus[this.index_menu].menu_ingredients.split(","))
-            return this.menus[this.index_menu].menu_ingredients.split(",");
+        computedMaterials() {
+            console.log("in list-materail", this.listMaterials)
+            return this.listMaterials;
         },
-        menu_methods() {
-            console.log(this.menus[this.index_menu].menu_methods.split(","))
-            return this.menus[this.index_menu].menu_methods.split(",");
+        computedMethods() {
+            console.log("in list-methods", this.listMethods)
+            return this.listMethods;
         },
-    }
+    },
 };
 </script>
 

@@ -269,7 +269,9 @@ router.put('/updates', upload.single("image"), async function (req, res, next) {
   const nation = req.body.nation;
   const cooking = req.body.cooking;
   const meat = req.body.meat;
-  const menu_duration = req.body.menu_duration;
+  const duration = req.body.duration;
+  const ingredients = req.body.ingredients;
+  const methods = req.body.methods;
 
   if (file == null) {
     console.log("ไม่มีการเปลี่ยนflie")
@@ -282,13 +284,14 @@ router.put('/updates', upload.single("image"), async function (req, res, next) {
     image = req.file.filename;
   }
 
-  console.log(" body เข้ามาแล้ว ", name, id, image,nation, cooking, meat, menu_duration)
+  console.log(" body เข้ามาแล้ว ", name, id, image, nation, cooking, meat, duration, ingredients, methods)
 
 
   try {
     if (image == "not_change") {
       [row, fields1] = await conn.query(
-        'UPDATE menus SET menu_name=?, category_nation=?, category_cooking=?, category_meat=?, menu_duration=? WHERE menu_id=?', [name, nation, cooking, meat, menu_duration, id]
+        'UPDATE menus SET menu_name=?, category_nation=?, category_cooking=?, category_meat=?, menu_duration=?, menu_ingredients=?, menu_methods=? WHERE menu_id=?',
+        [name, nation, cooking, meat, duration, ingredients, methods, id]
       )
       await conn.commit()
       console.log("PUT updates1", row)
