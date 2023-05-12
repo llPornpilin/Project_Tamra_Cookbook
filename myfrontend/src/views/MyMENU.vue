@@ -108,6 +108,23 @@
                                     </div>
                                 </div>
 
+                                <!-- edit spending time -->
+                                <div class="is-flex mt-5" id="spendTime">
+                                    <div class="container mr-4 ml-6">
+                                        <input class="input has-text-centered" type="number" id="day" v-model="days" name="menuDay">
+                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
+                                    </div>
+                                    <div class="container mr-4 ml-4">
+                                        <input class="input has-text-centered" type="number" id="hour" v-model="hours" name="menuHour">
+                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
+                                    </div>
+                                    <div class="container ml-4 mr-6">
+                                        <input class="input has-text-centered" type="number" id="minute" v-model="minutes"
+                                            name="menuMinute">
+                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
+                                    </div>
+                                </div>
+
                                 <button @click="saveMenu(menu.menu_id)" class="button is-primary">
                                     <span>Save</span>
                                     <span class="icon is-small">
@@ -192,10 +209,12 @@ export default {
             select_menu: false,
             select_show: false,
             index_menu: 0,
+
             days:0,
             hours:0,
             minutes:0,
             editToggle: -1,
+            // for edit
             showeditmenu: null,
             edit_name: "",
             edit_image: "",
@@ -206,6 +225,8 @@ export default {
             select_nation: "",
             select_cooking: "",
             select_meat: "",
+
+
         };
     },
     created() {
