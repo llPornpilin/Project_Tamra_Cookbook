@@ -64,6 +64,50 @@
                         <div v-if="index_menu === editToggle">
                             <div class="content">
                                 <input v-model="edit_name" class="input" type="text" />
+                                <!-- edit image -->
+                                <label class="image is-2by1 container p-6" for="file" id="imageBox">
+                                    <img :src="(edit_image == menu.menu_image) ? 'http://localhost:3000/uploads/' + edit_image : showSelectImage(images[0])"
+                                        style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                                    <input type="file" accept="image/*" name="images" id="file" @change="loadImg"
+                                        style="display: none;">
+                                    <span class="icon is-large" id="aboutImg">
+                                        <i class="fas fa-images is-large"
+                                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                                        <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse
+                                            Image
+                                        </p>
+                                    </span>
+                                </label>
+                                <!-- edit category -->
+                                <div class="p-5">
+                                    <div class="mt-3 is-flex">
+                                        <label class="label">Menu Nation</label>
+                                        <select v-model="nation" name="menuCategory">
+                                            <option v-for="(nation, index) in category_nation" :key="index"
+                                                :value="nation.nation_id">{{
+                                                    nation.nation_name }}
+                                            </option>
+                                        </select>
+                                    </div><br>
+                                    <div class="mt-3 is-flex">
+                                        <label class="label">Type Cooking</label>
+                                        <select v-model="method" name="menuTypeCook">
+                                            <option v-for="(typecook, index) in category_cooking" :key="index"
+                                                :value="typecook.cooking_id">{{ typecook.cooking_name
+                                                }}</option>
+                                        </select>
+                                    </div><br>
+                                    <div class="mt-3 is-flex">
+                                        <label class="label">Type Meat</label>
+                                        <select v-model="meat" name="menuTypeMeat">
+                                            <option v-for="(typemeat, index) in category_meat" :key="index"
+                                                :value="typemeat.meat_id">
+                                                {{ typemeat.meat_name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <button @click="saveMenu(menu.menu_id)" class="button is-primary">
                                     <span>Save</span>
                                     <span class="icon is-small">
@@ -154,6 +198,8 @@ export default {
             editToggle: -1,
             showeditmenu: null,
             edit_name: "",
+            edit_image: "",
+            images: [],
         };
     },
     created() {
@@ -186,9 +232,6 @@ export default {
                 this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
                 this.minutes = time % 60;
                 console.log(this.days, this.hours, this.minutes)
-                // const index = this.blogs.findIndex(blog => blog.id == response.data.blogId)
-                // console.log(index)
-                // this.blogs[index].like = response.data.likeNum;
             })
                 //-------------------------------------
             .catch(error => {
@@ -233,15 +276,35 @@ export default {
                 alert(error.response.data.message);
             });
         },
+        // update image
+        loadImg(event) {
+            console.log("click loadImg")
+            this.images = event.target.files;
+            console.log("loadImg", this.images)
+            console.log("in showSelectImage", this.images[0].name)
+            this.edit_image = this.images[0].name
+        },
+        showSelectImage(images) {
+            // for preview only
+            console.log("show", images)
+            console.log("in showSelectImage", URL.createObjectURL(images))
+            return URL.createObjectURL(images);
+        },
         // edit Menu
         editMenu(menu, index){
             this.editToggle = index
             this.edit_name = menu.menu_name
+            this.edit_image = menu.menu_image
         },
         saveMenu(menu_id){
             let formData = new FormData();
             formData.append("name", this.edit_name);
             formData.append("id", menu_id);
+            if (this.images[0] == null) {
+                formData.append("image", "not_change");
+            } else {
+                formData.append("image", this.images[0]);
+            }
 
             axios.put(`http://localhost:3000/updates`, formData)
                 .then((response) => {
