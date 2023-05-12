@@ -352,6 +352,7 @@ export default {
             formData.append("nation", this.select_nation)
             formData.append("cooking", this.select_cooking)
             formData.append("meat", this.select_meat)
+            formData.append("menu_duration", (this.days*1440)+(this.hours*60)+this.minutes)
 
             axios.put(`http://localhost:3000/updates`, formData)
                 .then((response) => {
