@@ -30,7 +30,7 @@
                     </div>
 
                     <button class="button is-large" type="submit" id="signInButton" @click="submit()"><a
-                            class="has-text-white" href="/">Sign In</a></button>
+                            class="has-text-white">Sign In</a></button>
                     <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Need an
                         Account ? <u><a href="/user/signup">Sign up</a></u></label>
                 </div>
@@ -75,7 +75,7 @@
           const token = res.data.token                                
           localStorage.setItem('token', token)
           this.$emit('auth-change')
-        //   this.$router.replace({name: 'HomePage'})
+          this.$router.push({name: 'HomePage'})
         })
         .catch(error => {
           this.error = error.response.data

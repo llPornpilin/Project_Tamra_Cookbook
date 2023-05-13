@@ -1,18 +1,38 @@
 <!-- ลบ code เก่าออก และใส่ code ใหม่เข้าไป  โดย tag <router-view/> จะเปลี่ยนไปตาม router ที่ตั้งไว้  -->
 <template>
   <div id="app">
-    <router-view :key="$route.fullPath" />
+    <router-view :key="$route.fullPath" @auth-change="onAuthChange" :user="user" />
   </div>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
+import axios from '@/plugins/axios' //+  axios interceptor
 
 export default {
   name: 'App',
-  // components: {
-  //   HelloWorld
-  // }
+  data() {
+    return {
+      user: null
+    }
+  },
+  mounted() {
+    this.onAuthChange()
+  },
+  methods: {
+    onAuthChange() {
+      const token = localStorage.getItem('token')
+      if (token) {
+        this.getUser()
+      }
+    },
+    getUser() {
+      // const token = localStorage.getItem('token')
+      axios.get('user/me').then(res => {
+        this.user = res.data
+      })
+    },
+  }
 }
 </script>
 
