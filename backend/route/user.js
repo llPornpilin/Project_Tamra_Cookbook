@@ -17,8 +17,13 @@ const loginSchema = Joi.object({
     password: Joi.string().required()
 })
 
-router.post('/user/login', async (req, res, next) => {
+// --------------------sign in------------------------------------------
+router.post('/user/signin', async (req, res, next) => {
     try {
+        console.log("Sign in แล้ววววว")
+        console.log(req.body.username)
+        console.log(req.body.password)
+
         await loginSchema.validateAsync(req.body, { abortEarly: false })
         // console.log('loginnn')
     } catch (err) {
@@ -32,8 +37,9 @@ router.post('/user/login', async (req, res, next) => {
 
     try {
         // Check if username is correct
+        // Check user or email
         const [users] = await conn.query(
-            'SELECT * FROM users WHERE username=?', 
+            'SELECT * FROM users WHERE username=?'
             [username]
         )
         const user = users[0]
@@ -51,9 +57,12 @@ router.post('/user/login', async (req, res, next) => {
             'SELECT * FROM tokens WHERE user_id=?',
             [user.id]
         )
+        console.log(tokens[0])
+
         let token = tokens[0]?.token
         if (!token) {
             // Generate and save token into database
+            console.log("no token")
             token = generateToken()
             await conn.query(
                 'INSERT INTO tokens(user_id, token) VALUES (?, ?)', 
@@ -90,14 +99,15 @@ const passwordValidator = (value, helpers) => {
 }
 
 const usernameValidator = async (value, helpers) => {
-    const [rows, _] = await pool.query("SELECT username FROM users WHERE username = ?", [value])
+    const [rows, _] = await pool.query("SELECT username FROM users WHERE username=? or email=?", [value, value])
     if (rows.length > 0) {
-        const message = 'This username is already taken'
+        const message = 'This username or email is already taken'
         throw new Joi.ValidationError(message, { message })
     }
     return value
 }
 
+// ----------------------------------register-------------------------------------
 const signupSchema = Joi.object({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(passwordValidator),

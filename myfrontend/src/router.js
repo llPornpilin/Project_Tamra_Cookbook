@@ -29,15 +29,20 @@ const routes = [
     name: 'mymenu',
     component: () => import('./views/MyMENU.vue')
   },
-  {
-    path: '/user/me', 
-    name: 'signup',
-    component: () => import('./views/SignUp.vue') 
-  },
+  // {
+  //   path: '/user/me',
+  //   name: 'signup',
+  //   component: () => import('./views/SignUp.vue') 
+  // },
   {
     path: '/user/signup',
     name: 'signup',
     component: () => import('./views/SignUp.vue')
+  },
+  {
+    path: '/user/signin',
+    name: 'signin',
+    component: () => import('./views/SignIn.vue')
   },
 ]
 

@@ -87,8 +87,8 @@
                       </template>
                   </div>
 
-                  <button class="button is-large" type="submit" id="signInButton" @click="submit()"><a class="has-text-white" href="./Home.html">Sign Up</a></button>
-                  <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Already have an account ? <u><a href="/signin">Sign in</a></u></label>
+                  <button class="button is-large" type="submit" id="signInButton" @click="submit()"><a class="has-text-white">Sign Up</a></button>
+                  <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Already have an account ? <u><a href="/user/signin">Sign in</a></u></label>
               </div>
           </form>
       </div>
@@ -153,7 +153,7 @@
           axios
             .post("http://localhost:3000/user/signup", data)
             .then((res) => {
-              alert("Sign up Success");
+              this.$router.push({path: '/signin'})
             })
             .catch((err) => {
               alert(err.response.data.details.message)
