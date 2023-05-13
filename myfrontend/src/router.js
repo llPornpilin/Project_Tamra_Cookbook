@@ -12,22 +12,32 @@ const routes = [
   {
     path: '/allmenu',
     name: 'AllMenu',
-    component: () => import('./views/AllMenu.vue') // set home as path '/'
+    component: () => import('./views/AllMenu.vue')
   },
   {
     path: '/allmenu/:category_type/:category_id',
     name: 'CategoryMenu',
-    component: () => import('./views/AllMenu.vue') // set home as path '/'
+    component: () => import('./views/AllMenu.vue')
   },
   {
     path: '/addmenu',
     name: 'addmenu',
-    component: () => import('./views/AddMenu.vue') // set home as path '/'
+    component: () => import('./views/AddMenu.vue')
   },
   {
-    path: '/mymenu', // *********เพิ่ม params user_id*********
+    path: '/mymenu',
     name: 'mymenu',
-    component: () => import('./views/MyMENU.vue') // set home as path '/'
+    component: () => import('./views/MyMENU.vue')
+  },
+  {
+    path: '/user/me', 
+    name: 'signup',
+    component: () => import('./views/SignUp.vue') 
+  },
+  {
+    path: '/user/signup',
+    name: 'signup',
+    component: () => import('./views/SignUp.vue')
   },
 ]
 
