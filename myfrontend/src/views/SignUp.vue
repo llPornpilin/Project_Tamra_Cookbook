@@ -5,7 +5,7 @@
           <figure class="image is-128x128 mr-auto ml-auto mt-5" id="chefHat">
               <img src="/img/chef_hat.png">
           </figure>
-          <form action="" class="form">
+          <div  class="form">
               <label class="label has-text-centered is-size-1 sign-label">Sign Up</label>
               <div class="container">
                   <div class="field">
@@ -90,7 +90,7 @@
                   <button class="button is-large" type="submit" id="signInButton" @click="submit()"><a class="has-text-white">Sign Up</a></button>
                   <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Already have an account ? <u><a href="/user/signin">Sign in</a></u></label>
               </div>
-          </form>
+            </div>
       </div>
       <!-- right side -->
       <figure class="image is-128x128" id="tomyamImg">
@@ -153,7 +153,7 @@
           axios
             .post("http://localhost:3000/user/signup", data)
             .then((res) => {
-              this.$router.push({path: '/signin'})
+              this.$router.push({path: '/user/signin'})
             })
             .catch((err) => {
               alert(err.response.data.details.message)
