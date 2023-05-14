@@ -73,6 +73,8 @@ import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
 import axios from "axios";
 export default {
+    name: "HomePage",
+    props: ['user'], // รับ Props user มาจาก App.vue
     components: {
         topbarVUE,
         sidemenubarVUE
@@ -80,9 +82,6 @@ export default {
     data() {
         return {
             category: null,
-            // category_nation: null, // add menu variable
-            // category_meat: null, // add menu variable
-            // category_cooking: null, // add menu variable
         };
     },
     created() {

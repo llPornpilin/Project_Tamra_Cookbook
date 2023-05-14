@@ -5,7 +5,7 @@ const multer = require("multer");
 
 const router = express.Router();
 
-// ตั้งค่า multer
+// ---------------------------------------ตั้งค่า multer-----------------------------------------
 // destination เก็บรูป
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -23,35 +23,8 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-// เพิ่มเมนูอาหาร > redirect ไปแสดงหน้า mymenu
-router.get("/mymenu", multer().none(), async function (req, res, next) { // *********เพิ่ม params user_id*********
-  const conn = await pool.getConnection();
-  await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
-
-  try {
-    console.log(req.params.id);
-
-    const [rows, fields] = await conn.query(
-      "SELECT * FROM menus"
-    );
-
-    // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
-    await conn.commit();
-
-    return (res.json(rows))
-  } catch (err) {
-    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
-    await conn.rollback();
-    next(err);
-  } finally {
-    console.log("finally");
-    conn.release(); //ปิด transaction
-  }
-}
-)
-
-
-// รับ path /allmenu มา แล้วแสดงหน้า allmenu
+// ----------------------------------All Menu Page----------------------------------------------
+// รับ path /allmenu มา แล้วแสดง หน้า all menu
 router.get("/allmenu", async function (req, res, next) {
   try {
     const [rows, fields] = await pool.query("SELECT * FROM menus");
@@ -62,8 +35,7 @@ router.get("/allmenu", async function (req, res, next) {
   }
 });
 
-
-// แสดงเมนูใน category นั้น
+// แสดงเมนูใน category ที่เลือก
 router.get("/allmenu/:category_type/:category_id", async function (req, res, next) {
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
@@ -90,7 +62,7 @@ router.get("/allmenu/:category_type/:category_id", async function (req, res, nex
   }
 });
 
-// แสดงรายละเอียดเมนูที่คลิกเลือก
+// แสดงรายละเอียด(หน้าฝั่งขวา)ของเมนูที่คลิกเลือก
 router.get("/showmenu/:id", async function (req, res, next) {
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
@@ -117,7 +89,7 @@ router.get("/showmenu/:id", async function (req, res, next) {
 });
 
 
-// -----------------Delete menu----------------------
+// Delete menu
 router.delete("/showmenu/:id", async function (req, res, next) {
   // Your code here
   const conn = await pool.getConnection();
@@ -147,7 +119,7 @@ router.delete("/showmenu/:id", async function (req, res, next) {
   }
 });
 
-// ---------------------Update Menu------------------------
+// Update Menu
 router.put("/showmenu/:id", async function (req, res, next) {
   // Your code here
   const conn = await pool.getConnection();
@@ -176,7 +148,18 @@ router.put("/showmenu/:id", async function (req, res, next) {
   }
 });
 
-// show at home page
+// search menu
+router.get('/search_menu', async (req, res) => {
+  const menu_name = req.query.name
+  console.log(menu_name)
+  const [filtered] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
+  console.log(filtered)
+  return res.status(200).send(filtered)
+})
+
+
+// --------------------------------------Home Page------------------------------------------------
+// แสดงรายการ catgory ทั้งหมด หน้า Home Page
 router.get("/categorys", async function (req, res, next) {
   const conn = await pool.getConnection();
   // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
@@ -200,7 +183,8 @@ router.get("/categorys", async function (req, res, next) {
 }
 )
 
-
+// ------------------------------------Add My Menu Page---------------------------------------------
+// เพิ่มเมนูของตัวเอง หน้า Add My Meny
 router.post("/addMenu", upload.single("images"), async function (req, res, next) {
 
   if (req.method == "POST") {
@@ -255,8 +239,9 @@ router.post("/addMenu", upload.single("images"), async function (req, res, next)
 }
 );
 
-//Edit menu
 
+// ---------------------------------------My Menu Page-----------------------------------------------
+// แก้ไขเมนูตัวเอง หน้า My Menu
 router.put('/updates', upload.single("image"), async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction();
@@ -319,8 +304,7 @@ router.put('/updates', upload.single("image"), async function (req, res, next) {
 
 })
 
-
-
+// เรียกหน้า My Menu
 router.get('/mymenu', async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction();
@@ -344,6 +328,33 @@ router.get('/mymenu', async function (req, res, next) {
   }
 
 })
+
+// แสดงหน้า My Menu >> ซ้ำข้างบน
+// router.get("/mymenu", multer().none(), async function (req, res, next) { // *********เพิ่ม params user_id*********
+//   const conn = await pool.getConnection();
+//   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+
+//   try {
+//     console.log(req.params.id);
+
+//     const [rows, fields] = await conn.query(
+//       "SELECT * FROM menus"
+//     );
+
+//     // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
+//     await conn.commit();
+
+//     return (res.json(rows))
+//   } catch (err) {
+//     //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
+//     await conn.rollback();
+//     next(err);
+//   } finally {
+//     console.log("finally");
+//     conn.release(); //ปิด transaction
+//   }
+// }
+// )
 
 
 exports.router = router;
