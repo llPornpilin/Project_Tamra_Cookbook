@@ -150,8 +150,9 @@ router.put("/showmenu/:id", async function (req, res, next) {
 
 // search menu
 router.get('/search_menu', async (req, res) => {
-  const menu_name = req.query.name
-  console.log(menu_name)
+  const menu_name = req.query.search
+  console.log("search1 : ", menu_name)
+
   const [filtered] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
   console.log(filtered)
   return res.status(200).send(filtered)

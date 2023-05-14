@@ -44,6 +44,11 @@ const routes = [
     name: 'signin',
     component: () => import('./views/SignIn.vue')
   },
+  {
+    path: '/search_menu',
+    name: 'search',
+    component: () => import('./views/AllMenu.vue')
+  },
 ]
 
 const router = new VueRouter({
