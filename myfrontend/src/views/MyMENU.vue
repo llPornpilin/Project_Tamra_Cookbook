@@ -221,9 +221,10 @@
 <script>
 import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
-import axios from "axios";
+import axios from '@/plugins/axios' //+  axios interceptor
 
 export default {
+    props: ['user'], // รับ Props user มาจาก App.vue
     components: {
         topbarVUE,
         sidemenubarVUE

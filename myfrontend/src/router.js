@@ -13,11 +13,13 @@ const routes = [
   {
     path: '/allmenu',
     name: 'AllMenu',
+    meta: { login: true }, //+
     component: () => import('./views/AllMenu.vue')
   },
   {
     path: '/allmenu/:category_type/:category_id',
     name: 'CategoryMenu',
+    meta: { login: true }, //+
     component: () => import('./views/AllMenu.vue')
   },
   {
@@ -28,6 +30,7 @@ const routes = [
   {
     path: '/mymenu',
     name: 'mymenu',
+    meta: { login: true }, //+
     component: () => import('./views/MyMENU.vue')
   },
   // {

@@ -5,6 +5,8 @@ const multer = require("multer");
 
 const router = express.Router();
 
+const { isLoggedIn } = require("../middlewares"); //+
+
 // ---------------------------------------ตั้งค่า multer-----------------------------------------
 // destination เก็บรูป
 var storage = multer.diskStorage({
@@ -151,10 +153,10 @@ router.put("/showmenu/:id", async function (req, res, next) {
 // search menu
 router.get('/search_menu', async (req, res) => {
   const menu_name = req.query.search
-  console.log("search1 : ", menu_name)
+  // console.log("search1 : ", menu_name)
 
   const [filtered] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
-  console.log(filtered)
+  // console.log(filtered)
   return res.status(200).send(filtered)
 })
 
@@ -306,11 +308,13 @@ router.put('/updates', upload.single("image"), async function (req, res, next) {
 })
 
 // เรียกหน้า My Menu
-router.get('/mymenu', async function (req, res, next) {
+router.get('/mymenu', isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction();
 
-  const user = 1;
+  console.log("mymenu req.user",req.user.user_id);
+
+  const user = req.user.user_id;
 
   try {
     const [row, fields1] = await conn.query(
@@ -320,7 +324,7 @@ router.get('/mymenu', async function (req, res, next) {
     await conn.commit()
     console.log("GET mymenu", row)
     res.json(row)
-  } catch {
+  } catch (error){
     await conn.rollback();
     res.status(500).json(error)
   } finally {

@@ -28,8 +28,9 @@ export default {
     },
     getUser() {
       // const token = localStorage.getItem('token')
-      axios.get('user/me').then(res => {
+      axios.get('/user/me').then(res => {
         this.user = res.data
+        console.log("res.data in App.vue --> ",res.data);
       })
     },
   }
