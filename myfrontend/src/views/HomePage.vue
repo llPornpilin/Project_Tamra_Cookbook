@@ -1,8 +1,9 @@
 <template>
-    <div style="background-color:  var(--cream);">
+    <!-- <div style="background-color:  var(--cream);"> -->
+        <div>
 
         <topbarVUE />
-        <div class="columns is-max-desktop inside">
+        <div class="columns is-max-desktop inside" style="background-color:  var(--cream);">
             <sidemenubarVUE />
             <!---------------------------------------------- category ------------------------------------------------->
             <div class="column is-9 p-0" id="cate">
@@ -98,7 +99,7 @@ export default {
             });
 
     },
-    
+
 };
 </script>
 

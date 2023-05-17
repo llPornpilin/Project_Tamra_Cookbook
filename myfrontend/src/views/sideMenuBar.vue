@@ -14,7 +14,7 @@
                         onmouseout="this.style.color = '#f4eea9'"><b>Home</b></a>
                 </li>
                 <li class="menu-item has-text-centered mb-5">
-                    <a href="/addmenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
+                    <a href="/mymenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
                         onmouseout="this.style.color = '#f4eea9'"><b>Add My Menu</b></a>
                 </li>
                 <li class="menu-item has-text-centered mb-5">
@@ -26,7 +26,7 @@
                         onmouseout="this.style.color = '#f4eea9'"><b>My Menu</b></a>
                 </li><br>
                 <li class="menu-item has-text-centered mt-6">
-                    <a href="/signin" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
+                    <a href="/user/signin" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
                         onmouseout="this.style.color = '#f4eea9'"><b>Log out</b></a>
                 </li>
             </ul>

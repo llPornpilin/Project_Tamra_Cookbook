@@ -1,7 +1,7 @@
 <template>
     <div>
         <topbarVUE />
-        <div class="columns is-max-desktop inside">
+        <div class="columns is-max-desktop inside" style="background-color:  var(--cream);">
             <sidemenubarVUE />
 
 
