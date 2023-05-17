@@ -1,16 +1,23 @@
 <template>
     <!-- top bar -->
     <section class="hero is-small" id="top">
-        <div class="hero-body is-flex">
-            <div class="container">
-                <h6 class="title is-size-4 has-text-centered has-text-weight-bold">
-                    <b>Tamra Cookbook</b>
-                </h6>
-            </div>
-            <!-- <form action=""> -->
-            <input v-model="search" class="input" type="text" placeholder="Search Menu ..." id="search" name="search">
+        <!-- <div class="hero-body is-flexd">
+            <b class="title is-size-4 has-text-centered has-text-weight-bold">Tamra Cookbook</b>
+            <input v-model="search" class="input has-text-right" type="text" placeholder="Search Menu ..." id="search" name="search">
             <button class="button" id="searchButton" @click="getMenus"><i class="fas fa-search"></i></button>
-            <!-- </form> -->
+        </div> -->
+        <div class="hero-body">
+            <div class="columns is-centered">
+                <div class="column">
+                    <b class="title is-size-4 has-text-centered has-text-weight-bold">Tamra Cookbook</b>
+                </div>
+                <div class="column is-flex is-justify-content-flex-end">
+                    <input v-model="search" class="input has-text-right" type="text" placeholder="Search Menu ..."
+                        id="search" name="search">
+                    <button class="button" id="searchButton" @click="getMenus"><i class="fas fa-search"></i></button>
+                </div>
+
+            </div>
         </div>
     </section>
 </template>

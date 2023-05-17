@@ -4,6 +4,10 @@ const path = require('path')
 const bodyParser = require('body-parser')
 var cors = require('cors')
 
+//สั่งใช้งาน Logger Middleware ของเราในระดับ Application-Level
+const { logger } = require('./middlewares') //+
+app.use(logger) //+ 
+
 app.use(cors())
 
 app.use(express.json()) // for parsing application/json

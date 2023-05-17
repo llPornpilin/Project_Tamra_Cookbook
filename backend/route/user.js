@@ -81,7 +81,7 @@ router.post('/user/signin', async (req, res, next) => {
         }
 
         conn.commit()
-        res.status(200).json({'token': token})
+        res.status(200).json({token: token})
         console.log("ส่งคืน SignGn.vue --> ",{'token': token} )
     } catch (error) {
         conn.rollback()
@@ -94,7 +94,8 @@ router.post('/user/signin', async (req, res, next) => {
 // นำ IsLoggedIn Middleware มาใช้งาน
 router.get('/user/me', isLoggedIn, async (req, res, next) => {
         // req.user ถูก save ข้อมูล user จาก database ใน middleware function "isLoggedIn"
-        res.json(req.user)
+    console.log("req.user in user.js",req.user);
+    res.json(req.user)
     })
 // ----------------------------------------------------------------------------------------
 

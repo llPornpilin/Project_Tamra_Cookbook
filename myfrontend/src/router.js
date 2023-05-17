@@ -7,6 +7,7 @@ const routes = [
   {
     path: '/',
     name: 'HomePage',
+    meta: { login: true }, //+
     component: () => import('./views/HomePage.vue') // set home as path '/'
   },
   {
@@ -55,6 +56,23 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+//+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = !!localStorage.getItem('token')
+
+  if (to.meta.login && !isLoggedIn) {
+    alert('Please login first!')
+    next({ path: '/user/signin' })
+  }
+
+  if (to.meta.guess && isLoggedIn) {
+    alert("You've already logged in")
+    next({ path: '/' })
+  }
+
+  next()
 })
 
 export default router

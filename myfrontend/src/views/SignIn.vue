@@ -32,7 +32,7 @@
                     <button class="button is-large" type="submit" id="signInButton" @click="submit"><a
                             class="has-text-white">Sign In</a></button>
                     <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Need an
-                        Account ? <u><a href="/user/signup">Sign up</a></u></label>
+                        Account ? <u><router-link to="/user/signup">Sign up</router-link></u></label>
                 </div>
             </div>
         </div>

@@ -3,6 +3,8 @@ const path = require("path");
 const pool = require("../config");
 const multer = require("multer");
 
+const { isLoggedIn } = require("../middlewares"); //+
+
 const router = express.Router();
 
 //ตั้งค่า multer
@@ -24,7 +26,7 @@ const router = express.Router();
 
 
 // get all category
-router.get("/", async function (req, res, next) {
+router.get("/", isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection();
   // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 

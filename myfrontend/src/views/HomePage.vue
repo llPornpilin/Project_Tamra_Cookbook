@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div style="background-color:  var(--cream);">
+
         <topbarVUE />
         <div class="columns is-max-desktop inside">
             <sidemenubarVUE />
@@ -11,7 +12,7 @@
                     <!-- food -->
                     <div class="card pt-5 pr-2 pl-2 mr-5 cate-type-1 nation" id="cate1"
                         v-for="(nation, index) in category[0]" :key="index"
-                        @click="$router.push({name: 'CategoryMenu', params: {category_id: nation.nation_id, category_type: 'category_nation'}})">
+                        @click="$router.push({ name: 'CategoryMenu', params: { category_id: nation.nation_id, category_type: 'category_nation' } })">
                         <div class="card-img pl-4 pr-4">
                             <figure class="image is-96x96 mr-auto ml-auto">
                                 <img class="food_img" :src="nation.nation_image" alt="Placeholder image">
@@ -32,7 +33,7 @@
                 <div class="column is-12 p-5 category mt-4" id="typeCooking">
                     <!-- each type -->
                     <div class="card pt-5 mr-5 type" v-for="(typecook, index) in category[1]" :key="index"
-                        @click="$router.push({name: 'CategoryMenu', params: {category_id: typecook.cooking_id, category_type: 'category_cooking'}})">
+                        @click="$router.push({ name: 'CategoryMenu', params: { category_id: typecook.cooking_id, category_type: 'category_cooking' } })">
                         <div class="card-img pl-5 pr-5">
                             <figure class="image is-128x128 mr-auto ml-auto">
                                 <img class="is-rounded type-img" :src="typecook.cooking_image" alt="Placeholder image">
@@ -50,7 +51,7 @@
                 <div class="column is-12 p-5 category " id="typeMeat">
                     <!-- each type -->
                     <div class="card pt-5 mr-5 type" v-for="(typemeat, index) in category[2]" :key="index"
-                    @click="$router.push({name: 'CategoryMenu', params: {category_id: typemeat.meat_id, category_type: 'category_meat'}})">
+                        @click="$router.push({ name: 'CategoryMenu', params: { category_id: typemeat.meat_id, category_type: 'category_meat' } })">
                         <div class="card-img pl-5 pr-5">
                             <figure class="image is-128x128 mr-auto ml-auto">
                                 <img class="is-rounded type-img" :src="typemeat.meat_image" alt="Placeholder image">
@@ -71,7 +72,7 @@
 <script>
 import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
-import axios from "axios";
+import axios from '@/plugins/axios' //+  axios interceptor
 export default {
     name: "HomePage",
     props: ['user'], // รับ Props user มาจาก App.vue
@@ -96,76 +97,51 @@ export default {
                 console.log(err);
             });
 
-        //nations
-        // axios
-        //     .get("http://localhost:3000/nations")
-        //     .then((response) => {
-        //         this.category_nation = response.data;
-        //         console.log(this.category_nation);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // //cooking
-        // axios
-        //     .get("http://localhost:3000/cooking")
-        //     .then((response) => {
-        //         this.category_cooking = response.data;
-        //         console.log(this.category_cooking);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // //meats
-        // axios
-        //     .get("http://localhost:3000/meats")
-        //     .then((response) => {
-        //         this.category_meat = response.data;
-        //         console.log(this.category_meat);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
     },
-    methods: {
-    }
+    
 };
 </script>
 
   
 <style scoped>
-.inside{
+.inside {
     margin: 0px;
     box-sizing: border-box;
     padding: 40px;
 }
+
 /* side menu bar */
-aside{
+aside {
     box-shadow: none;
     margin-right: 40px;
     border-radius: 30px;
     overflow: hidden;
 }
-.menu-item{
+
+.menu-item {
     background-color: var(--darkgreen);
     border-radius: 70px;
 }
-.menu-item:hover{
+
+.menu-item:hover {
     background-color: var(--cream);
     transform: translateX(15px);
 }
-.menu-item a:hover{
+
+.menu-item a:hover {
     background-color: var(--cream);
     border-radius: 70px;
 }
-#search{
+
+#search {
     width: 20%;
     border-radius: 15px;
     position: absolute;
     right: 50px;
     top: 18px;
 }
-#searchButton{
+
+#searchButton {
     border: none;
     border-radius: 15px;
     border-top-left-radius: 0px;
@@ -178,7 +154,7 @@ aside{
 
 
 /* category book-------------------------------------------------- */
-#nation{
+#nation {
     box-shadow: none;
     /* border: 40px solid var(--cream); */
     border-radius: 30px;
@@ -188,38 +164,45 @@ aside{
     min-width: 30px;
     position: relative;
 }
-.cate-type-1{
+
+.cate-type-1 {
     height: 250px;
     border-radius: 10px;
     background-color: var(--darkgreen);
 }
-.cate-type-2{
+
+.cate-type-2 {
     height: 250px;
     border-radius: 10px;
     background-color: var(--lightgreen);
 }
-.cate-type-1 .title{
+
+.cate-type-1 .title {
     color: var(--cream);
 }
-.cate-type-2 .title{
+
+.cate-type-2 .title {
     color: var(--darkgreen);
 }
+
 /* .category .food_img{
     width: 100%;
     height: 100%;
 } */
-.nation .flag{
+.nation .flag {
     width: 33px;
     height: 22px;
 }
-.nation:hover{
+
+.nation:hover {
     background-color: #f5a55a;
 }
 
 /* type cooking------------------------------------------------------ */
 
 /* type cooking box */
-#typeCooking, #typeMeat{
+#typeCooking,
+#typeMeat {
     height: fit-content;
     display: flex;
     overflow-x: scroll;
@@ -227,27 +210,33 @@ aside{
     border-top-right-radius: 70px;
     border-top-left-radius: 70px;
 }
-#typeCooking .card:hover{
+
+#typeCooking .card:hover {
     background-color: var(--yellow);
 }
-#typeMeat .card:hover{
+
+#typeMeat .card:hover {
     background-color: var(--yellow);
 }
+
 /* each type */
-.type{
+.type {
     background-color: #f6f6f6;
     width: 40rem;
     left: 20px;
 }
+
 /* each type image */
-.type-img{
+.type-img {
     margin-top: 30px;
     transform: translateY(-70px);
 }
-.type .title{
+
+.type .title {
     color: var(--darkgreen);
 }
-#line{
+
+#line {
     border-radius: 15px;
     top: 90%;
 }
@@ -257,7 +246,7 @@ aside{
 .category::-webkit-scrollbar {
     width: 15px;
 }
-  
+
 /* Track */
 .category::-webkit-scrollbar-track {
     margin-left: 20px;
@@ -267,9 +256,6 @@ aside{
 
 /* Handle */
 .category::-webkit-scrollbar-thumb {
-    background: var(--yellow); 
+    background: var(--yellow);
     border-radius: 10px;
-}
-
-
-</style>
+}</style>

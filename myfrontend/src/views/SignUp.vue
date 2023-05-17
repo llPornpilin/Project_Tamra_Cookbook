@@ -88,7 +88,7 @@
                   </div>
 
                   <button class="button is-large" type="submit" id="signInButton" @click="submit()"><a class="has-text-white">Sign Up</a></button>
-                  <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Already have an account ? <u><a href="/user/signin">Sign in</a></u></label>
+                  <label for="" class="label has-text-centered has-text-weight-normal is-size-6" id="label">Already have an account ? <u><router-link to="/user/signin">Sign in</router-link></u></label>
               </div>
             </div>
       </div>
