@@ -24,13 +24,13 @@ app.use(express.static(path.join(__dirname, '../frontend/public')))
 app.use(bodyParser.urlencoded({ extended: false}));
 
 const homeRouter = require('./route/home')
-const indexRouter = require('./route/index')
+// const indexRouter = require('./route/index')
 const userRouter = require('./route/user')
 const menuRouter = require('./route/menu')
 // app.use('/', indexRouter)
 
 app.use(homeRouter.router)
-app.use(indexRouter.router)
+// app.use(indexRouter.router)
 app.use(userRouter.router)
 app.use(menuRouter.router)
 

@@ -53,6 +53,11 @@ const routes = [
     name: 'search',
     component: () => import('./views/AllMenu.vue')
   },
+  {
+    path: '/favorite',
+    name: 'favorite',
+    component: () => import('./views/LikeFavorite.vue')
+  },
 ]
 
 const router = new VueRouter({
