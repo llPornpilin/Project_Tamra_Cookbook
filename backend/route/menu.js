@@ -188,7 +188,7 @@ router.get("/categorys", async function (req, res, next) {
 
 // ------------------------------------Add My Menu Page---------------------------------------------
 // เพิ่มเมนูของตัวเอง หน้า Add My Meny
-router.post("/addMenu", upload.single("images"), async function (req, res, next) {
+router.post("/addMenu",isLoggedIn, upload.single("images"), async function (req, res, next) {
 
   if (req.method == "POST") {
     const file = req.file;
@@ -209,7 +209,9 @@ router.post("/addMenu", upload.single("images"), async function (req, res, next)
     const minutes = req.body.minutes;
 
     // userId
-    const userId = req.body.userId;
+    // const userId = req.body.userId;
+    const userId = req.user.user_id;
+
     // v-model
     const nation = req.body.nation;
     const method = req.body.method;

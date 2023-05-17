@@ -111,10 +111,10 @@
 
 import topBarVUE from './topBar.vue';
 import sideMenuBarVUE from './sideMenuBar.vue';
-// import axios from "axios";
 import axios from '@/plugins/axios' //+
 
 export default {
+    props: ['user'], // รับ Props user มาจาก App.vue
     components: {
         topBarVUE,
         sideMenuBarVUE
@@ -189,8 +189,8 @@ export default {
             formData.append("days", this.days);
             formData.append("hours", this.hours);
             formData.append("minutes", this.minutes);
-            // userId
-            formData.append("userId", 1);
+            // // userId
+            // formData.append("userId", 1);
             // v-model ------------------------------------------
             formData.append("nation", this.nation);
             formData.append("method", this.method);
