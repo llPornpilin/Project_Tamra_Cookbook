@@ -45,8 +45,37 @@ router.get("/allmenu/:category_type/:category_id", async function (req, res, nex
   try {
     if (req.params.category_type == 'category_nation') {
       const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-        "SELECT * FROM menus WHERE category_nation=?", [req.params.category_id]
+        "SELECT * FROM menus "+
+         "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+         "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+         "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
+         "WHERE category_nation=?", [req.params.category_id]
       );
+      console.log(rows)
+      return (res.json(rows))
+    }
+    
+    else if (req.params.category_type == 'category_cooking') {
+      const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+        "SELECT * FROM menus "+
+         "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+         "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+         "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
+         "WHERE category_cooking=?", [req.params.category_id]
+      );
+      console.log(rows)
+      return (res.json(rows))
+    }
+
+    else if (req.params.category_type == 'category_meat') {
+      const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+        "SELECT * FROM menus "+
+         "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+         "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+         "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
+         "WHERE category_meat=?", [req.params.category_id]
+      );
+      console.log(rows)
       return (res.json(rows))
     }
 
@@ -73,7 +102,11 @@ router.get("/showmenu/:id", async function (req, res, next) {
     console.log(req.params.id);
 
     const [rows, fields] = await conn.query(
-      "SELECT * FROM menus WHERE menu_id=?", [req.params.id]
+      "SELECT * FROM menus "+
+      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
+      "WHERE menu_id=?", [req.params.id]
     );
 
     // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
@@ -320,7 +353,11 @@ router.get('/mymenu', isLoggedIn, async function (req, res, next) {
 
   try {
     const [row, fields1] = await conn.query(
-      'SELECT * FROM menus  WHERE user_id=?', [user]
+      'SELECT * FROM menus  '+
+      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
+      "WHERE user_id=?", [user]
     )
 
     await conn.commit()

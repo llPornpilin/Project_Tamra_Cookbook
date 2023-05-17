@@ -35,13 +35,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><b>Nation</b> : {{ menu.category_nation }} food</td>
+                        <td><b>Nation</b> : {{ menu.nation_name }} Food</td>
                     </tr>
                     <tr>
-                        <td><b>Method</b> : {{ menu.category_cooking }}</td>
+                        <td><b>Method</b> : {{ menu.cooking_name }}</td>
                     </tr>
                     <tr>
-                        <td><b>Meat</b> : {{ menu.category_meat }}</td>
+                        <td><b>Meat</b> : {{ menu.meat_name }}</td>
                     </tr>
                     
                 </table>
@@ -175,9 +175,9 @@
                         </figure>
                         <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
                             style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5"><b>Nation : </b>{{ menu.category_nation }} food </p>
-                            <p class="ml-5"><b>Method :</b>{{ menu.category_cooking }}</p>
-                            <p class="ml-5"><b>Meat :</b>{{ menu.category_meat }} </p>
+                            <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
+                            <p class="ml-5"><b>Method : </b>{{ menu.cooking_name }}</p>
+                            <p class="ml-5"><b>Meat : </b>{{ menu.meat_name }} </p>
                         </div>
                         <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
                             style="background-color: var(--yellow-l); border-radius:10px;">
