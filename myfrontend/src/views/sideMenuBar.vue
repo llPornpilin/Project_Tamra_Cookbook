@@ -14,6 +14,10 @@
                         onmouseout="this.style.color = '#f4eea9'"><b>Home</b></a>
                 </li>
                 <li class="menu-item has-text-centered mb-5">
+                    <a href="/allmenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
+                        onmouseout="this.style.color = '#f4eea9'"><b>All Menu</b></a>
+                </li>
+                <li class="menu-item has-text-centered mb-5">
                     <a href="/addmenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
                         onmouseout="this.style.color = '#f4eea9'"><b>Add My Menu</b></a>
                 </li>

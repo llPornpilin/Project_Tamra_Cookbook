@@ -6,6 +6,8 @@ const multer = require("multer");
 const router = express.Router();
 
 const { isLoggedIn } = require("../middlewares"); //+
+const { release } = require("os");
+const { log } = require("console");
 
 // ---------------------------------------ตั้งค่า multer-----------------------------------------
 // destination เก็บรูป
@@ -26,34 +28,61 @@ const upload = multer({ storage: storage });
 
 // ----------------------------------------Like Favorite Page-----------------------------------------
 router.get("/favorite", isLoggedIn, async function (req, res, next) {
-  const conn = await pool.getConnection();
-  await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
-
-  try {
-      const user_id = req.user.user_id
-      console.log("idddd_user : ", user_id)
-      const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-        "SELECT * FROM menus " +
-        "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-        "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-        "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
-        "join stars using (menu_id) " +
-        "WHERE stars.user_id=?", [user_id]
-      )
-      console.log(rows)
-
-      await conn.commit();
-      return (res.json(rows))
-  } 
-  catch (err) {
-    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
-    await conn.rollback();
-    next(err);
-  } finally {
-    console.log("finally");
-    conn.release(); //ปิด transaction
-  }
+  const user_id = req.user.user_id
+  console.log("idddd_user : ", user_id)
+  const [rows, fields] = await pool.query( // **** JOIN table menus category_nation category_cooking category_meat
+    "SELECT * FROM menus " +
+    "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+    "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+    "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+    "join stars using (menu_id) " +
+    "WHERE stars.user_id=?", [user_id]
+  )
+  console.log(rows)
+  return (res.json(rows))
 });
+
+// ----------------------------------------check star----------------------------------
+router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
+  const menu_id = req.params.menu_id
+  const user_id = req.user.user_id
+  const [fav_menu] = await pool.query('SELECT * FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
+  // all menu >> ถ้าไม่มีเมนูที่กด fav ในตาราง ให้เพิ่มเมนูที่ชอบ
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+
+  try{
+    // all menu >> ถ้าไม่มีเมนูที่ชอบในตาราง เมื่อกดจะเพิ่มเมนูนั้นเข้าไป
+    if (fav_menu.length === 0){
+      const [insert_fav] = await conn.query('INSERT INTO stars (user_id, menu_id) VALUES(?, ?)', [menu_id, user_id])
+    }
+    // favorite >> ถ้ามีเมนูที่ชอบในตาราง เมื่อกดจะลบเมนูนั้นออก
+    else{
+      const [delete_fav] = await conn.query('DELETE FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
+    }
+
+    await conn.commit()
+
+    const [all_menu] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+      "SELECT * FROM menus " +
+      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+      "join stars using (menu_id) " +
+      "WHERE stars.user_id=?", [user_id]
+    )
+    console.log(all_menu)
+    return res.json(all_menu)
+
+
+  }
+  catch(err){
+    await conn.rollback()
+  }
+  finally{
+    conn.release()
+  }
+})
 
 
 // ----------------------------------All Menu Page----------------------------------------------

@@ -21,13 +21,13 @@
                         </td>
                         <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
                         <td rowspan="2">
-                            <div class="icon is-size-4" @click.stop="isFavorite(menu)">
+                            <div class="icon is-size-4" @click.stop="fav_function(menu.menu_id)">
                                 <!-- star ทึบ -->
-                                <span class="icon" key="true">
+                                <span class="icon" key="false" v-if="favorite==false" style="color:#edb34f; box-shadow:1px 1px">
                                     <i class="fa-solid fa-star"></i>
                                 </span>
                                 <!-- star ใส -->
-                                <span class="icon" key="false">
+                                <span class="icon" key="true" v-if="favorite==true">
                                     <i class="fa-regular fa-star"></i>
                                 </span>
                             </div>
@@ -179,6 +179,8 @@ export default {
             images: [],
             //------------------------
             editToggle: -1,
+            // star---------------
+            favorite: false,
         };
     },
     created() {
@@ -286,6 +288,18 @@ export default {
                 this.error = error.message;
             })
         },
+        fav_function(menu_id){
+            console.log(menu_id)
+            axios
+                .get("http://localhost:3000/check_star/" + menu_id)
+                .then((response) => {
+                    this.menus = response.data;
+                    console.log("เมนูที่เหลือ ",this.menus);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     },
 };
 </script>
