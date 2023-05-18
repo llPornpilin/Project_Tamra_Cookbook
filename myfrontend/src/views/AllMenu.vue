@@ -27,7 +27,7 @@
                                     <i class="fa-solid fa-star"></i>
                                 </span>
                                 <!-- star ใส -->
-                                <span class="icon" key="false" v-if="menu.star_id != user.user_id" style="color:#edb34f;" >
+                                <span class="icon" key="false" v-if="menu.star_id != user.user_id" style="color:#edb34f;">
                                     <i class="fa-regular fa-star"></i>
                                 </span>
                             </div>
@@ -71,7 +71,7 @@
                             <label class="image is-2by1 container p-6" for="file" id="imageBox">
                                 <!-- <img v-for="(image, index) in images" :key="index" :src="showSelectImage(image)"
                                 style="border-radius: 30px;"> -->
-                                <img :src="(e_image  == menu.menu_image) ? 'http://localhost:3000/uploads/' + e_image : showSelectImage(images[0]) "
+                                <img :src="(e_image == menu.menu_image) ? 'http://localhost:3000/uploads/' + e_image : showSelectImage(images[0])"
                                     style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
                                 <input type="file" accept="image/*" name="images" id="file" @change="loadImg"
                                     style="display: none;">
@@ -103,6 +103,59 @@
                                 <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
                                     style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
                             </figure>
+                            <!-- <button @click="show_comment(menu)" data-target="modal"> comment</button> -->
+                            <!-- <div class="modal" v-if="showComment == true"> -->
+                            <button @click="show_comment(menu)"> comment</button>
+                            <div class="modal" :class="{ 'is-active': isActive }">
+                                <div class="modal-background"></div>
+                                <div class="modal-card">
+                                    <header class="modal-card-head">
+                                        <p class="modal-card-title">COMMENT</p>
+                                        <button class="delete" aria-label="close" @click="closeModal"></button>
+                                    </header>
+                                    <div style="background-color: #ffffff;">
+                                        <div class="comment">
+                                            <div v-for="(comment, index) in comment_this_menu" :key="index">
+                                                <section class="modal-card-body" v-if="index % 2 == 0"
+                                                    style="background-color: #edb34f4a;">
+                                                    <div>
+                                                        <p style="text-align: left; margin-left: 20px; font-size: 20px;">
+                                                            {{ comment.detail }}</p>
+                                                        <p
+                                                            style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
+                                                            {{ comment.username }}
+                                                            <span
+                                                                style="float: right; margin-right: 20px; font-size: 15px;">{{
+                                                                    comment.comment_date }}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </section>
+                                                <section class="modal-card-body" v-if="index % 2 != 0"
+                                                    style="background-color: #51925953;">
+                                                    <div>
+                                                        <p style="text-align: left; margin-left: 20px; font-size: 20px;">
+                                                            {{ comment.detail }}</p>
+                                                        <p
+                                                            style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
+                                                            {{ comment.username }}
+                                                            <span
+                                                                style="float: right; margin-right: 20px; font-size: 15px;">{{
+                                                                    comment.comment_date }}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <footer class="modal-card-foot">
+                                        <input class="input" type="text" style="width: 80%;" v-model="comment"><button
+                                            class="button" style="width: 20%"
+                                            @click="addComment(menu.menu_id)">submit</button>
+                                    </footer>
+                                </div>
+                            </div>
                             <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
                                 style="background-color: var(--yellow-l); border-radius:10px;">
                                 <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
@@ -177,9 +230,11 @@ export default {
             images: [],
             //------------------------
             editToggle: -1,
+            //-------comment----------------
+            isActive: false, // สถานะของ Modal
+            comment_this_menu: null,
+            comment: ""
 
-            // favorite-------------
-            // favorite: false
         };
     },
     created() {
@@ -200,13 +255,13 @@ export default {
         loadImg(event) {
             console.log("click loadImg")
             this.images = event.target.files;
-            console.log("loadImg",this.images)
+            console.log("loadImg", this.images)
             console.log("in showSelectImage", this.images[0].name)
             this.e_image = this.images[0].name
         },
         showSelectImage(images) {
             // for preview only
-            console.log("show",images)
+            console.log("show", images)
             console.log("in showSelectImage", URL.createObjectURL(images))
             return URL.createObjectURL(images);
         },
@@ -270,52 +325,111 @@ export default {
             let formData = new FormData();
             formData.append("name", this.e_menu_name);
             formData.append("id", menuId);
-            if(this.images[0] == null){
+            if (this.images[0] == null) {
                 formData.append("image", "not_change");
-            }else{
+            } else {
                 formData.append("image", this.images[0]);
             }
 
             axios.put(`http://localhost:3000/updates`, formData)
-            .then((response) => {
-                console.log("then",response.data.data[0])
-                // console.log("then",response.data.data[0])
-                this.editToggle = -1;
-                this.getCategories(response.data.data[0].menu_id);
-                // this.$router.push({ name: 'CategoryMenu' })
-            }).catch((error) => {
-                this.error = error.message;
-            })
+                .then((response) => {
+                    console.log("then", response.data.data[0])
+                    // console.log("then",response.data.data[0])
+                    this.editToggle = -1;
+                    this.getCategories(response.data.data[0].menu_id);
+                    // this.$router.push({ name: 'CategoryMenu' })
+                }).catch((error) => {
+                    this.error = error.message;
+                })
         },
-        fav_function(menu_id){
+        fav_function(menu_id) {
             console.log(menu_id)
             axios
                 .get("http://localhost:3000/check_star/" + menu_id)
                 .then((response) => {
-                    console.log("เมนูที่เหลือ ",response.data);
+                    console.log("เมนูที่เหลือ ", response.data);
                     //
                     axios
                         .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
                         .then((response) => {
                             this.menus = response.data;
-                            console.log("หลังจากกดดาว",this.menus);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-                    
+                            console.log("หลังจากกดดาว", this.menus);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+
                 })
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        show_comment(menu) {
+            this.isActive = true; // เปิด Modal
+
+            console.log("show_comment", menu.menu_id)
+
+            axios.get('http://localhost:3000/comment/' + menu.menu_id
+            ).then(response => {
+                console.log("มาแล้ว", response.data)
+                this.comment_this_menu = response.data;
+            })
+                //-------------------------------------
+                .catch(error => {
+                    console.log(error.message);
+                });
+        },
+        closeModal() {
+            this.isActive = false; // ปิด Modal
+        },
+        addComment(menu_id) {
+            console.log("click addComment")
+            axios
+                .post("http://localhost:3000/addComment", {detail: this.comment, menu_id: menu_id})
+                .then(response => {
+                console.log("มาแล้ว", response.data)
+                this.comment_this_menu  = response.data
+                this.comment = ""
+
+            })
+                .catch((e) => console.log(e.response.data));
+            console.log("axios")
         }
-    },
+    }
 };
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Montserrat+Alternates&display=swap');
+
+
+/* ------test-modal-bulma----- */
+.comment {
+    overflow-y: scroll;
+    height: 400px;
+}
+
+.comment::-webkit-scrollbar {
+    width: 20px;
+}
+
+/* Track */
+.comment::-webkit-scrollbar-track {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 100px;
+}
+
+/* Handle */
+.comment::-webkit-scrollbar-thumb {
+    background: var(--cream);
+    border-radius: 100px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+}
+
+/* ------test-modal-bulma----- */
 
 #top {
     background-color: var(--yellow);
@@ -537,5 +651,4 @@ select {
 .textarea::-webkit-scrollbar-thumb {
     background: var(--yellow);
     border-radius: 10px;
-}
-</style>
+}</style>

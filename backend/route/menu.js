@@ -85,50 +85,6 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
   }
 })
 
-
-// ----------------------------------------check star all----------------------------------
-router.get("/check_star_all/:menu_id", isLoggedIn, async function (req, res, next) {
-  const menu_id = req.params.menu_id
-  const user_id = req.user.user_id
-  const [fav_menu] = await pool.query('SELECT * FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
-  // all menu >> ถ้าไม่มีเมนูที่กด fav ในตาราง ให้เพิ่มเมนูที่ชอบ
-  const conn = await pool.getConnection();
-  await conn.beginTransaction();
-
-  try{
-    // all menu >> ถ้าไม่มีเมนูที่ชอบในตาราง เมื่อกดจะเพิ่มเมนูนั้นเข้าไป
-    if (fav_menu.length === 0){
-      const [insert_fav] = await conn.query('INSERT INTO stars (user_id, menu_id) VALUES(?, ?)', [user_id,menu_id])
-    }
-    // favorite >> ถ้ามีเมนูที่ชอบในตาราง เมื่อกดจะลบเมนูนั้นออก
-    else{
-      const [delete_fav] = await conn.query('DELETE FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
-    }
-
-    await conn.commit()
-
-    const [all_menu] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-      "SELECT * FROM menus " +
-      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
-      "join stars using (menu_id) " +
-      "WHERE stars.user_id=?", [user_id]
-    )
-    console.log(all_menu)
-    return res.json(all_menu)
-
-
-  }
-  catch(err){
-    await conn.rollback()
-  }
-  finally{
-    conn.release()
-  }
-})
-
-
 // ----------------------------------All Menu Page----------------------------------------------
 
 // แสดงเมนูใน category ที่เลือก
@@ -142,7 +98,7 @@ router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (re
   try {
     if (category_type != 'category_nation' && category_type != 'category_meat' && category_type != 'category_cooking'){
       const [rows, cols] = await conn.query(
-        "select menus.*, star.user_id as star_id from menus "+
+        "select menus.*,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id from menus "+
         "join category_nation on (menus.category_nation = category_nation.nation_id) " +
         "join category_meat on (menus.category_meat = category_meat.meat_id) " +
         "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
@@ -154,7 +110,7 @@ router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (re
     else{
       if (req.params.category_type == 'category_nation') {
          const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "select menus.*,  star.user_id as star_id from menus "+
+          "select menus.*,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id from menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
           "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
@@ -168,7 +124,7 @@ router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (re
       
       else if (req.params.category_type == 'category_cooking') {
         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT menus.* , star.user_id as star_id  FROM menus "+
+          "SELECT menus.* ,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id  FROM menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
           "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
@@ -182,7 +138,7 @@ router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (re
 
       else if (req.params.category_type == 'category_meat') {
         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT * , star.user_id as star_id FROM menus "+
+          "SELECT * ,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id FROM menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
           "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
