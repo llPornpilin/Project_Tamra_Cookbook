@@ -6,9 +6,6 @@ const multer = require("multer");
 const router = express.Router();
 
 const { isLoggedIn } = require("../middlewares"); //+
-const { release } = require("os");
-const { log } = require("console");
-
 // ---------------------------------------ตั้งค่า multer-----------------------------------------
 // destination เก็บรูป
 var storage = multer.diskStorage({
@@ -46,6 +43,8 @@ router.get("/favorite", isLoggedIn, async function (req, res, next) {
 router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
   const menu_id = req.params.menu_id
   const user_id = req.user.user_id
+
+  console.log("menu_id : ",menu_id, "user_id : ",user_id)
   const [fav_menu] = await pool.query('SELECT * FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
   // all menu >> ถ้าไม่มีเมนูที่กด fav ในตาราง ให้เพิ่มเมนูที่ชอบ
   const conn = await pool.getConnection();
@@ -54,7 +53,52 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
   try{
     // all menu >> ถ้าไม่มีเมนูที่ชอบในตาราง เมื่อกดจะเพิ่มเมนูนั้นเข้าไป
     if (fav_menu.length === 0){
-      const [insert_fav] = await conn.query('INSERT INTO stars (user_id, menu_id) VALUES(?, ?)', [menu_id, user_id])
+      const [insert_fav] = await conn.query('INSERT INTO stars (menu_id, user_id) VALUES(?, ?)', [menu_id, user_id])
+      console.log("insert", insert_fav);
+    }
+    // favorite >> ถ้ามีเมนูที่ชอบในตาราง เมื่อกดจะลบเมนูนั้นออก
+    else{
+      const [delete_fav] = await conn.query('DELETE FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
+      console.log("delete", delete_fav);
+    }
+
+    await conn.commit()
+
+    const [all_menu] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+      "SELECT * FROM menus " +
+      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+      "join stars using (menu_id) " +
+      "WHERE stars.user_id=?", [user_id]
+    )
+    console.log(all_menu)
+    return res.json(all_menu)
+
+
+  }
+  catch(err){
+    await conn.rollback()
+  }
+  finally{
+    conn.release()
+  }
+})
+
+
+// ----------------------------------------check star all----------------------------------
+router.get("/check_star_all/:menu_id", isLoggedIn, async function (req, res, next) {
+  const menu_id = req.params.menu_id
+  const user_id = req.user.user_id
+  const [fav_menu] = await pool.query('SELECT * FROM stars WHERE menu_id=? AND user_id=?', [menu_id, user_id])
+  // all menu >> ถ้าไม่มีเมนูที่กด fav ในตาราง ให้เพิ่มเมนูที่ชอบ
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+
+  try{
+    // all menu >> ถ้าไม่มีเมนูที่ชอบในตาราง เมื่อกดจะเพิ่มเมนูนั้นเข้าไป
+    if (fav_menu.length === 0){
+      const [insert_fav] = await conn.query('INSERT INTO stars (user_id, menu_id) VALUES(?, ?)', [user_id,menu_id])
     }
     // favorite >> ถ้ามีเมนูที่ชอบในตาราง เมื่อกดจะลบเมนูนั้นออก
     else{
@@ -86,48 +130,51 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
 
 
 // ----------------------------------All Menu Page----------------------------------------------
-// รับ path /allmenu มา แล้วแสดง หน้า all menu
-// router.get("/allmenu", async function (req, res, next) {
-//   try {
-//     const [rows, fields] = await pool.query("SELECT * FROM menus");
-//     console.log("All menu บน ", rows)
-//     return res.json(rows);
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
 
 // แสดงเมนูใน category ที่เลือก
-router.get("/allmenu/:category_type/:category_id", async function (req, res, next) {
+router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
+
+  console.log(  );
 
   const category_type = req.params.category_type
   try {
     if (category_type != 'category_nation' && category_type != 'category_meat' && category_type != 'category_cooking'){
-      const [rows, cols] = await conn.query('SELECT * FROM menus')
+      const [rows, cols] = await conn.query(
+        "select menus.*, star.user_id as star_id from menus "+
+        "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+        "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+        "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
+        "left outer join  (select * from stars where user_id = ?)  AS star "+
+        "on (star.menu_id = menus.menu_id) " ,[req.user.user_id])
+      console.log(rows);
       return res.json(rows)
     }
     else{
       if (req.params.category_type == 'category_nation') {
-        const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT * FROM menus "+
+         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
+          "select menus.*,  star.user_id as star_id from menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-          "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-          "WHERE category_nation=?", [req.params.category_id]
+          "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
+          "left outer join  (select * from stars where user_id = ?)  AS star "+
+          "on (star.menu_id = menus.menu_id) " +
+          "WHERE category_nation=?", [req.user.user_id,req.params.category_id]
         );
-        console.log(rows)
+        console.log("/allmenu/:category_type/:category_id in menu.js --> ",rows)
         return (res.json(rows))
       }
       
       else if (req.params.category_type == 'category_cooking') {
         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT * FROM menus "+
+          "SELECT menus.* , star.user_id as star_id  FROM menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
           "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-          "WHERE category_cooking=?", [req.params.category_id]
+          "left outer join  (select * from stars where user_id = ?)  AS star "+
+          "on (star.menu_id = menus.menu_id) " +
+          "WHERE category_cooking=?", [req.user.user_id,req.params.category_id]
         );
         console.log(rows)
         return (res.json(rows))
@@ -135,11 +182,13 @@ router.get("/allmenu/:category_type/:category_id", async function (req, res, nex
 
       else if (req.params.category_type == 'category_meat') {
         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT * FROM menus "+
+          "SELECT * , star.user_id as star_id FROM menus "+
           "join category_nation on (menus.category_nation = category_nation.nation_id) " +
           "join category_meat on (menus.category_meat = category_meat.meat_id) " +
           "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-          "WHERE category_meat=?", [req.params.category_id]
+          "left outer join  (select * from stars where user_id = ?)  AS star "+
+          "on (star.menu_id = menus.menu_id) " +
+          "WHERE category_meat=?", [req.user.user_id,req.params.category_id]
         );
         console.log(rows)
         return (res.json(rows))

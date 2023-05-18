@@ -23,11 +23,11 @@
                         <td rowspan="2">
                             <div class="icon is-size-4" @click.stop="fav_function(menu.menu_id)">
                                 <!-- star ทึบ -->
-                                <span class="icon" key="true" v-if="favorite==true" style="color:#edb34f;">
+                                <span class="icon" key="true" v-if="menu.star_id == user.user_id" style="color:#edb34f;">
                                     <i class="fa-solid fa-star"></i>
                                 </span>
                                 <!-- star ใส -->
-                                <span class="icon" key="false" v-if="favorite==false" style="color:#edb34f;" >
+                                <span class="icon" key="false" v-if="menu.star_id != user.user_id" style="color:#edb34f;" >
                                     <i class="fa-regular fa-star"></i>
                                 </span>
                             </div>
@@ -158,6 +158,7 @@ export default {
         topbarVUE,
         sidemenubarVUE
     },
+    props: ['user'], // รับ Props user มาจาก App.vue
     data() {
         return {
             menus: null, // add blogs variable
@@ -176,8 +177,9 @@ export default {
             images: [],
             //------------------------
             editToggle: -1,
+
             // favorite-------------
-            favorite: false
+            // favorite: false
         };
     },
     created() {
@@ -290,8 +292,18 @@ export default {
             axios
                 .get("http://localhost:3000/check_star/" + menu_id)
                 .then((response) => {
-                    this.menus = response.data;
-                    console.log("เมนูที่เหลือ ",this.menus);
+                    console.log("เมนูที่เหลือ ",response.data);
+                    //
+                    axios
+                        .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
+                        .then((response) => {
+                            this.menus = response.data;
+                            console.log("หลังจากกดดาว",this.menus);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+                    
                 })
                 .catch((err) => {
                     console.log(err);

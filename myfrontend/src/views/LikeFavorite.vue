@@ -23,7 +23,7 @@
                         <td rowspan="2">
                             <div class="icon is-size-4" @click.stop="fav_function(menu.menu_id)">
                                 <!-- star ทึบ -->
-                                <span class="icon" key="false" v-if="favorite==false" style="color:#edb34f; box-shadow:1px 1px">
+                                <span class="icon" key="false" v-if="favorite==false" style="color:#edb34f;">
                                     <i class="fa-solid fa-star"></i>
                                 </span>
                                 <!-- star ใส -->
@@ -295,6 +295,18 @@ export default {
                 .then((response) => {
                     this.menus = response.data;
                     console.log("เมนูที่เหลือ ",this.menus);
+                    //
+                    axios
+                        .get("http://localhost:3000/favorite/")
+                        .then((response) => {
+                            this.menus = response.data;
+                            console.log(this.menus);
+                            console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
                 })
                 .catch((err) => {
                     console.log(err);
