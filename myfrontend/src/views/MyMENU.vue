@@ -7,11 +7,19 @@
             <!---------------------------------------------- category ------------------------------------------------->
 
             <div class="column list-fav-menu">
+                <!-- search bar -->
+                <div id="searchArea">
+                    <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
+                        id="search" name="search">
+                    <!-- <button class="button" id="searchButton" @click.stop="getSearch"><i class="fas fa-search"></i></button> -->
+                </div>
 
                 <!-- start form menu  -->
                 <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus" :key="index"
                     :class="[{ 'has-background-warning-light': menu.is_favorite }]"
                     @click="showMenu(menu.menu_id), select_menu = true, index_menu = index">
+
+                    <p>{{ checkSearch }}</p>
                     <!-- @click="select_menu = true, index_menu = index" -->
                     <tr>
                         <td rowspan="4" style="width: 128px">
@@ -590,7 +598,35 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        }
+        },
+        // เรียกเมนูที่ search มาแสดง
+        getSearch() {
+            console.log("Front Search in Allmenu.vue : ", this.search)
+            axios.get("http://localhost:3000/mymenu" , {
+                params: {
+                    search_value: this.search
+                }
+            })
+                .then((response) => {
+                    console.log('response.data - MyMenu.vue ', response.data);
+                    this.menus = response.data
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        callMenuAgain(){
+            axios
+            .get("http://localhost:3000/mymenu")
+            .then((response) => {
+                this.menus = response.data;
+                console.log(this.menus);
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
     },
     computed: {
         computedMaterials() {
@@ -601,6 +637,12 @@ export default {
             console.log("in list-methods", this.listMethods)
             return this.listMethods;
         },
+        checkSearch(){
+            if (this.search == ''){
+                return this.callMenuAgain()
+            }
+            return this.getSearch()
+        }
     },
 };
 </script>
@@ -670,20 +712,26 @@ aside {
     border-radius: 70px;
 }
 
+#searchArea{
+    width: fit-content;
+    height: fit-content;
+    border-radius: 30px;
+    background-color: white;
+}
+
 #search {
-    width: 20%;
+    border: none;
+    width: 200px;
     border-radius: 15px;
-    position: absolute;
-    right: 50px;
-    top: 18px;
 }
 
 #searchButton {
     border: none;
-    border-radius: 15px;
-    position: absolute;
-    right: 50px;
-    top: 18px;
+    border-radius: 30px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    position: relative;
+    right: 0px;
     background-color: var(--cream);
 }
 

@@ -86,7 +86,6 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
 })
 
 // ----------------------------------All Menu Page----------------------------------------------
-// ----------------------------------All Menu Page----------------------------------------------
 
 // แสดงเมนูใน category ที่เลือก
 router.get("/allmenu/:category_type/:category_id", isLoggedIn, async function (req, res, next) {
@@ -283,14 +282,14 @@ router.put("/showmenu/:id", async function (req, res, next) {
 });
 
 // search menu
-router.get('/search_menu', async (req, res) => {
-  const menu_name = req.query.search
-  // console.log("search1 : ", menu_name)
+// router.get('/search_menu', async (req, res) => {
+//   const menu_name = req.query.search
+//   // console.log("search1 : ", menu_name)
 
-  const [searched] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
-  console.log("SEARCH แล้วว : ", searched)
-  return res.status(200).send(searched)
-})
+//   const [searched] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
+//   console.log("SEARCH แล้วว : ", searched)
+//   return res.status(200).send(searched)
+// })
 
 
 // --------------------------------------Home Page------------------------------------------------
@@ -446,22 +445,28 @@ router.get('/mymenu', isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction();
 
+  const search_value = req.query.search_value
+
   console.log("mymenu req.user",req.user.user_id);
 
   const user = req.user.user_id;
 
   try {
-    const [row, fields1] = await conn.query(
-      'SELECT * FROM menus  '+
-      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-      "WHERE user_id=?", [user]
-    )
+    let query = "SELECT * FROM menus " +
+                "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+                "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+                "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+                "WHERE user_id=?"
+    if (search_value === '' || search_value == null){
+      const [rows, cols] = await conn.query(query, [user])
+      return res.json(rows)
+    }
+    else{
+      query += " AND menu_name LIKE ?"
+      const [rows, cols] = await conn.query(query, [user, `%${search_value}%`])
+      return res.json(rows)
+    }
 
-    await conn.commit()
-    console.log("GET mymenu", row)
-    res.json(row)
   } catch (error){
     await conn.rollback();
     res.status(500).json(error)
@@ -471,34 +476,5 @@ router.get('/mymenu', isLoggedIn, async function (req, res, next) {
   }
 
 })
-
-// แสดงหน้า My Menu >> ซ้ำข้างบน
-// router.get("/mymenu", multer().none(), async function (req, res, next) { // *********เพิ่ม params user_id*********
-//   const conn = await pool.getConnection();
-//   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
-
-//   try {
-//     console.log(req.params.id);
-
-//     const [rows, fields] = await conn.query(
-//       "SELECT * FROM menus"
-//     );
-
-//     // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
-//     await conn.commit();
-
-//     return (res.json(rows))
-//   } catch (err) {
-//     //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
-//     await conn.rollback();
-//     next(err);
-//   } finally {
-//     console.log("finally");
-//     conn.release(); //ปิด transaction
-//   }
-// }
-// )
-
-
 
 exports.router = router;

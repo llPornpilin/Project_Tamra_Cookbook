@@ -384,21 +384,6 @@ export default {
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
         },
-        getSearch() {
-            console.log("Front Search in Allmenu.vue : ", this.search)
-            axios.get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id, {
-                params: {
-                    search_value: this.search
-                }
-            })
-                .then((response) => {
-                    console.log('response.data - AllMenu.vue ', response.data);
-                    this.menus = response.data
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
         deleteComment(comment, comment_id, menu_id) {
             console.log("comment --> ", comment);
             console.log("comment_id --> ", comment_id);
@@ -425,6 +410,22 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err);
+                });
+        },
+        // เรียกเมนูที่ search มาแสดง
+        getSearch() {
+            console.log("Front Search in Allmenu.vue : ", this.search)
+            axios.get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id, {
+                params: {
+                    search_value: this.search
+                }
+            })
+                .then((response) => {
+                    console.log('response.data - AllMenu.vue ', response.data);
+                    this.menus = response.data
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
         // เรียกเมนูทั้งหมด ถ้าไม่พิมพ์อะไรในช่อง search
