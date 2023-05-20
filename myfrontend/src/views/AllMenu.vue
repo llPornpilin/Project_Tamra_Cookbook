@@ -10,7 +10,7 @@
                 <div id="searchArea">
                     <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
                         id="search" name="search">
-                    <button class="button" id="searchButton" @click.stop="getMenus"><i class="fas fa-search"></i></button>
+                    <!-- <button class="button" id="searchButton" @click.stop="getSearch"><i class="fas fa-search"></i></button> -->
                 </div>
 
                 <!-- start form menu  -->
@@ -18,6 +18,7 @@
                     :class="[{ 'has-background-warning-light': menu.is_favorite }]"
                     @click.prevent="showMenu(menu.menu_id), select_menu = true, index_menu = index" :key="index">
 
+                    <p>{{ checkSearch }}</p>
                     <!-- select_menu = true,  -->
                     <tr>
                         <td rowspan="4" style="width: 128px">
@@ -383,7 +384,7 @@ export default {
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
         },
-        getMenus() {
+        getSearch() {
             console.log("Front Search in Allmenu.vue : ", this.search)
             axios.get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id, {
                 params: {
@@ -425,6 +426,27 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        // เรียกเมนูทั้งหมด ถ้าไม่พิมพ์อะไรในช่อง search
+        callMenuAgain(){
+            axios
+            .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
+            .then((response) => {
+                this.menus = response.data;
+                console.log(this.menus);
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
+    },
+    computed: {
+        checkSearch(){
+            if (this.search == ''){
+                return this.callMenuAgain()
+            }
+            return this.getSearch()
         }
     }
 };
