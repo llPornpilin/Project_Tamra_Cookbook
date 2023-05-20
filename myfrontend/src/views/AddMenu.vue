@@ -12,13 +12,13 @@
                     class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName" id="menuName"
                     v-model="$v.menu_name.$model" :class="{'is-danger': $v.menu_name.$error}">
                     <template v-if="$v.menu_name.$error">
-                        <p class="help is-danger" v-if="!$v.menu_name.required" style="text-align: left">This field is required</p>
+                        <p class="help is-danger" v-if="!$v.menu_name.minLength" style="text-align: left">This field is required</p>
                     </template>
 
                     <!-- กรอก วัตถุดิบ -->
                     <div class="container is-flex">
                         <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant"
-                            id="menuIngrediant" v-model="ingredient">
+                        id="menuIngrediant" v-model="$v.ingredient.$model" :class="{'is-danger': $v.ingredient.$error}">
                         <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial">Add material</button>
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
@@ -174,13 +174,24 @@ export default {
     methods: {
         addMaterial() {
             console.log("click addMaterial")
-            this.materials.push(this.ingredient);
-            this.ingredient = "";
+            if (this.ingredient === ''){
+                confirm('You must type ingredient before add.')
+            }
+            else{
+                this.materials.push(this.ingredient);
+                this.ingredient = "";
+            }
+            
         },
         addMethods() {
             console.log("click addMethods")
-            this.methods.push(this.howTo);
-            this.howTo = "";
+            if (this.howTo === ''){
+                confirm('You must type method before add.')
+            }
+            else{
+                this.methods.push(this.howTo);
+                this.howTo = "";
+            }
 
         },
         loadImg(event) {
@@ -195,35 +206,40 @@ export default {
         },
         addMenu() {
             console.log("click addMenu")
-            let formData = new FormData();
-            formData.append("menuName", this.menu_name);
-            formData.append("menuIngredient", this.materials);
-            formData.append("menuHowTo", this.methods);
-            // time cooking
-            formData.append("days", this.days);
-            formData.append("hours", this.hours);
-            formData.append("minutes", this.minutes);
-            // // userId
-            // formData.append("userId", 1);
-            // v-model ------------------------------------------
-            formData.append("nation", this.nation);
-            formData.append("method", this.method);
-            formData.append("meat", this.meat);
-            // image
-            console.log("click submit", this.images)
-            this.images = Array.from(this.images);
-            this.images.forEach((images) => {
-                formData.append("images", images);
-            });
-            axios
-                .post("http://localhost:3000/addMenu/", formData)
-                .then(() => this.$router.push({ name: 'AllMenu' }))
-                .catch((e) => console.log(e.response.data));
-            console.log("axios")
+            if (this.materials.length === 0 || this.methods.length === 0){
+                confirm('Please full fill all data')
+            }
+            else{
+                let formData = new FormData();
+                formData.append("menuName", this.menu_name);
+                formData.append("menuIngredient", this.materials);
+                formData.append("menuHowTo", this.methods);
+                // time cooking
+                formData.append("days", this.days);
+                formData.append("hours", this.hours);
+                formData.append("minutes", this.minutes);
+                // // userId
+                // formData.append("userId", 1);
+                // v-model ------------------------------------------
+                formData.append("nation", this.nation);
+                formData.append("method", this.method);
+                formData.append("meat", this.meat);
+                // image
+                console.log("click submit", this.images)
+                this.images = Array.from(this.images);
+                this.images.forEach((images) => {
+                    formData.append("images", images);
+                });
+                axios
+                    .post("http://localhost:3000/addMenu/", formData)
+                    .then(() => this.$router.push({ name: 'AllMenu' }))
+                    .catch((e) => console.log(e.response.data));
+                console.log("axios")
+            }
         },
         deleteIngrediant(item, index) {
             const result = confirm(`Are you sure you want to delete this Ingrediant ` + item);
-            if (result) {
+            if (result) { 
                 console.log("delete Ingrediant --> ", item, index);
                 console.log("list --> ", this.listMaterials);
                 const removeIng = this.listMaterials.splice(index, 1)
@@ -264,11 +280,11 @@ export default {
         menu_name: {
             required: required,
         },
-        materials: {
-            required: required
+        ingredient: {
+            minLength: minLength(2),
         },
-        methods: {
-            required: required
+        howTo: {
+            minLength: minLength(1),
         },
         days: {
             minLength: minLength(0)
@@ -283,7 +299,7 @@ export default {
         },
         images: {
             required: required,
-        }
+        },
     }
 };
 
