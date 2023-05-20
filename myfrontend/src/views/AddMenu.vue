@@ -2,7 +2,7 @@
     <div>
         <topBarVUE />
         <div class="columns is-max-desktop inside">
-            <sideMenuBarVUE />
+            <sideMenuBarVUE :user="user" />
             <!------------------------------ Add Menu -------------------------------------->
             <form class="column pr-5 pl-5" id="list_menu" action="/mymenu" enctype="multipart/form-data" method="POST">
                 <!-------------- foodName -------------------->

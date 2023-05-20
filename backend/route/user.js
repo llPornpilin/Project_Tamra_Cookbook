@@ -13,7 +13,7 @@ router = express.Router();
 
 // -----add---------------------------------------------------
 const loginSchema = Joi.object({
-    username: Joi.string().required(),
+    username: Joi.required(),
     password: Joi.string().required()
 })
 
@@ -37,15 +37,24 @@ router.post('/user/signin', async (req, res, next) => {
 
     try {
         console.log("เข้า มาแล้ว");
+
         // Check if username is correct
         // Check user or email
-        const [users] = await conn.query(
-            'SELECT * FROM users WHERE username=?',
-            [username]
-        )
-        // console.log("SELECT * FROM users WHERE username=? ---> ",users)
+        console.log(username.includes('@'));
+        if (username.includes('@')) {
+            var [users] = await conn.query(
+                'SELECT * FROM users WHERE email=?',
+                [username]
+            )
+        } else {
+            var [users] = await conn.query(
+                'SELECT * FROM users WHERE username=?',
+                [username]
+            )
+        }
+        console.log("SELECT * FROM users WHERE username=? ---> ", users)
         const user = users[0]
-        console.log("user[0]",user.user_id);
+        console.log("user[0]", user.user_id);
         if (!user) {
             throw new Error('Incorrect username or password')
         }
@@ -57,7 +66,7 @@ router.post('/user/signin', async (req, res, next) => {
         if (!(await bcrypt.compare(password, user.password))) { // password decodeed
             throw new Error('Incorrect username or password')
         }
-        console.log("check password ว่าตรงกันไหม",await bcrypt.compare(password, user.password));
+        console.log("check password ว่าตรงกันไหม", await bcrypt.compare(password, user.password));
 
         // Check if token already existed เช็คว่ามี token แล้วยัง (เคย log in รึยัง)
         const [tokens] = await conn.query(
@@ -74,15 +83,15 @@ router.post('/user/signin', async (req, res, next) => {
             token = generateToken()
             console.log("สร้าง Token ใหม่ให้ ---> ", token)
             await conn.query(
-                'INSERT INTO tokens(user_id, token) VALUES (?, ?)', 
+                'INSERT INTO tokens(user_id, token) VALUES (?, ?)',
                 [user.user_id, token]
             )
-            console.log("บันทึกลงตาราง tokens แล้ว ---> ", user.id," ---- ", token)
+            console.log("บันทึกลงตาราง tokens แล้ว ---> ", user.id, " ---- ", token)
         }
 
         conn.commit()
-        res.status(200).json({token: token})
-        console.log("ส่งคืน SignGn.vue --> ",{'token': token} )
+        res.status(200).json({ token: token })
+        console.log("ส่งคืน SignGn.vue --> ", { 'token': token })
     } catch (error) {
         conn.rollback()
         res.status(400).json(error.toString())
@@ -91,12 +100,13 @@ router.post('/user/signin', async (req, res, next) => {
     }
 })
 
+
 // นำ IsLoggedIn Middleware มาใช้งาน
 router.get('/user/me', isLoggedIn, async (req, res, next) => {
-        // req.user ถูก save ข้อมูล user จาก database ใน middleware function "isLoggedIn"
-    console.log("req.user in user.js",req.user);
+    // req.user ถูก save ข้อมูล user จาก database ใน middleware function "isLoggedIn"
+    console.log("req.user in user.js", req.user);
     res.json(req.user)
-    })
+})
 // ----------------------------------------------------------------------------------------
 
 

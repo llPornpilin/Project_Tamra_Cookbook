@@ -4,7 +4,7 @@
 
         <topbarVUE />
         <div class="columns is-max-desktop inside" style="background-color:  var(--cream);">
-            <sidemenubarVUE />
+            <sidemenubarVUE :user="user"/>
             <!---------------------------------------------- category ------------------------------------------------->
             <div class="column is-9 p-0" id="cate">
 

@@ -2,7 +2,7 @@
     <div>
         <topbarVUE />
         <div class="columns is-max-desktop inside" style="background-color:  var(--cream);">
-            <sidemenubarVUE />
+            <sidemenubarVUE :user="user"/>
 
 
             <div class="column list-fav-menu">

@@ -5,26 +5,39 @@
             <figure class="image is-128x128 mr-auto ml-auto mt-5" id="chefHat">
                 <img src="/img/chef_hat.png">
             </figure>
-            <div  class="form">
+            <div class="form">
                 <label class="label has-text-centered is-size-1 sign-label">Sign In</label>
                 <div class="container">
                     <div class="field">
                         <div class="control has-icons-left">
-                            <input v-model="username" class="input is-success input-info is-large" type="text"
-                                placeholder="E-mail/User Name">
+                            <input v-model="$v.username.$model" :class="{ 'is-danger': $v.username.$error }"
+                                class="input is-success input-info is-large" type="text" placeholder="E-mail/User Name">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-envelope-open-text"></i>
                             </span>
+                            <template v-if="$v.username.$error">
+                                <p class="help is-danger" v-if="!$v.username.required">
+                                    This field is required
+                                </p>
+                                <p class="help is-danger" v-else-if="!$v.username.validateAlpha">
+                                    This field is validateAlpha
+                                </p>
+                            </template>
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="control has-icons-left">
-                            <input v-model="password" class="input is-success input-info is-large" type="text"
+                            <input v-model="$v.password.$model" :class="{ 'is-danger': $v.password.$error }" class="input is-success input-info is-large" type="text"
                                 placeholder="Password">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-shield-alt"></i>
                             </span>
+                            <template v-if="$v.password.$error">
+                                <p class="help is-danger" v-if="!$v.password.required">
+                                    This field is required
+                                </p>
+                            </template>
                         </div>
 
                     </div>
@@ -53,37 +66,70 @@
 
 
 <script>
-  import axios from '@/plugins/axios'
+import axios from '@/plugins/axios'
   // import axios from 'axios'
-  export default {
+
+
+import {
+    required,
+    email,
+    helpers,
+    minLength,
+    maxLength,
+    sameAs,
+} from "vuelidate/lib/validators";
+
+function validateAlpha(value) {
+    if (value.match(/^[a-zA-Z@0-9._]+$/)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+
+export default {
     data () {
-      return {
+    return {
         username: '',
         password: '',
         error: '',
-      }
+    }
+    },
+    validations: {
+        username: {
+            required: required,
+            validateAlpha: validateAlpha,
+            // checkUsernameDB: checkUsernameDB
+        },
+        password: {
+            required: required,
+        },
     },
     // -------add method-----------------------------------------------------------
     methods: {
-      submit () {
-        const data = {
-          username: this.username,
-          password: this.password
+        submit () {
+            const data = {
+            username: this.username,
+            password: this.password
+            }
+            axios.post('http://localhost:3000/user/signin/', data)
+            .then(res => {
+            const token = res.data.token                                
+            localStorage.setItem('token', token)
+            this.$emit('auth-change')
+            this.$router.push({path: '/'})
+            })
+            .catch(error => {
+            this.error = error.response.data
+            console.log("error--> ",error.response.data)
+            alert("username/e-mail/password ไม่ถูกต้อง")
+            })
         }
-        axios.post('http://localhost:3000/user/signin/', data)
-        .then(res => {
-          const token = res.data.token                                
-          localStorage.setItem('token', token)
-          this.$emit('auth-change')
-          this.$router.push({path: '/'})
-        })
-        .catch(error => {
-          this.error = error.response.data
-          console.log(error.response.data)
-        })
-      }
     }
-  }
+}
 </script>
 
 <style scope>
@@ -193,4 +239,5 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 4;
-}</style>
+}
+</style>

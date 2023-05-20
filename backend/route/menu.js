@@ -86,6 +86,7 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
 })
 
 // ----------------------------------All Menu Page----------------------------------------------
+// ----------------------------------All Menu Page----------------------------------------------
 
 // แสดงเมนูใน category ที่เลือก
 router.get("/allmenu/:category_type/:category_id", isLoggedIn, async function (req, res, next) {
@@ -185,6 +186,7 @@ router.get("/allmenu/:category_type/:category_id", isLoggedIn, async function (r
     conn.release();
   }
 });
+
 
 
 // แสดงรายละเอียด(หน้าฝั่งขวา)ของเมนูที่คลิกเลือก

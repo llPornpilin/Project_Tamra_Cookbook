@@ -1,23 +1,23 @@
 <template>
     <div>
         <topbarVUE />
-            <div class="columns is-max-desktop inside" id="list_menu">
-                <sidemenubarVUE />
+        <div class="columns is-max-desktop inside" id="list_menu">
+            <sidemenubarVUE :user="user" />
 
             <!---------------------------------------------- category ------------------------------------------------->
-            
+
             <div class="column list-fav-menu">
 
                 <!-- start form menu  -->
-                <table class="table is-fullwidth" id="fav-menu" v-for="(menu,index) in menus" :key="index"
-                :class="[{ 'has-background-warning-light': menu.is_favorite }]"
+                <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus" :key="index"
+                    :class="[{ 'has-background-warning-light': menu.is_favorite }]"
                     @click="showMenu(menu.menu_id), select_menu = true, index_menu = index">
                     <!-- @click="select_menu = true, index_menu = index" -->
                     <tr>
                         <td rowspan="4" style="width: 128px">
                             <figure class="image is-128x128" style="border: 5px solid var(--cream-l);">
-                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image"  style="height: 100%; object-fit:contain;">
+                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                    alt="Placeholder image" style="height: 100%; object-fit:contain;">
                             </figure>
                         </td>
                         <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
@@ -43,7 +43,7 @@
                     <tr>
                         <td><b>Meat</b> : {{ menu.meat_name }}</td>
                     </tr>
-                    
+
                 </table>
                 <!-- end form menu -->
             </div>
@@ -73,7 +73,8 @@
                                     <span class="icon is-large" id="aboutImg">
                                         <i class="fas fa-images is-large"
                                             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
-                                        <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse
+                                        <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">
+                                            Browse
                                             Image
                                         </p>
                                     </span>
@@ -111,30 +112,37 @@
                                 <!-- edit spending time -->
                                 <div class="is-flex mt-5" id="spendTime">
                                     <div class="container mr-4 ml-6">
-                                        <input class="input has-text-centered" type="number" id="day" v-model="days" name="menuDay">
+                                        <input class="input has-text-centered" type="number" id="day" v-model="days"
+                                            name="menuDay">
                                         <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
                                     </div>
                                     <div class="container mr-4 ml-4">
-                                        <input class="input has-text-centered" type="number" id="hour" v-model="hours" name="menuHour">
-                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
+                                        <input class="input has-text-centered" type="number" id="hour" v-model="hours"
+                                            name="menuHour">
+                                        <label class="label is-size-6 has-text-centered"
+                                            style="color: #064635">Hours</label>
                                     </div>
                                     <div class="container ml-4 mr-6">
                                         <input class="input has-text-centered" type="number" id="minute" v-model="minutes"
                                             name="menuMinute">
-                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
+                                        <label class="label is-size-6 has-text-centered"
+                                            style="color: #064635">Minutes</label>
                                     </div>
                                 </div>
 
                                 <!-- edit วัตถุดิบ -->
                                 <div class="container is-flex">
-                                    <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant"
-                                        id="menuIngrediant" v-model="ingredient">
+                                    <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ"
+                                        name="menuIngrediant" id="menuIngrediant" v-model="ingredient">
                                     <button class="button mt-3 ml-5" @click.prevent="addMaterial"
                                         style="width:100px; background-color: #F0BB62;">Add material</button>
                                 </div>
-                                <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
+                                <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant"
+                                    style="height: 310px">
                                     <ol class="p-5">
-                                        <li v-for="(item, index) in computedMaterials" :key="index">{{ item }}</li>
+                                        <li v-for="(item, index) in computedMaterials" :key="index">{{ item }} <i
+                                                class="fa fa-minus" style="float: right;"
+                                                @click.stop="deleteIngrediant(item, index)"></i></li>
                                     </ol>
                                 </div>
 
@@ -145,9 +153,12 @@
                                     <button class="button mt-3 ml-5" @click.prevent="addMethods"
                                         style="width:100px; background-color: #F0BB62;">Add method</button>
                                 </div>
-                                <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
+                                <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod"
+                                    style="height: 310px">
                                     <ol class="p-5">
-                                        <li v-for="(item2, index) in computedMethods" :key="index">{{ item2 }}</li>
+                                        <li v-for="(item2, index) in computedMethods" :key="index">{{ item2 }}<i
+                                                class="fa fa-minus" style="float: right;"
+                                                @click.stop="deleteMethod(item2, index)"></i></li>
                                     </ol>
                                 </div>
 
@@ -159,64 +170,64 @@
                                 </button>
                             </div>
                         </div>
-                        
-                    <div v-else>
-                        <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
-                            style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
-                            <p>{{ menu.menu_name }}</p>
-                        </div>
-                        <figure class="image is-2by1 ml-6 mr-6 mt-3">
-                            <img :src="menu.menu_image"
-                                style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
-                            <!-- <img :src="menu.menu_image ? 'http://localhost/3000'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image"> -->
-                            <img :src="menu.menu_image ? 'http://localhost:3000/uploads/'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image" >
-                        </figure>
-                        <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
-                            style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
-                            <p class="ml-5"><b>Method : </b>{{ menu.cooking_name }}</p>
-                            <p class="ml-5"><b>Meat : </b>{{ menu.meat_name }} </p>
-                        </div>
-                        <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
-                            style="background-color: var(--yellow-l); border-radius:10px;">
-                            <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }} <b>minutes</b></p>
-                        </div>
-                        <!-- วัตถุดิบ -->
-                        <div class="has-text-left m-1 mt-4"
-                            style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
-                            <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
-                            <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in computedMaterials" :key="index">{{ item }}</li>
-                            </ol>
-                        </div>
-                        <!-- วิธีทำ -->
-                        <div class="has-text-left m-1 mt-5"
-                            style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
-                            <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
-                            <ol class="ml-6 mb-3 mr-6">
-                                <li v-for="(item, index) in computedMethods" :key="index">{{ item }}</li>
-                            </ol>
-                        </div>
-                        <!-- ปุ่ม edit -->
-                        <button @click="editMenu(menu, index_menu)" class="button is-warning">
-                            <span>Edit</span>
-                            <span class="icon is-small">
-                                <i class="fas fa-edit"></i>
-                            </span>
-                        </button>
 
+                        <div v-else>
+                            <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
+                                style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
+                                <p>{{ menu.menu_name }}</p>
+                            </div>
+                            <figure class="image is-2by1 ml-6 mr-6 mt-3">
+                                <img :src="menu.menu_image"
+                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
+                                <!-- <img :src="menu.menu_image ? 'http://localhost/3000'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                                alt="Placeholder image"> -->
+                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
+                                    alt="Placeholder image">
+                            </figure>
+                            <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
+                                style="background-color: var(--yellow-l); border-radius:10px;">
+                                <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
+                                <p class="ml-5"><b>Method : </b>{{ menu.cooking_name }}</p>
+                                <p class="ml-5"><b>Meat : </b>{{ menu.meat_name }} </p>
+                            </div>
+                            <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
+                                style="background-color: var(--yellow-l); border-radius:10px;">
+                                <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }}
+                                    <b>minutes</b></p>
+                            </div>
+                            <!-- วัตถุดิบ -->
+                            <div class="has-text-left m-1 mt-4"
+                                style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                                <p class="is-size-5 m-3 ml-4" style="color:var(--black)"><b>วัตถุดิบ</b></p>
+                                <ol class="ml-6 mb-3 mr-6">
+                                    <li v-for="(item, index) in computedMaterials" :key="index">{{ item }}</li>
+                                </ol>
+                            </div>
+                            <!-- วิธีทำ -->
+                            <div class="has-text-left m-1 mt-5"
+                                style="border-radius: 20px; border: 3px solid #00000000; background: var(--cream-l)">
+                                <p class="is-size-5 m-3 ml-4"><b>วิธีทำ</b></p>
+                                <ol class="ml-6 mb-3 mr-6">
+                                    <li v-for="(item, index) in computedMethods" :key="index">{{ item }}</li>
+                                </ol>
+                            </div>
+                            <!-- ปุ่ม edit -->
+                            <button @click="editMenu(menu, index_menu)" class="button is-warning">
+                                <span>Edit</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            </button>
+
+                        </div>
                     </div>
-                </div>
                     <!-- add menu button -->
                     <!-- <button v-if="index===editToggle" class="button" @click="updateMenu(menu.menu_id, index)" id="addMenuButton" style="color: #064635; width: 200px;"><b>Update Menu</b></button> -->
                 </div>
 
-                </div>
             </div>
         </div>
-    
+    </div>
 </template>
 <script>
 import topbarVUE from './topBar.vue';
@@ -237,9 +248,9 @@ export default {
             select_show: false,
             index_menu: 0,
 
-            days:0,
-            hours:0,
-            minutes:0,
+            days: 0,
+            hours: 0,
+            minutes: 0,
             editToggle: -1,
             // for edit
             showeditmenu: null,
@@ -296,19 +307,19 @@ export default {
                 console.log(this.days, this.hours, this.minutes)
             })
                 //-------------------------------------
-            .catch(error => {
-                console.log(error.message);
-            });
+                .catch(error => {
+                    console.log(error.message);
+                });
         },
         getMenuAgain(id) { // เรียกเมนูใหม่ หลังจากลบเมนู
             axios.get("http://localhost:3000/mymenu/")
-            .then((response) => {
-                this.menus = response.data;
-                
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                .then((response) => {
+                    this.menus = response.data;
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
@@ -326,21 +337,21 @@ export default {
 
             })
         },
-        deleteMenu(menu_id){
+        deleteMenu(menu_id) {
             console.log("delete menu ", menu_id)
-            const result = confirm('Delete Your Menu')
-            if (result){
+            const result = confirm(`Are you sure you want to delete this menu`);
+            if (result) {
                 axios
-                .delete('http://localhost:3000/showmenu/' + menu_id)
-                .then((response) => {
-                    console.log(response)
-                    this.getMenuAgain();
-                })
-                .catch((error) => {
-                    alert(error.response.data.message);
-                });
+                    .delete('http://localhost:3000/showmenu/' + menu_id)
+                    .then((response) => {
+                        console.log(response)
+                        this.getMenuAgain();
+                    })
+                    .catch((error) => {
+                        alert(error.response.data.message);
+                    });
             }
-            
+
         },
         // update image
         loadImg(event) {
@@ -369,7 +380,7 @@ export default {
             this.howTo = "";
         },
         // edit Menu
-        editMenu(menu, index){
+        editMenu(menu, index) {
             this.editToggle = index
             this.edit_name = menu.menu_name
             this.edit_image = menu.menu_image
@@ -380,20 +391,20 @@ export default {
             this.listMethods = menu.menu_methods.split(",");
             console.log("nationnn ", this.select_nation)
             axios
-            .get("http://localhost:3000/categorys/")
-            .then((response) => {
-                this.category_nation = response.data[0];
-                this.category_cooking = response.data[1];
-                this.category_meat = response.data[2];
-                console.log("front", this.category_nation);
-                console.log("front", this.category_meat);
-                console.log("front", this.category_cooking);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                .get("http://localhost:3000/categorys/")
+                .then((response) => {
+                    this.category_nation = response.data[0];
+                    this.category_cooking = response.data[1];
+                    this.category_meat = response.data[2];
+                    console.log("front", this.category_nation);
+                    console.log("front", this.category_meat);
+                    console.log("front", this.category_cooking);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
-        saveMenu(menu_id){
+        saveMenu(menu_id) {
             let formData = new FormData();
             formData.append("name", this.edit_name);
             formData.append("id", menu_id);
@@ -405,9 +416,9 @@ export default {
             formData.append("nation", this.select_nation)
             formData.append("cooking", this.select_cooking)
             formData.append("meat", this.select_meat)
-            formData.append("duration", (this.days*1440)+(this.hours*60)+this.minutes)
-            formData.append("ingredients",this.listMaterials)
-            formData.append("methods",this.listMethods)
+            formData.append("duration", (this.days * 1440) + (this.hours * 60) + this.minutes)
+            formData.append("ingredients", this.listMaterials)
+            formData.append("methods", this.listMethods)
 
             axios.put(`http://localhost:3000/updates`, formData)
                 .then((response) => {
@@ -416,12 +427,29 @@ export default {
                     this.getMenuAgain(response.data.data[0].menu_id)
                 }).catch((error) => {
                     this.error = error.message;
-            })
+                })
+        },
+        deleteIngrediant(item, index) {
+            const result = confirm(`Are you sure you want to delete this Ingrediant ` + item);
+            if (result) {
+                console.log("delete Ingrediant --> ", item, index);
+                console.log("list --> ", this.listMaterials);
+                const removeIng = this.listMaterials.splice(index, 1)
+                console.log("delete --> ", removeIng);
+            }
+
+        },
+        deleteMethod(item, index) {
+            const result = confirm(`Are you sure you want to delete this Method ` + item);
+            if (result) {
+                console.log("delete Method --> ", item, index);
+                console.log("list --> ", this.listMethods);
+                const removeIng = this.listMethods.splice(index, 1)
+                console.log("delete --> ", removeIng);
+            }
+
         }
-
     },
-
-
     computed: {
         computedMaterials() {
             console.log("in list-materail", this.listMaterials)

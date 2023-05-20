@@ -25,6 +25,7 @@ const routes = [
   {
     path: '/addmenu',
     name: 'addmenu',
+    meta: { login: true }, //+
     component: () => import('./views/AddMenu.vue')
   },
   {
@@ -51,11 +52,13 @@ const routes = [
   {
     path: '/search_menu',
     name: 'search',
+    meta: { login: true }, //+
     component: () => import('./views/AllMenu.vue')
   },
   {
     path: '/favorite',
     name: 'favorite',
+    meta: { login: true }, //+
     component: () => import('./views/LikeFavorite.vue')
   },
 ]
