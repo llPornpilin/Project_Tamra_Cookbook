@@ -328,15 +328,19 @@ export default {
         },
         deleteMenu(menu_id){
             console.log("delete menu ", menu_id)
-            axios
-            .delete('http://localhost:3000/showmenu/' + menu_id)
-            .then((response) => {
-                console.log(response)
-                this.getMenuAgain();
-            })
-            .catch((error) => {
-                alert(error.response.data.message);
-            });
+            const result = confirm('Delete Your Menu')
+            if (result){
+                axios
+                .delete('http://localhost:3000/showmenu/' + menu_id)
+                .then((response) => {
+                    console.log(response)
+                    this.getMenuAgain();
+                })
+                .catch((error) => {
+                    alert(error.response.data.message);
+                });
+            }
+            
         },
         // update image
         loadImg(event) {

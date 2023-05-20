@@ -6,11 +6,16 @@
 
 
             <div class="column list-fav-menu">
+                <!-- search bar -->
+                <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
+                id="search" name="search">
+                <button class="button" id="searchButton" @click.stop="getMenus"><i class="fas fa-search"></i></button>
 
                 <!-- start form menu  -->
                 <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus"
                     :class="[{ 'has-background-warning-light': menu.is_favorite }]"
-                    @click="showMenu(menu.menu_id), select_menu = true, index_menu = index" :key="index">
+                    @click.prevent="showMenu(menu.menu_id), select_menu = true, index_menu = index" :key="index">
+
                     <!-- select_menu = true,  -->
                     <tr>
                         <td rowspan="4" style="width: 128px">
@@ -224,22 +229,22 @@ export default {
             days: 0,
             hours: 0,
             minutes: 0,
-            //------------------------
+            //----------edit------------
             e_menu_name: '', //ชื่อเมนูที่กรอก
             e_image: '', //รูปใหม่
             images: [],
-            //------------------------
             editToggle: -1,
             //-------comment----------------
             isActive: false, // สถานะของ Modal
             comment_this_menu: null,
-            comment: ""
+            comment: "",
+            // ----------search----------
+            search: "",
 
         };
     },
     created() {
-        // console.log(this.$route.params.category_type)
-        // console.log(this.$route.params.category_id)
+        // console.log('search in AllMenu.vue --------->', search_value)
         axios
             .get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id)
             .then((response) => {
@@ -380,7 +385,7 @@ export default {
                 });
         },
         closeModal() {
-            this.isActive = false; // ปิด Modal
+            this.isActive = false; // ปิด Modal comment
         },
         addComment(menu_id) {
             console.log("click addComment")
@@ -394,6 +399,21 @@ export default {
             })
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
+        },
+        getMenus() {
+            console.log("Front Search in Allmenu.vue : ", this.search)
+            axios.get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id, {
+            params: {
+                search_value: this.search
+            }
+            })
+            .then((response) => {
+                console.log('response.data - AllMenu.vue ', response.data);
+                this.menus = response.data
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         }
     }
 };

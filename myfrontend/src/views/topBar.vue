@@ -8,54 +8,19 @@
         </div> -->
         <div class="hero-body">
             <div class="columns is-centered">
-                <div class="column">
+                <div class="column is-10">
                     <b class="title is-size-4 has-text-centered has-text-weight-bold">Tamra Cookbook</b>
                 </div>
-                <div class="column is-flex is-justify-content-flex-end">
-                    <input v-model="search" class="input has-text-right" type="text" placeholder="Search Menu ..."
+                <!-- <div class="column is-flex is-justify-content-flex-end" id="searchArea">
+                    <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
                         id="search" name="search">
                     <button class="button" id="searchButton" @click="getMenus"><i class="fas fa-search"></i></button>
-                </div>
+                </div> -->
 
             </div>
         </div>
     </section>
 </template>
-
-
-<script>
-import axios from '@/plugins/axios'
-export default {
-    data() {
-        return {
-            search: "",
-            menus: [],
-        };
-    },
-    mounted() {
-        this.getMenus();
-    },
-    methods: {
-        getMenus() {
-        console.log("Front Search : ", this.search)
-        axios
-        .get("http://localhost:3000/search_menu", {
-        params: {
-            search: this.search,
-        },
-        })
-        .then((response) => {
-        this.menus = response.data;
-        console.log(response.data)
-        })
-        .catch((err) => {
-        console.log(err);
-        });
-    }}
-}
-</script>
-
-
 <style scoped>
 
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&display=swap');
@@ -69,7 +34,19 @@ export default {
     box-sizing: border-box;
     padding: 40px;
 }
+#searchArea{
+    background-color: white;
+    border-radius: 30px ;
+    padding: 0;
+    height: fit-content;
+}
 #search{
     width: 250px;
+    border-radius: 30px;
+    border: none;
+}
+#searchButton{
+    border-radius: 50px;
+    border: none;
 }
 </style>

@@ -88,81 +88,104 @@ router.get("/check_star/:menu_id", isLoggedIn, async function (req, res, next) {
 // ----------------------------------All Menu Page----------------------------------------------
 
 // แสดงเมนูใน category ที่เลือก
-router.get("/allmenu/:category_type/:category_id",isLoggedIn, async function (req, res, next) {
+router.get("/allmenu/:category_type/:category_id", isLoggedIn, async function (req, res, next) {
+
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
-  console.log(  );
-
   const category_type = req.params.category_type
+  const category_id = req.params.category_id
+  console.log('TYPE: ', category_type)
+  console.log('ID: ', category_id)
+
+  const search_value = req.query.search_value
+  console.log("search_value in menu.js ---> ", search_value)
+
   try {
-    if (category_type != 'category_nation' && category_type != 'category_meat' && category_type != 'category_cooking'){
-      const [rows, cols] = await conn.query(
-        "select menus.*,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id from menus "+
-        "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-        "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-        "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
-        "left outer join  (select * from stars where user_id = ?)  AS star "+
-        "on (star.menu_id = menus.menu_id) " ,[req.user.user_id])
-      console.log(rows);
-      return res.json(rows)
-    }
-    else{
-      if (req.params.category_type == 'category_nation') {
-         const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "select menus.*,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id from menus "+
-          "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-          "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-          "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) "+
-          "left outer join  (select * from stars where user_id = ?)  AS star "+
-          "on (star.menu_id = menus.menu_id) " +
-          "WHERE category_nation=?", [req.user.user_id,req.params.category_id]
-        );
-        console.log("/allmenu/:category_type/:category_id in menu.js --> ",rows)
-        return (res.json(rows))
-      }
-      
-      else if (req.params.category_type == 'category_cooking') {
-        const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT menus.* ,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id  FROM menus "+
-          "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-          "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-          "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-          "left outer join  (select * from stars where user_id = ?)  AS star "+
-          "on (star.menu_id = menus.menu_id) " +
-          "WHERE category_cooking=?", [req.user.user_id,req.params.category_id]
-        );
-        console.log(rows)
-        return (res.json(rows))
-      }
+    let query = "select menus.*,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id from menus " +
+                "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+                "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+                "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+                "left outer join  (select * from stars where user_id = ?) AS star " +
+                "on (star.menu_id = menus.menu_id)"
 
-      else if (req.params.category_type == 'category_meat') {
-        const [rows, fields] = await conn.query( // **** JOIN table menus category_nation category_cooking category_meat
-          "SELECT * ,category_nation.*, category_meat.*,category_cooking.*, star.user_id as star_id FROM menus "+
-          "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-          "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-          "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-          "left outer join  (select * from stars where user_id = ?)  AS star "+
-          "on (star.menu_id = menus.menu_id) " +
-          "WHERE category_meat=?", [req.user.user_id,req.params.category_id]
-        );
-        console.log(rows)
-        return (res.json(rows))
+    // ---------------check category-----------
+    // all menu, no category
+    if (category_type != 'category_nation' && category_type != 'category_meat' && category_type != 'category_cooking') {
+      if (search_value === '' || search_value == null){
+        const [rows, cols] = await conn.query(query, [req.user.user_id]);
+        console.log("ไม่ SEARCH >>>>>>>>>>>>> : ", rows)
+        return res.json(rows);
+      }
+      // if have search
+      else{
+        query += " WHERE menu_name LIKE ?"
+        const [rows, cols] = await conn.query(query, [req.user.user_id, `%${search_value}%`])
+        console.log("SEARCH แล้วว --------------- : ", rows)
+        return res.json(rows);
       }
     }
+    // click nation category
+    else if (category_type === 'category_nation'){
+      query += " WHERE category_nation=?"
+      if (search_value === '' || search_value == null){
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id])
+        console.log("ไม่ SEARCH >>>>>>>>>>>>> : ", rows)
+        return res.json(rows);
+      }
+      // if have search
+      else{
+        query += " AND menu_name LIKE ?"
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id, `%${search_value}%`])
+        console.log("SEARCH แล้วว ------- : ", rows)
+        return res.json(rows);
+      }
+    }
+    // click cooking category
+    else if (category_type === 'category_cooking'){
+      query += " WHERE category_cooking=?"
+      if (search_value === '' || search_value == null){
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id])
+        console.log("ไม่ SEARCH >>>>>>>>>>>>> : ", rows)
+        return res.json(rows);
+      }
+      // if have search
+      else{
+        query += " AND menu_name LIKE ?"
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id, `%${search_value}%`])
+        console.log("SEARCH แล้วว ------- : ", rows)
+        return res.json(rows);
+      }
+    }
+    // click maet category
+    else if (category_type === 'category_meat'){
+      query += " WHERE category_meat=?"
+      if (search_value === '' || search_value == null){
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id])
+        console.log("ไม่ SEARCH >>>>>>>>>>>>> : ", rows)
+        return res.json(rows);
+      }
+      // if have search
+      if(search_value !== ''){
+        query += " AND menu_name LIKE ?"
+        const [rows, cols] = await conn.query(query, [req.user.user_id, category_id, `%${search_value}%`])
+        console.log("SEARCH แล้วว ------- : ", rows)
+        return res.json(rows);
+      }
+    }
 
-    // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
     await conn.commit();
-
-  } catch (err) {
-    //ถ้ามี query ใด query หนึ่งมีปัญหา/พัง ให้สถานะ database กลับไป
+  }
+  catch (err) {
     await conn.rollback();
     next(err);
-  } finally {
+  }
+  finally {
     console.log("finally");
-    conn.release(); //ปิด transaction
+    conn.release();
   }
 });
+
 
 // แสดงรายละเอียด(หน้าฝั่งขวา)ของเมนูที่คลิกเลือก
 router.get("/showmenu/:id", async function (req, res, next) {
@@ -259,9 +282,9 @@ router.get('/search_menu', async (req, res) => {
   const menu_name = req.query.search
   // console.log("search1 : ", menu_name)
 
-  const [filtered] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
-  // console.log(filtered)
-  return res.status(200).send(filtered)
+  const [searched] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
+  console.log("SEARCH แล้วว : ", searched)
+  return res.status(200).send(searched)
 })
 
 

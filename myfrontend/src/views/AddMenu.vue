@@ -8,8 +8,12 @@
                 <!-------------- foodName -------------------->
                 <div class="column is-6 mr-4 p-6" id="leftPage">
                     <!-- กรอก ชื่ออาหาร -->
-                    <input class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName" id="menuName"
-                        v-model="menu_name">
+                    <input 
+                    class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName" id="menuName"
+                    v-model="$v.menu_name.$model" :class="{'is-danger': $v.menu_name.$error}">
+                    <template v-if="$v.menu_name.$error">
+                        <p class="help is-danger" v-if="!$v.menu_name.required" style="text-align: left">This field is required</p>
+                    </template>
 
                     <!-- กรอก วัตถุดิบ -->
                     <div class="container is-flex">
@@ -83,7 +87,10 @@
                     <!-- spending time -->
                     <div class="is-flex mt-5" id="spendTime">
                         <div class="container mr-4 ml-6">
-                            <input class="input has-text-centered" type="number" id="day" v-model="days" name="menuDay">
+                            <input class="input has-text-centered" type="number" id="day" name="menuDay" v-model="days">
+                            <!-- <template v-if="$v.days.$error">
+                                <p class="help is-danger" v-if="!$v.days.minLength" style="text-align: left">This field is required</p>
+                            </template> -->
                             <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
                         </div>
                         <div class="container mr-4 ml-4">
@@ -112,6 +119,11 @@
 import topBarVUE from './topBar.vue';
 import sideMenuBarVUE from './sideMenuBar.vue';
 import axios from '@/plugins/axios' //+
+import {
+    required,
+    minLength,
+    maxLength,
+  } from "vuelidate/lib/validators";
 
 export default {
     props: ['user'], // รับ Props user มาจาก App.vue
@@ -125,9 +137,9 @@ export default {
             menu_name: '', //ชื่อเมนูที่กรอก
             ingredient: '', //วัตถุกดิบที่กรอก 1 
             howTo: '', //วิธีทำที่กรอก 1
-            days: '0',
-            hours: '0',
-            minutes: '0',
+            days: 0,
+            hours: 0,
+            minutes: 0,
             //--------------------------------
             materials: ["ใจเย็น", "ใกล้ละ"],
             methods: ["ตั้งสติ", "ดูให้รอบครอบ"],
@@ -136,9 +148,9 @@ export default {
             category_meat: null,
             category_cooking: null,
             // v-model -----------------------
-            nation: '',
-            method: '',
-            meat: '',
+            nation: 'TH',
+            method: 'FR',
+            meat: 'FH',
         };
     },
     created() {
@@ -218,6 +230,31 @@ export default {
             return this.methods;
         },
     },
+    validations: {
+        menu_name: {
+            required: required,
+        },
+        materials: {
+            required: required
+        },
+        methods: {
+            required: required
+        },
+        days: {
+            minLength: minLength(0)
+        },
+        hours: {
+            minLength: minLength(0),
+            maxLength: maxLength(23)
+        },
+        minutes: {
+            minLength: minLength(0),
+            maxLength: maxLength(59)
+        },
+        images: {
+            required: required,
+        }
+    }
 };
 
 </script>
