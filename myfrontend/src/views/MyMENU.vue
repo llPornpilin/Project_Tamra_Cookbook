@@ -184,6 +184,71 @@
                                 <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
                                     alt="Placeholder image">
                             </figure>
+                            <!-------------------------- comment-----------------------(start)--------------------------->
+                            <button @click="show_comment(menu)"> comment</button>
+                            <div class="modal" :class="{ 'is-active': isActive }">
+                                <div class="modal-background"></div>
+                                <div class="modal-card">
+                                    <header class="modal-card-head">
+                                        <p class="modal-card-title">COMMENT</p>
+                                        <button class="delete" aria-label="close" @click="closeModal"></button>
+                                    </header>
+                                    <div style="background-color: #ffffff;">
+                                        <div class="comment">
+                                            <div v-for="(comment, index) in comment_this_menu" :key="index">
+                                                <section class="modal-card-body" v-if="index % 2 == 0"
+                                                    style="background-color: #edb34f4a;">
+                                                    <div>
+                                                        <p style="text-align: left; margin-left: 20px; font-size: 20px;">
+                                                            {{ comment.detail }}</p>
+                                                        <p
+                                                            style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
+                                                            {{ comment.username }}
+                                                            <span
+                                                                style="float: right; margin-right: 10px; font-size: 15px;">{{
+                                                                    comment.comment_date }}
+                                                                <span>
+                                                                    <i v-if="comment.comment_by_id == user.user_id"
+                                                                        class="fa fa-minus"
+                                                                        style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                        @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
+                                                                </span>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </section>
+                                                <section class="modal-card-body" v-if="index % 2 != 0"
+                                                    style="background-color: #51925953;">
+                                                    <div>
+                                                        <p style="text-align: left; margin-left: 20px; font-size: 20px;">
+                                                            {{ comment.detail }}</p>
+                                                        <p
+                                                            style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
+                                                            {{ comment.username }}
+                                                            <span
+                                                                style="float: right; margin-right: 10px; font-size: 15px;">{{
+                                                                    comment.comment_date }}
+                                                                <span>
+                                                                    <i v-if="comment.comment_by_id == user.user_id"
+                                                                        class="fa fa-minus"
+                                                                        style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                        @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
+                                                                </span>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <footer class="modal-card-foot">
+                                        <input class="input" type="text" style="width: 80%;" v-model="comment"><button
+                                            class="button" style="width: 20%"
+                                            @click="addComment(menu.menu_id)">submit</button>
+                                    </footer>
+                                </div>
+                            </div>
+                            <!----------------------- comment-------------------------(end)----------------------------->
                             <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
                                 style="background-color: var(--yellow-l); border-radius:10px;">
                                 <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
@@ -193,7 +258,8 @@
                             <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
                                 style="background-color: var(--yellow-l); border-radius:10px;">
                                 <p class="ml-5">{{ days }} <b>days</b> : {{ hours }} <b>hour</b> : {{ minutes }}
-                                    <b>minutes</b></p>
+                                    <b>minutes</b>
+                                </p>
                             </div>
                             <!-- วัตถุดิบ -->
                             <div class="has-text-left m-1 mt-4"
@@ -268,6 +334,10 @@ export default {
             howTo: "",
             listMethods: [],
             listMaterials: [],
+            //-------comment----------------
+            isActive: false, // สถานะของ Modal
+            comment_this_menu: null,
+            comment: "",
 
 
         };
@@ -448,6 +518,53 @@ export default {
                 console.log("delete --> ", removeIng);
             }
 
+        },
+        show_comment(menu) {
+            this.isActive = true; // เปิด Modal
+
+            console.log("show_comment", menu.menu_id)
+
+            axios.get('http://localhost:3000/comment/' + menu.menu_id
+            ).then(response => {
+                console.log("มาแล้ว", response.data)
+                this.comment_this_menu = response.data;
+            })
+                //-------------------------------------
+                .catch(error => {
+                    console.log(error.message);
+                });
+        },
+        closeModal() {
+            this.isActive = false; // ปิด Modal comment
+        }, 
+        addComment(menu_id) {
+            console.log("click addComment")
+            axios
+                .post("http://localhost:3000/addComment", { detail: this.comment, menu_id: menu_id })
+                .then(response => {
+                    console.log("มาแล้ว", response.data)
+                    this.comment_this_menu = response.data
+                    this.comment = ""
+
+                })
+                .catch((e) => console.log(e.response.data));
+            console.log("axios")
+        },
+        deleteComment(comment, comment_id, menu_id){
+            console.log("comment --> ", comment);
+            console.log("comment_id --> ", comment_id);
+            const result = confirm(`Are you sure you want to delete this comment`);
+            if (result){
+                axios
+                    .delete('http://localhost:3000/comment/' + comment_id + "/" + menu_id)
+                    .then((response) => {
+                        console.log("delete",response.data)
+                        this.comment_this_menu = response.data
+                    })
+                    .catch((error) => {
+                        alert(error.response.data.message);
+                    });
+            }
         }
     },
     computed: {
@@ -466,6 +583,33 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Montserrat+Alternates&display=swap');
+
+/* ------test-modal-bulma----- */
+.comment {
+    overflow-y: scroll;
+    height: 400px;
+}
+
+.comment::-webkit-scrollbar {
+    width: 20px;
+}
+
+/* Track */
+.comment::-webkit-scrollbar-track {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 100px;
+}
+
+/* Handle */
+.comment::-webkit-scrollbar-thumb {
+    background: var(--cream);
+    border-radius: 100px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+}
+
+/* ------test-modal-bulma----- */
 
 #top {
     background-color: var(--yellow);

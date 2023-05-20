@@ -2,14 +2,16 @@
     <div>
         <topbarVUE />
         <div class="columns is-max-desktop inside" style="background-color:  var(--cream);">
-            <sidemenubarVUE :user="user"/>
+            <sidemenubarVUE :user="user" />
 
 
             <div class="column list-fav-menu">
                 <!-- search bar -->
-                <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
-                id="search" name="search">
-                <button class="button" id="searchButton" @click.stop="getMenus"><i class="fas fa-search"></i></button>
+                <div id="searchArea">
+                    <input v-model="search" class="input has-text-left" type="text" placeholder="Search Menu ..."
+                        id="search" name="search">
+                    <button class="button" id="searchButton" @click.stop="getMenus"><i class="fas fa-search"></i></button>
+                </div>
 
                 <!-- start form menu  -->
                 <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus"
@@ -62,44 +64,8 @@
                 <!-- select menu true -->
                 <div v-if="select_menu == true">
                     <div v-for="(menu, index) in showonemenu" :key="index">
-                        <!-- -----------EDIT------------ -->
-                        <div v-if="index_menu === editToggle">
-                            <!-- กรอก ชื่ออาหาร -->
-                            <input class="input mt-3 is-warning" type="text" placeholder="ชื่อเมนู" name="menuName"
-                                id="menuName" v-model="e_menu_name">
-
-                            <!-- <figure class="image is-2by1 ml-6 mr-6 mt-3">
-                                <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
-                            </figure> -->
-
-                            <label class="image is-2by1 container p-6" for="file" id="imageBox">
-                                <!-- <img v-for="(image, index) in images" :key="index" :src="showSelectImage(image)"
-                                style="border-radius: 30px;"> -->
-                                <img :src="(e_image == menu.menu_image) ? 'http://localhost:3000/uploads/' + e_image : showSelectImage(images[0])"
-                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
-                                <input type="file" accept="image/*" name="images" id="file" @change="loadImg"
-                                    style="display: none;">
-                                <span class="icon is-large" id="aboutImg">
-                                    <i class="fas fa-images is-large"
-                                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
-                                    <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">Browse
-                                        Image
-                                    </p>
-                                </span>
-                            </label>
-
-
-
-                            <button @click="saveEditMenu(menu.menu_id)" class="button is-primary">
-                                <span>Save Comment</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </button>
-                        </div>
                         <!-- -----------SAVE------------- -->
-                        <div v-else>
+                        <div>
                             <div class="is-size-4 has-text-centered mt-4 mb-4 ml-3 mr-3"
                                 style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
                                 <p>{{ menu.menu_name }}</p>
@@ -108,9 +74,22 @@
                                 <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
                                     style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
                             </figure>
-                            <!-- <button @click="show_comment(menu)" data-target="modal"> comment</button> -->
-                            <!-- <div class="modal" v-if="showComment == true"> -->
-                            <button @click="show_comment(menu)"> comment</button>
+                            <!-------------------------- comment-----------------------(start)--------------------------->
+                            <!-- <button @click="show_comment(menu)" style="float: right; margin-bottom: 50px;" class="button"> comment</button> -->
+
+                            <div style="font-size: 20px; float:right ; margin-right:  50px; margin-top: 5px;">
+                                <i class="fa-solid fa-comment" @click="show_comment(menu)" id="btnComment"></i>
+                                <span @click="addLike(menu.menu_id)" id="btnLike" style="margin-left: 5px;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <!-- <i class="fa-solid fa-thumbs-up" v-if="statusLike == 1"></i>
+                                    <i class="fa-regular fa-thumbs-up" v-if="statusLike == 0"></i> -->
+                                    <span style="margin-left:5px">{{ menu.menu_id_count
+                                    }}</span>
+                                    <!-- <i class="fa-solid fa-thumbs-up"></i><span style="margin-left:5px">{{ menu.menu_id_count
+                                    }}</span> -->
+                                </span>
+
+                            </div>
                             <div class="modal" :class="{ 'is-active': isActive }">
                                 <div class="modal-background"></div>
                                 <div class="modal-card">
@@ -130,8 +109,14 @@
                                                             style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
                                                             {{ comment.username }}
                                                             <span
-                                                                style="float: right; margin-right: 20px; font-size: 15px;">{{
+                                                                style="float: right; margin-right: 10px; font-size: 15px;">{{
                                                                     comment.comment_date }}
+                                                                <span>
+                                                                    <i v-if="comment.comment_by_id == user.user_id"
+                                                                        class="fa fa-minus"
+                                                                        style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                        @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
+                                                                </span>
                                                             </span>
                                                         </p>
                                                     </div>
@@ -145,8 +130,14 @@
                                                             style="text-align: left; margin-left: 20px; font-size: 15px; color: #a09f9c;">
                                                             {{ comment.username }}
                                                             <span
-                                                                style="float: right; margin-right: 20px; font-size: 15px;">{{
+                                                                style="float: right; margin-right: 10px; font-size: 15px;">{{
                                                                     comment.comment_date }}
+                                                                <span>
+                                                                    <i v-if="comment.comment_by_id == user.user_id"
+                                                                        class="fa fa-minus"
+                                                                        style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                        @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
+                                                                </span>
                                                             </span>
                                                         </p>
                                                     </div>
@@ -161,8 +152,9 @@
                                     </footer>
                                 </div>
                             </div>
-                            <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
-                                style="background-color: var(--yellow-l); border-radius:10px;">
+                            <!----------------------- comment-------------------------(end)----------------------------->
+                            <div class="is-size-6 has-text-left ml-5 mr-5 p-1"
+                                style="background-color: var(--yellow-l); border-radius:10px; margin-top: 40px;">
                                 <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
                                 <p class="ml-5"><b>Method :</b>{{ menu.cooking_name }}</p>
                                 <p class="ml-5"><b>Meat :</b>{{ menu.meat_name }} </p>
@@ -190,13 +182,6 @@
                                 </ol>
                             </div>
 
-                            <!-- ปุ่ม edit -->
-                            <button @click="editMenu(index_menu, menu)" class="button is-warning">
-                                <span>Edit</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-edit"></i>
-                                </span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -240,6 +225,8 @@ export default {
             comment: "",
             // ----------search----------
             search: "",
+            //-----like
+            statusLike: 0,
 
         };
     },
@@ -279,10 +266,10 @@ export default {
         showMenu(id) {
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
-                console.log("มาแล้ว", response.data)
+                console.log("มาแล้ว-->", response.data)
                 this.showonemenu = response.data;
+                console.log("showonemenu", this.showonemenu)
                 let time = response.data[0].menu_duration
-                // console.log(response.data[0].menu_duration)
                 this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
                 this.hours = Math.floor((time % 1440) / 60); // 1 ชั่วโมงมี 60 นาที
                 this.minutes = time % 60;
@@ -310,9 +297,9 @@ export default {
                 });
             axios.get('http://localhost:3000/showmenu/' + id
             ).then(response => {
-                console.log("มาแล้ว", response.data)
+                console.log("มาแล้ว fucn", response.data)
                 this.showonemenu = response.data;
-                console.log(this.showonemenu)
+                console.log("func", this.showonemenu)
                 console.log(response.data[0].menu_duration)
                 let time = response.data[0].menu_duration
                 this.days = Math.floor(time / 1440); // 1 วันมี 1440 นาที
@@ -390,30 +377,57 @@ export default {
         addComment(menu_id) {
             console.log("click addComment")
             axios
-                .post("http://localhost:3000/addComment", {detail: this.comment, menu_id: menu_id})
+                .post("http://localhost:3000/addComment", { detail: this.comment, menu_id: menu_id })
                 .then(response => {
-                console.log("มาแล้ว", response.data)
-                this.comment_this_menu  = response.data
-                this.comment = ""
-
-            })
+                    console.log("มาแล้ว", response.data)
+                    this.comment_this_menu = response.data
+                    this.comment = ""
+                })
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
         },
         getMenus() {
             console.log("Front Search in Allmenu.vue : ", this.search)
             axios.get("http://localhost:3000/allmenu/" + this.$route.params.category_type + '/' + this.$route.params.category_id, {
-            params: {
-                search_value: this.search
+                params: {
+                    search_value: this.search
+                }
+            })
+                .then((response) => {
+                    console.log('response.data - AllMenu.vue ', response.data);
+                    this.menus = response.data
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        deleteComment(comment, comment_id, menu_id) {
+            console.log("comment --> ", comment);
+            console.log("comment_id --> ", comment_id);
+            const result = confirm(`Are you sure you want to delete this comment`);
+            if (result) {
+                axios
+                    .delete('http://localhost:3000/comment/' + comment_id + "/" + menu_id)
+                    .then((response) => {
+                        console.log("delete", response.data)
+                        this.comment_this_menu = response.data
+                    })
+                    .catch((error) => {
+                        alert(error.response.data.message);
+                    });
             }
-            })
-            .then((response) => {
-                console.log('response.data - AllMenu.vue ', response.data);
-                this.menus = response.data
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        },
+        addLike(menu_id) {
+            console.log("menu_id", menu_id)
+            axios
+                .post("http://localhost:3000/addLike/" + menu_id)
+                .then((response) => {
+                    console.log("like ", response.data);
+                    this.getCategories(menu_id);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }
 };
@@ -447,6 +461,14 @@ export default {
     border-radius: 100px;
     border: 5px solid transparent;
     background-clip: content-box;
+}
+
+#btnComment {
+    color: var(--lightgreen);
+}
+
+#btnComment:hover {
+    color: var(--yellow);
 }
 
 /* ------test-modal-bulma----- */
@@ -485,20 +507,26 @@ aside {
     border-radius: 70px;
 }
 
+#searchArea{
+    width: fit-content;
+    height: fit-content;
+    border-radius: 30px;
+    background-color: white;
+}
+
 #search {
-    width: 20%;
+    border: none;
+    width: 200px;
     border-radius: 15px;
-    position: absolute;
-    right: 50px;
-    top: 18px;
 }
 
 #searchButton {
     border: none;
-    border-radius: 15px;
-    position: absolute;
-    right: 50px;
-    top: 18px;
+    border-radius: 30px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    position: relative;
+    right: 0px;
     background-color: var(--cream);
 }
 
@@ -671,4 +699,5 @@ select {
 .textarea::-webkit-scrollbar-thumb {
     background: var(--yellow);
     border-radius: 10px;
-}</style>
+}
+</style>

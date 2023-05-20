@@ -27,11 +27,13 @@ const homeRouter = require('./route/home')
 const userRouter = require('./route/user')
 const menuRouter = require('./route/menu')
 const commentRouter = require('./route/comment')
+const likeRouter = require('./route/like')
 
 app.use(homeRouter.router)
 app.use(userRouter.router)
 app.use(menuRouter.router)
 app.use(commentRouter.router)
+app.use(likeRouter.router)
 
 app.listen(3000 , () => {
   console.log('Start server at port 3000.')

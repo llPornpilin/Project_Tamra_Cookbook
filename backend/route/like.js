@@ -12,6 +12,7 @@ router.post("/addLike/:menu_id", isLoggedIn, async function (req, res, next) {
 
     const menu_id = req.params.menu_id;
     const user_id = req.user.user_id;
+    // let statusLike = 0;
 
     console.log("addLike", user_id, menu_id);
 
@@ -19,17 +20,21 @@ router.post("/addLike/:menu_id", isLoggedIn, async function (req, res, next) {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [checkLike] = await conn.query("SELECT * FROM likes WHERE menu_id = ? AND user_id = ?", [menu_id, user_id]);
+    const [checkLike] = await conn.query("SELECT * FROM likes WHERE menu_id = ? AND user_id = ?", [menu_id, user_id])
 
     try {
         if(checkLike.length == 0){
             const [like] = await conn.query("INSERT INTO `likes` (user_id, menu_id) VALUES (?,?)", [user_id, menu_id]);
             console.log("addLike in like.js :", like,user_id, menu_id)
+            // statusLike = 1;
         }else{
             const [deleteLike] = await conn.query("DELETE FROM `likes` WHERE user_id =? AND menu_id =?", [user_id, menu_id])
             console.log("delete like", user_id, menu_id)
+            // statusLike = 0;
         }
         await conn.commit();
+
+        return res.json(checkLike)
 
     } catch (err) {
         await conn.rollback();
@@ -37,12 +42,7 @@ router.post("/addLike/:menu_id", isLoggedIn, async function (req, res, next) {
     } finally {
         conn.release();
     }
-    console.log("like : ", checkLike.length)
-    return res.send(checkLike.length)
-    // const [all_like] = await pool.query("SELECT * FROM likes WHERE menu_id =?", [menu_id])
-    // console.log(all_like);
-    // console.log(all_like.length);
-    // return res.json(all_like.length)
 }
 );
+
 exports.router = router;

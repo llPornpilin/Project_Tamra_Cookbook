@@ -190,19 +190,22 @@ router.get("/allmenu/:category_type/:category_id", isLoggedIn, async function (r
 
 
 // แสดงรายละเอียด(หน้าฝั่งขวา)ของเมนูที่คลิกเลือก
-router.get("/showmenu/:id", async function (req, res, next) {
+router.get("/showmenu/:id",isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection();
   await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
+  let statusLike = 0;
   try {
     console.log(req.params.id);
 
-    const [rows, fields] = await conn.query(
-      "SELECT * FROM menus "+
-      "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-      "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-      "join category_cooking on (menus.category_cooking = category_cooking.cooking_id)"+
-      "WHERE menu_id=?", [req.params.id]
+    const [rows, fields] = await conn.query(`select menus.* ,category_nation.nation_name, category_meat.meat_name, category_cooking.cooking_name ,count(like_id) as menu_id_count from menus
+    join category_nation on (menus.category_nation = category_nation.nation_id) 
+    join category_meat on (menus.category_meat = category_meat.meat_id) 
+    join category_cooking on (menus.category_cooking = category_cooking.cooking_id)
+    left outer join likes on (menus.menu_id = likes.menu_id)
+    where menus.menu_id = ?
+    group by menus.menu_id`
+      , [req.params.id]
     );
 
     // ถ้าทุก transaction เสร็จแล้ว ให้ทำการ ส่ง/เสร็จเลย
