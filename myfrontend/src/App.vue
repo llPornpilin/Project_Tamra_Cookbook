@@ -67,4 +67,92 @@ body {
     padding: 0;
     font-family: var(--font2);
 }
+
+/* AllMenu.vue , LikeFavorite.vue , MyMENU.vue  ---> กด like menu */
+#btnLike{
+  color: var(--yellow);
+  font-size: 20px;
+}
+#btnLike:hover{
+  color: var(--darkgreen);
+  font-size: 18px;
+}
+
+/* ------test-modal-bulma-------------[START]-------------- */
+/* AllMenu.vue , LikeFavorite.vue , MyMENU.vue  ---> scroll-y comment*/
+.comment {
+    overflow-y: scroll;
+    height: 400px;
+}
+.comment::-webkit-scrollbar {
+    width: 20px;
+}
+/* Track */
+.comment::-webkit-scrollbar-track {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 100px;
+}
+/* Handle */
+.comment::-webkit-scrollbar-thumb {
+    background: var(--cream);
+    border-radius: 100px;
+    border: 5px solid transparent;
+    background-clip: content-box;
+}
+/* AllMenu.vue , LikeFavorite.vue , MyMENU.vue  --->  กด comment menu */
+#btnComment {
+    color: var(--yellow);
+    font-size: 20px;
+}
+#btnComment:hover {
+    color: var(--darkgreen);
+    font-size: 18px;
+}
+#commentItem0{
+  background-color: #edb34f30;
+}
+#commentItem1{
+  background-color: #edb34f4e;
+
+}
+/* ------test-modal-bulma----------[END]-------- */
+
+/* AllMenu.vue , LikeFavorite.vue , MyMENU.vue  ---> กด favorite menu*/
+#favorite_star_0 , #favorite_star_1{
+  color: var(--yellow);
+  font-size: 20px;
+}
+#favorite_star_0:hover , #favorite_star_1:hover{
+  color: var(--yellow);
+  font-size: 22px;
+}
+/* BTN */
+#btnMethod, #btnMaterial{
+  width:100px; 
+  background-color: var(--yellow);
+}
+#btnMethod:hover, #btnMaterial:hover{
+  width:100px; 
+  background-color: var(--lightgreen);
+  border-radius: 10px;
+}
+#btnSubComment{
+  background-color: var(--yellow-l);
+}
+#btnSubComment:hover{
+  background-color: var(--yellow);
+
+}
+/* ICON : delete */
+#deleteItem{
+  color: var(--yellow)
+}
+#deleteItem:hover{
+  color: var(--lightgreen)
+}
+
+tr{
+  text-align: left;
+}
 </style>

@@ -22,11 +22,11 @@
                         <td rowspan="2">
                             <div class="icon is-size-4" @click.stop="fav_function(menu.menu_id)">
                                 <!-- star ทึบ -->
-                                <span class="icon" key="true" v-if="menu.star_id != user.user_id" style="color:#edb34f;">
+                                <span class="icon" key="true" v-if="menu.star_id != user.user_id" id="favorite_star_0">
                                     <i class="fa-solid fa-star"></i>
                                 </span>
                                 <!-- star ใส -->
-                                <span class="icon" key="false" v-if="menu.star_id == user.user_id" style="color:#edb34f;">
+                                <span class="icon" key="false" v-if="menu.star_id == user.user_id" id="favorite_star_1">
                                     <i class="fa-regular fa-star"></i>
                                 </span>
                             </div>
@@ -66,7 +66,20 @@
                         </figure>
 
                         <!-------------------------- comment-----------------------(start)--------------------------->
-                        <button @click="show_comment(menu)"> comment</button>
+                        <!-- icon chat & like -----------------(start) -->
+                        <div style="font-size: 20px; float:right ; margin-right:  50px; margin-top: 5px;">
+                                <i class="fa-solid fa-comment" @click="show_comment(menu)" id="btnComment"></i>
+                                <span @click="addLike(menu.menu_id)" id="btnLike" style="margin-left: 5px;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <!-- <i class="fa-solid fa-thumbs-up" v-if="statusLike == 1"></i>
+                                    <i class="fa-regular fa-thumbs-up" v-if="statusLike == 0"></i> -->
+                                    <span style="margin-left:5px">{{ menu.menu_id_count
+                                    }}</span>
+                                    <!-- <i class="fa-solid fa-thumbs-up"></i><span style="margin-left:5px">{{ menu.menu_id_count
+                                    }}</span> -->
+                                </span>
+                            </div>
+                            <!-- icon chat & like -----------------(end) -->
                         <div class="modal" :class="{ 'is-active': isActive }">
                             <div class="modal-background"></div>
                             <div class="modal-card">
@@ -77,8 +90,7 @@
                                 <div style="background-color: #ffffff;">
                                     <div class="comment">
                                         <div v-for="(comment, index) in comment_this_menu" :key="index">
-                                            <section class="modal-card-body" v-if="index % 2 == 0"
-                                                style="background-color: #edb34f4a;">
+                                            <section class="modal-card-body" v-if="index % 2 == 0" id="commentItem0">
                                                 <div>
                                                     <p style="text-align: left; margin-left: 20px; font-size: 20px;">
                                                         {{ comment.detail }}</p>
@@ -90,15 +102,14 @@
                                                             <span>
                                                                 <i v-if="comment.comment_by_id == user.user_id"
                                                                     class="fa fa-minus"
-                                                                    style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                    style="float: right; font-size: 15px; margin-left: 10px;" id="deleteItem"
                                                                     @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
                                                             </span>
                                                         </span>
                                                     </p>
                                                 </div>
                                             </section>
-                                            <section class="modal-card-body" v-if="index % 2 != 0"
-                                                style="background-color: #51925953;">
+                                            <section class="modal-card-body" v-if="index % 2 != 0" id="commentItem1">
                                                 <div>
                                                     <p style="text-align: left; margin-left: 20px; font-size: 20px;">
                                                         {{ comment.detail }}</p>
@@ -110,7 +121,7 @@
                                                             <span>
                                                                 <i v-if="comment.comment_by_id == user.user_id"
                                                                     class="fa fa-minus"
-                                                                    style="float: right; font-size: 15px; margin-left: 10px;"
+                                                                    style="float: right; font-size: 15px; margin-left: 10px;" id="deleteItem"
                                                                     @click.stop="deleteComment(comment.detail, comment.comment_id, comment.menu_id)"></i>
                                                             </span>
                                                         </span>
@@ -122,16 +133,16 @@
                                 </div>
                                 <footer class="modal-card-foot">
                                     <input class="input" type="text" style="width: 80%;" v-model="comment"><button
-                                        class="button" style="width: 20%" @click="addComment(menu.menu_id)">submit</button>
+                                        class="button" style="width: 20%" @click="addComment(menu.menu_id)" id="btnSubComment">submit</button>
                                 </footer>
                             </div>
                         </div>
                         <!----------------------- comment-------------------------(end)----------------------------->
-                        <div class="is-size-6 has-text-left mt-5 ml-5 mr-5 p-1"
-                            style="background-color: var(--yellow-l); border-radius:10px;">
+                        <div class="is-size-6 has-text-left ml-5 mr-5 p-1"
+                            style="background-color: var(--yellow-l); border-radius:10px; margin-top: 40px;">
                             <p class="ml-5"><b>Nation : </b>{{ menu.nation_name }} Food </p>
-                            <p class="ml-5"><b>Method :</b>{{ menu.cooking_name }}</p>
-                            <p class="ml-5"><b>Meat :</b>{{ menu.meat_name }} </p>
+                            <p class="ml-5"><b>Method : </b>{{ menu.cooking_name }}</p>
+                            <p class="ml-5"><b>Meat : </b>{{ menu.meat_name }} </p>
                         </div>
                         <div class="is-size-6 has-text-left mt-2 ml-5 mr-5 p-1"
                             style="background-color: var(--yellow-l); border-radius:10px;">
@@ -198,7 +209,11 @@ export default {
             //-------comment----------------
             isActive: false, // สถานะของ Modal
             comment_this_menu: null,
-            comment: ""
+            comment: "",
+            // ----------search----------
+            search: "",
+            //-----like
+            statusLike: 0,
         };
     },
     created() {
@@ -348,6 +363,18 @@ export default {
                         alert(error.response.data.message);
                     });
             }
+        },
+        addLike(menu_id) {
+            console.log("menu_id", menu_id)
+            axios
+                .post("http://localhost:3000/addLike/" + menu_id)
+                .then((response) => {
+                    console.log("like ", response.data);
+                    this.getCategories(menu_id);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     },
 };
@@ -358,7 +385,6 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Montserrat+Alternates&display=swap');
 
 
-/* ------test-modal-bulma----- */
 .comment {
     overflow-y: scroll;
     height: 400px;
@@ -383,8 +409,8 @@ export default {
     background-clip: content-box;
 }
 
-/* ------test-modal-bulma----- */
 
+/* ------test-modal-bulma----- */
 #top {
     background-color: var(--yellow);
 }

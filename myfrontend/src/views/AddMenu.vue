@@ -19,13 +19,12 @@
                     <div class="container is-flex">
                         <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant"
                             id="menuIngrediant" v-model="ingredient">
-                        <button class="button mt-3 ml-5" @click.prevent="addMaterial"
-                            style="width:100px; background-color: #F0BB62;">Add material</button>
+                        <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial">Add material</button>
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
                         <ol class="p-5">
                             <li v-for="(item, index) in computedMaterials" :key="index">{{ item }} <i
-                                    class="fa fa-minus" style="float: right;"
+                                    class="fa fa-minus" style="float: right;" id="deleteItem"
                                     @click.stop="deleteIngrediant(item, index)"></i></li>
                         </ol>
                     </div>
@@ -34,13 +33,12 @@
                     <div class="container is-flex">
                         <input class="input mt-3 is-warning" type="text" placeholder="วิธีทำ" name="menuMethod"
                             id="menuMethod" v-model="howTo">
-                        <button class="button mt-3 ml-5" @click.prevent="addMethods"
-                            style="width:100px; background-color: #F0BB62;">Add method</button>
+                        <button class="button mt-3 ml-5" @click.prevent="addMethods" id="btnMethod">Add method</button>
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
                         <ol class="p-5">
                             <li v-for="(item2, index) in computedMethods" :key="index">{{ item2 }}<i
-                                    class="fa fa-minus" style="float: right;"
+                                    class="fa fa-minus" style="float: right;" id="deleteItem"
                                     @click.stop="deleteMethod(item2, index)"></i></li>
                         </ol>
                     </div>
@@ -407,6 +405,10 @@ select {
     width: 200px;
     position: absolute;
     left: 74%;
+}
+#addMenuButton:hover{
+    background-color: var(--lightgreen);
+
 }
 
 
