@@ -24,7 +24,9 @@
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
                         <ol class="p-5">
-                            <li v-for="(item, index) in listMaterials" :key="index">{{ item }}</li>
+                            <li v-for="(item, index) in computedMaterials" :key="index">{{ item }} <i
+                                    class="fa fa-minus" style="float: right;"
+                                    @click.stop="deleteIngrediant(item, index)"></i></li>
                         </ol>
                     </div>
 
@@ -37,7 +39,9 @@
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
                         <ol class="p-5">
-                            <li v-for="(item2, index) in listMethods" :key="index">{{ item2 }}</li>
+                            <li v-for="(item2, index) in computedMethods" :key="index">{{ item2 }}<i
+                                    class="fa fa-minus" style="float: right;"
+                                    @click.stop="deleteMethod(item2, index)"></i></li>
                         </ol>
                     </div>
                 </div>
@@ -218,6 +222,26 @@ export default {
                 .then(() => this.$router.push({ name: 'AllMenu' }))
                 .catch((e) => console.log(e.response.data));
             console.log("axios")
+        },
+        deleteIngrediant(item, index) {
+            const result = confirm(`Are you sure you want to delete this Ingrediant ` + item);
+            if (result) {
+                console.log("delete Ingrediant --> ", item, index);
+                console.log("list --> ", this.listMaterials);
+                const removeIng = this.listMaterials.splice(index, 1)
+                console.log("delete --> ", removeIng);
+            }
+
+        },
+        deleteMethod(item, index) {
+            const result = confirm(`Are you sure you want to delete this Method ` + item);
+            if (result) {
+                console.log("delete Method --> ", item, index);
+                console.log("list --> ", this.listMethods);
+                const removeIng = this.listMethods.splice(index, 1)
+                console.log("delete --> ", removeIng);
+            }
+
         }
     },
     computed: {
@@ -228,6 +252,14 @@ export default {
         listMethods() {
             console.log("in list-methods", this.methods)
             return this.methods;
+        },
+        computedMaterials() {
+            console.log("in list-materail", this.listMaterials)
+            return this.listMaterials;
+        },
+        computedMethods() {
+            console.log("in list-methods", this.listMethods)
+            return this.listMethods;
         },
     },
     validations: {
