@@ -143,8 +143,8 @@ export default {
             hours: 0,
             minutes: 0,
             //--------------------------------
-            materials: ["ใจเย็น", "ใกล้ละ"],
-            methods: ["ตั้งสติ", "ดูให้รอบครอบ"],
+            materials: [],
+            methods: [],
             images: [],
             category_nation: null,
             category_meat: null,
