@@ -17,10 +17,10 @@ export default {
     }
   },
   mounted() {
-    this.onAuthChange()
+    this.onAuthChange() // ตรวจสอบการเปลี่ยนแปลงในการยืนยันตัวตน
   },
   methods: {
-    onAuthChange() {
+    onAuthChange() { // ตรวจสอบว่ามี token ใน localStorage มั้ย
       const token = localStorage.getItem('token')
       if (token) {
         this.getUser()
@@ -28,7 +28,7 @@ export default {
     },
     getUser() {
       // const token = localStorage.getItem('token')
-      axios.get('/user/me').then(res => {
+      axios.get('/user/me').then(res => { // รับข้อมูลผู้ใช้มาแล้วเก็บลงในตัวแปร user
         this.user = res.data
         console.log("res.data in App.vue --> ",res.data);
       })

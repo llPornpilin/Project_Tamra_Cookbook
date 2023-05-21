@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const pool = require("../config");
 const multer = require("multer");
+const Joi = require('joi')
 
 const router = express.Router();
 
@@ -290,16 +291,6 @@ router.put("/showmenu/:id", async function (req, res, next) {
   }
 });
 
-// search menu
-// router.get('/search_menu', async (req, res) => {
-//   const menu_name = req.query.search
-//   // console.log("search1 : ", menu_name)
-
-//   const [searched] = await pool.query('SELECT * FROM menus WHERE menu_name LIKE ?', [`%${menu_name}%`])
-//   console.log("SEARCH แล้วว : ", searched)
-//   return res.status(200).send(searched)
-// })
-
 
 // --------------------------------------Home Page------------------------------------------------
 // แสดงรายการ catgory ทั้งหมด หน้า Home Page
@@ -327,8 +318,29 @@ router.get("/categorys", async function (req, res, next) {
 )
 
 // ------------------------------------Add My Menu Page---------------------------------------------
+const checkData = Joi.object({
+  menuName: Joi.string().required(),
+  menuIngredient: Joi.required(),
+  menuHowTo: Joi.required(),
+  days: Joi.number().integer().required(),
+  hours: Joi.number().integer().required(),
+  minutes: Joi.number().integer().required(),
+  nation: Joi.optional(),
+  method: Joi.optional(),
+  meat: Joi.optional(),
+})
+
 // เพิ่มเมนูของตัวเอง หน้า Add My Meny
 router.post("/addMenu",isLoggedIn, upload.single("images"), async function (req, res, next) {
+
+  // ----------Validate--------------
+  try {
+    await checkData.validateAsync(req.body,  { abortEarly: false })
+  } 
+  catch (err) {
+    console.log('เข้ามาแล้วววว error4')
+    return res.status(400).json(err)
+  }
 
   if (req.method == "POST") {
     const file = req.file;

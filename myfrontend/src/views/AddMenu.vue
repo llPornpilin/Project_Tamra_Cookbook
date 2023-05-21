@@ -89,20 +89,28 @@
                     <!-- spending time -->
                     <div class="is-flex mt-5" id="spendTime">
                         <div class="container mr-4 ml-6">
-                            <input class="input has-text-centered" type="number" id="day" name="menuDay" v-model="days">
-                            <!-- <template v-if="$v.days.$error">
-                                <p class="help is-danger" v-if="!$v.days.minLength" style="text-align: left">This field is required</p>
-                            </template> -->
+                            <input class="input has-text-centered" type="number" id="day" name="menuDay" v-model="$v.days.$model"
+                             :class="{'is-danger': $v.days.$error}">
                             <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
+                            <template v-if="$v.days.$error">
+                                <p class="help is-danger" v-if="!$v.days.greaterThanZero" style="text-align: left">must greater than zero</p>
+                            </template>
                         </div>
                         <div class="container mr-4 ml-4">
-                            <input class="input has-text-centered" type="number" id="hour" v-model="hours" name="menuHour">
+                            <input class="input has-text-centered" type="number" id="hour" 
+                            v-model="$v.hours.$model" :class="{'is-danger': $v.hours.$error}" name="menuHour">
                             <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
+                            <template v-if="$v.hours.$error">
+                                <p class="help is-danger" v-if="!$v.hours.greaterThanZero" style="text-align: left">must greater than zero</p>
+                            </template>
                         </div>
                         <div class="container ml-4 mr-6">
-                            <input class="input has-text-centered" type="number" id="minute" v-model="minutes"
-                                name="menuMinute">
+                            <input class="input has-text-centered" type="number" id="minute" v-model="$v.minutes.$model"
+                             :class="{'is-danger': $v.minutes.$error}" name="menuMinute">
                             <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
+                            <template v-if="$v.minutes.$error">
+                                <p class="help is-danger" v-if="!$v.minutes.greaterThanZero" style="text-align: left">must greater than zero</p>
+                            </template>
                         </div>
                     </div>
                     <!-- add menu button -->
@@ -124,7 +132,6 @@ import axios from '@/plugins/axios' //+
 import {
     required,
     minLength,
-    maxLength,
   } from "vuelidate/lib/validators";
 
 export default {
@@ -289,21 +296,16 @@ export default {
             minLength: minLength(2),
         },
         howTo: {
-            minLength: minLength(1),
+            minLength: minLength(2),
         },
         days: {
-            minLength: minLength(0)
+            greaterThanZero: value => value >= 0
         },
         hours: {
-            minLength: minLength(0),
-            maxLength: maxLength(23)
+            greaterThanZero: value => value >= 0
         },
         minutes: {
-            minLength: minLength(0),
-            maxLength: maxLength(59)
-        },
-        images: {
-            required: required,
+            greaterThanZero: value => value >= 0
         },
     }
 };
