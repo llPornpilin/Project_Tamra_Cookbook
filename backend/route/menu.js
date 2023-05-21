@@ -27,16 +27,25 @@ const upload = multer({ storage: storage });
 router.get("/favorite", isLoggedIn, async function (req, res, next) {
   const user_id = req.user.user_id
   console.log("idddd_user : ", user_id)
-  const [rows, fields] = await pool.query( // **** JOIN table menus category_nation category_cooking category_meat
-    "SELECT * FROM menus " +
-    "join category_nation on (menus.category_nation = category_nation.nation_id) " +
-    "join category_meat on (menus.category_meat = category_meat.meat_id) " +
-    "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
-    "join stars using (menu_id) " +
-    "WHERE stars.user_id=?", [user_id]
-  )
-  console.log(rows)
-  return (res.json(rows))
+
+  const search_value = req.query.search_value
+
+  let query = "SELECT * FROM menus " +
+              "join category_nation on (menus.category_nation = category_nation.nation_id) " +
+              "join category_meat on (menus.category_meat = category_meat.meat_id) " +
+              "join category_cooking on (menus.category_cooking = category_cooking.cooking_id) " +
+              "join stars using (menu_id) " +
+              "WHERE stars.user_id=?"
+  
+  if (search_value === '' || search_value == null){
+    const [rows, cols] = await pool.query(query, [user_id])
+    return res.json(rows)
+  }
+  else{
+    query += " AND menu_name LIKE ?"
+    const [rows, cols] = await pool.query(query, [user_id, `%${search_value}%`])
+    return res.json(rows)
+  }
 });
 
 // ----------------------------------------check star----------------------------------

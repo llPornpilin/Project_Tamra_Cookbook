@@ -721,7 +721,7 @@ aside {
 
 #search {
     border: none;
-    width: 200px;
+    width: 300px;
     border-radius: 15px;
 }
 
