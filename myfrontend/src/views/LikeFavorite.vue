@@ -59,7 +59,7 @@
             <div class="column show-select-fav-menu">
                 <!-- select menu false -->
                 <p style="text-align: center; margin-top: 50%" v-if="select_menu == false">
-                    select Select Your Menu To Show
+                    Select Your Menu To Show
                 </p>
                 <!-- select menu true -->
                 <div v-if="select_menu == true">

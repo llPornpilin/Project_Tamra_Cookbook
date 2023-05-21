@@ -31,10 +31,6 @@
                         <td><b>ชื่อเมนู</b> : {{ menu.menu_name }} </td>
                         <td rowspan="2">
                             <div class="icon is-size-4"> <!-- @click.stop="menu.is_favorite = !menu.is_favorite" -->
-                                <!-- ดินสอ (ยังไม่กด) -->
-                                <!-- <span class="icon" id="icon_pen" @click.stop="editMenu(menu, index)">
-                                    <i class="fa fa-pen"></i>
-                                </span> -->
                                 <!-- ถังขยะ (กดแล้ว) -->
                                 <span key="false" id="icon_trash" @click.stop="deleteMenu(menu.menu_id)">
                                     <i class="fa fa-trash"></i>
@@ -62,7 +58,7 @@
             <div class="column show-select-fav-menu">
                 <!-- select menu false -->
                 <p style="text-align: center; margin-top: 50%" v-if="select_menu == false">
-                    select Select Your Menu To Show
+                    Select Your Menu To Show
                 </p>
                 <!-- select menu true -->
 
@@ -71,21 +67,13 @@
                     <div v-if="select_menu == true">
                         <div v-if="index_menu === editToggle">
                             <div class="content">
-                                <input v-model="edit_name" class="input" type="text" />
+                                <input v-model="edit_name" class="input" type="text" id="menuName"/>
                                 <!-- edit image -->
                                 <label class="image is-2by1 container p-6" for="file" id="imageBox">
                                     <img :src="(edit_image == menu.menu_image) ? 'http://localhost:3000/uploads/' + edit_image : showSelectImage(images[0])"
                                         style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
                                     <input type="file" accept="image/*" name="images" id="file" @change="loadImg"
                                         style="display: none;">
-                                    <span class="icon is-large" id="aboutImg">
-                                        <i class="fas fa-images is-large"
-                                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
-                                        <p style="position: absolute; top: 60%; left: 50%; transform: translate(-50%);">
-                                            Browse
-                                            Image
-                                        </p>
-                                    </span>
                                 </label>
                                 <!-- edit category -->
                                 <div class="p-5">
@@ -142,7 +130,7 @@
                                 <div class="container is-flex">
                                     <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ"
                                         name="menuIngrediant" id="menuIngrediant" v-model="ingredient">
-                                    <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial">Add material</button>
+                                    <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial" style="border-radius: 25px">Add material</button>
                                 </div>
                                 <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant"
                                     style="height: 310px">
@@ -157,7 +145,7 @@
                                 <div class="container is-flex">
                                     <input class="input mt-3 is-warning" type="text" placeholder="วิธีทำ" name="menuMethod"
                                         id="menuMethod" v-model="howTo">
-                                    <button class="button mt-3 ml-5" @click.prevent="addMethods" id="btnMethod">Add method</button>
+                                    <button class="button mt-3 ml-5" @click.prevent="addMethods" id="btnMethod" style="border-radius: 25px">Add method</button>
                                 </div>
                                 <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod"
                                     style="height: 310px">
@@ -168,12 +156,19 @@
                                     </ol>
                                 </div>
 
-                                <button @click="saveMenu(menu.menu_id)" class="button is-primary">
-                                    <span>Save</span>
-                                    <span class="icon is-small">
-                                        <i class="fas fa-edit"></i>
-                                    </span>
-                                </button>
+                                <div>
+                                    <button @click="cancleEdit" class="button" id="cancleEditButton" style="margin-top: 20px; margin-right: 5px">
+                                        <span>Cancle</span>
+                                    </button>
+
+                                    <button @click="saveMenu(menu.menu_id)" class="button" id="saveEditButton" style="margin-left: 5px">
+                                        <span>Save</span>
+                                        <span class="icon is-small">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
 
@@ -182,13 +177,10 @@
                                 style="background-color: var(--yellow); border-radius:20px; border:5px solid #ffffff; position:sticky; top:0; z-index:5;">
                                 <p>{{ menu.menu_name }}</p>
                             </div>
+                            <!----------------- menu image ---------------------->
                             <figure class="image is-2by1 ml-6 mr-6 mt-3">
-                                <img :src="menu.menu_image"
-                                    style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);" />
-                                <!-- <img :src="menu.menu_image ? 'http://localhost/3000'+ menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                                alt="Placeholder image"> -->
                                 <img :src="menu.menu_image ? 'http://localhost:3000/uploads/' + menu.menu_image : 'https://bulma.io/images/placeholders/640x360.png'"
-                                    alt="Placeholder image">
+                                    alt="Placeholder image" style="object-fit:cover; border-radius:20px; border: 5px solid var(--cream);">
                             </figure>
                             <!-------------------------- comment-----------------------(start)--------------------------->
                             <!-- icon chat & like -----------------(start) -->
@@ -196,12 +188,7 @@
                                 <i class="fa-solid fa-comment" @click="show_comment(menu)" id="btnComment"></i>
                                 <span @click="addLike(menu.menu_id)" id="btnLike" style="margin-left: 5px;">
                                     <i class="fa-solid fa-thumbs-up"></i>
-                                    <!-- <i class="fa-solid fa-thumbs-up" v-if="statusLike == 1"></i>
-                                    <i class="fa-regular fa-thumbs-up" v-if="statusLike == 0"></i> -->
-                                    <span style="margin-left:5px">{{ menu.menu_id_count
-                                    }}</span>
-                                    <!-- <i class="fa-solid fa-thumbs-up"></i><span style="margin-left:5px">{{ menu.menu_id_count
-                                    }}</span> -->
+                                    <span style="margin-left:5px">{{ menu.menu_id_count}}</span>
                                 </span>
                             </div>
                             <!-- icon chat & like -----------------(end) -->
@@ -295,7 +282,7 @@
                                 </ol>
                             </div>
                             <!-- ปุ่ม edit -->
-                            <button @click="editMenu(menu, index_menu)" class="button is-warning">
+                            <button @click="editMenu(menu, index_menu)" class="button is-warning" id="editButton">
                                 <span>Edit</span>
                                 <span class="icon is-small">
                                     <i class="fas fa-edit"></i>
@@ -518,6 +505,9 @@ export default {
                 }).catch((error) => {
                     this.error = error.message;
                 })
+        },
+        cancleEdit(){
+            this.editToggle = -1
         },
         deleteIngrediant(item, index) {
             const result = confirm(`Are you sure you want to delete this Ingrediant ` + item);
@@ -849,17 +839,19 @@ aside {
 #menuName {
     border-radius: 20px;
     border: 2px solid var(--yellow);
+    margin-top: 20px;
+    width: 90%;
 }
 
 #imageBox {
-    width: 90%;
-    height: 45%;
+    width: 85%;
+    height: 320px;
     background-repeat: no-repeat;
     background-size: cover;
     background-color: var(--cream);
     border-radius: 30px;
-    border-style: dashed;
     border-color: var(--yellow);
+    margin-top: 20px;
 }
 
 select {
@@ -870,6 +862,15 @@ select {
     color: #f4eea9;
     height: 35px;
     padding-left: 20px;
+}
+
+#editButton{
+    margin-top: 20px;
+}
+
+#saveEditButton{
+    margin-top: 20px;
+    background-color: var(--cream);
 }
 
 /* ------spending time--------- */
