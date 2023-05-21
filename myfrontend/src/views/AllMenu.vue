@@ -15,7 +15,7 @@
 
                 <!-- start form menu  -->
                 <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus"
-                    :class="[{ 'has-background-warning-light': menu.is_favorite }]"
+                    :class="{'has-background-warning-light': select_menu && index === index_menu}"
                     @click.prevent="showMenu(menu.menu_id), select_menu = true, index_menu = index" :key="index">
 
                     <p>{{ checkSearch }}</p>
@@ -223,7 +223,7 @@ export default {
             comment: "",
             // ----------search----------
             search: "",
-            //-----like
+            //-----like------
             statusLike: 0,
 
         };

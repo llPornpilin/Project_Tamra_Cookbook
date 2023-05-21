@@ -16,7 +16,7 @@
 
                 <!-- start form menu  -->
                 <table class="table is-fullwidth" id="fav-menu" v-for="(menu, index) in menus" :key="index"
-                    :class="[{ 'has-background-warning-light': menu.is_favorite }]"
+                    :class="{'has-background-warning-light': select_menu && index === index_menu}"
                     @click="showMenu(menu.menu_id), select_menu = true, index_menu = index">
 
                     <p>{{ checkSearch }}</p>
