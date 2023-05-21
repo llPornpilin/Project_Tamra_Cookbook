@@ -398,8 +398,30 @@ router.post("/addMenu",isLoggedIn, upload.single("images"), async function (req,
 
 
 // ---------------------------------------My Menu Page-----------------------------------------------
+// ----------validate----------
+// const checkDataUpdate = Joi.object({
+//   name: Joi.string().required(),
+//   id: Joi.required(),
+//   image: Joi.optional(),
+//   nation: Joi.optional(),
+//   cooking: Joi.optional(),
+//   meat: Joi.optional(),
+//   duration: Joi.number().integer().min(1).required(),
+//   ingredients: Joi.required(),
+//   methods: Joi.required(),
+// })
+
 // แก้ไขเมนูตัวเอง หน้า My Menu
 router.put('/updates', upload.single("image"), async function (req, res, next) {
+
+  // try {
+  //   await checkDataUpdate.validateAsync(req.body,  { abortEarly: false })
+  // } 
+  // catch (err) {
+  //   console.log('เข้ามาแล้วววว error4')
+  //   return res.status(400).json(err)
+  // }
+
   const conn = await pool.getConnection()
   await conn.beginTransaction();
 

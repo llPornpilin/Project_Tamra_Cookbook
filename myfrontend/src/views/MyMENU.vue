@@ -67,7 +67,11 @@
                     <div v-if="select_menu == true">
                         <div v-if="index_menu === editToggle">
                             <div class="content">
-                                <input v-model="edit_name" class="input" type="text" id="menuName"/>
+                                <input class="input" type="text" id="menuName" v-model="$v.edit_name.$model"
+                                :class="{'is-danger': $v.edit_name.$error}">
+                                <template v-if="$v.edit_name.$error">
+                                    <p class="help is-danger" v-if="!$v.edit_name.minLength" style="text-align: left">This field is required</p>
+                                </template>
                                 <!-- edit image -->
                                 <label class="image is-2by1 container p-6" for="file" id="imageBox">
                                     <img :src="(edit_image == menu.menu_image) ? 'http://localhost:3000/uploads/' + edit_image : showSelectImage(images[0])"
@@ -108,21 +112,28 @@
                                 <!-- edit spending time -->
                                 <div class="is-flex mt-5" id="spendTime">
                                     <div class="container mr-4 ml-6">
-                                        <input class="input has-text-centered" type="number" id="day" v-model="days"
-                                            name="menuDay">
+                                        <input class="input has-text-centered" type="number" id="day"
+                                        v-model="$v.days.$model" :class="{'is-danger': $v.days.$error}" name="menuDay">
                                         <label class="label is-size-6 has-text-centered" style="color: #064635">Days</label>
+                                        <template v-if="$v.days.$error">
+                                            <p class="help is-danger" v-if="!$v.days.greaterThanZero" style="text-align: left">must greater than zero</p>
+                                        </template>
                                     </div>
                                     <div class="container mr-4 ml-4">
-                                        <input class="input has-text-centered" type="number" id="hour" v-model="hours"
-                                            name="menuHour">
-                                        <label class="label is-size-6 has-text-centered"
-                                            style="color: #064635">Hours</label>
+                                        <input class="input has-text-centered" type="number" id="hour"
+                                        v-model="$v.hours.$model" :class="{'is-danger': $v.hours.$error}" name="menuHour">
+                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
+                                        <template v-if="$v.days.$error">
+                                            <p class="help is-danger" v-if="!$v.days.greaterThanZero" style="text-align: left">must greater than zero</p>
+                                        </template>
                                     </div>
                                     <div class="container ml-4 mr-6">
-                                        <input class="input has-text-centered" type="number" id="minute" v-model="minutes"
-                                            name="menuMinute">
-                                        <label class="label is-size-6 has-text-centered"
-                                            style="color: #064635">Minutes</label>
+                                        <input class="input has-text-centered" type="number" id="minute"
+                                        v-model="$v.minutes.$model" :class="{'is-danger': $v.minutes.$error}" name="menuMinute">
+                                        <label class="label is-size-6 has-text-centered" style="color: #064635">Minutes</label>
+                                        <template v-if="$v.minutes.$error">
+                                            <p class="help is-danger" v-if="!$v.minutes.greaterThanZero" style="text-align: left">must greater than zero</p>
+                                        </template>
                                     </div>
                                 </div>
 
@@ -303,6 +314,9 @@
 import topbarVUE from './topBar.vue';
 import sidemenubarVUE from './sideMenuBar.vue';
 import axios from '@/plugins/axios' //+  axios interceptor
+import {
+    required,
+  } from "vuelidate/lib/validators";
 
 export default {
     props: ['user'], // รับ Props user มาจาก App.vue
@@ -447,14 +461,24 @@ export default {
         // กดเพิ่ม วัตถุดิบ 
         addMaterial() {
             console.log("click addMaterial")
-            this.listMaterials.push(this.ingredient);
-            this.ingredient = "";
+            if (this.ingredient === ''){
+                confirm('You must type ingredient before add.')
+            }
+            else{
+                this.listMaterials.push(this.ingredient);
+                this.ingredient = "";
+            }
         },
         // กดเพิ่ม วิธีทำ
         addMethods() {
             console.log("click addMethods")
-            this.listMethods.push(this.howTo);
-            this.howTo = "";
+            if (this.howTo === ''){
+                confirm('You must type method before add.')
+            }
+            else{
+                this.listMethods.push(this.howTo);
+                this.howTo = "";
+            }
         },
         // edit Menu
         editMenu(menu, index) {
@@ -634,6 +658,20 @@ export default {
             return this.getSearch()
         }
     },
+    validations: {
+        edit_name: {
+            required: required,
+        },
+        days: {
+            greaterThanZero: value => value >= 0
+        },
+        hours: {
+            greaterThanZero: value => value >= 0
+        },
+        minutes: {
+            greaterThanZero: value => value >= 0
+        },
+    }
 };
 </script>
 
