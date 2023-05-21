@@ -15,13 +15,14 @@
                         v-for="(nation, index) in category[0]" :key="index"
                         @click="$router.push({ name: 'CategoryMenu', params: { category_id: nation.nation_id, category_type: 'category_nation' } })">
                         <div class="card-img pl-4 pr-4">
-                            <figure class="image is-96x96 mr-auto ml-auto">
+                            <figure class="image is-96x96 mr-auto ml-auto" >
                                 <img class="food_img" :src="nation.nation_image" alt="Placeholder image">
                             </figure>
                         </div>
                         <!-- flag -->
                         <figure class="image is-32x32 mr-auto ml-auto pt-4">
-                            <img class="flag" :src="nation.nation_flag" alt="Placeholder image">
+                            <!-- <img class="flag"  :src="nation.nation_flag" alt="Placeholder image"> -->
+                            <img class="flag"  :src="nation.nation_flag ? nation.nation_flag : 'placeholder.jpg'" alt="Placeholder image">
                         </figure>
                         <div class="card-content pr-0 pl-0 pb-4 pr-0 pl-0 pb-4">
                             <div class="title is-size-5 has-text-centered">{{ nation.nation_name }} <br>food</div>

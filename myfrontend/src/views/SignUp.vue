@@ -205,7 +205,7 @@ html, body{
     --black: #000;
     --white: #fff;
     background-color: var(--darkgreen);
-    overflow: hidden;
+    /* overflow: hidden; */
     font-family: 'Montserrat Alternates', sans-serif;
 }
 /* left side --------------------------------------*/
