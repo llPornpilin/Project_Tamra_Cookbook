@@ -52,7 +52,11 @@
                       <div class="control has-icons-left">
                           <input v-model="$v.password.$model"
                           :class="{ 'is-danger': $v.password.$error }" 
-                          class="input is-success input-info is-large" type="text" placeholder="Password">
+                          class="input is-success input-info is-large" :type="showPassword ? 'text' : 'password'" placeholder="Password">
+                          <span @click="showPassword = !showPassword;"  style="position: absolute; top:18px; right: 20px; font-size: 20px;">
+                                    <i class="fa-solid fa-eye" v-if="showPassword == true"></i>
+                                    <i class="fa-solid fa-eye-slash" v-if="showPassword == false"></i>
+                                </span>
                           <span class="icon is-small is-left">
                               <i class="fas fa-shield-alt"></i>
                           </span>
@@ -74,7 +78,11 @@
                       <div class="control has-icons-left">
                           <input v-model="$v.confirm_password.$model"
                           :class="{ 'is-danger': $v.confirm_password.$error }"
-                          class="input is-success input-info is-large" type="text" placeholder="Confirm Password">
+                          class="input is-success input-info is-large" :type="showConfirmPassword ? 'text' : 'password'" placeholder="Confirm Password">
+                          <span @click="showConfirmPassword = !showConfirmPassword;"  style="position: absolute; top:18px; right: 20px; font-size: 20px;">
+                                    <i class="fa-solid fa-eye" v-if="showConfirmPassword == true"></i>
+                                    <i class="fa-solid fa-eye-slash" v-if="showConfirmPassword == false"></i>
+                                </span>
                           <span class="icon is-small is-left">
                               <i class="fas fa-shield-alt"></i>
                           </span>
@@ -134,6 +142,8 @@
         password: "",
         confirm_password: "",
         email: "",
+        showPassword: false,
+        showConfirmPassword: false,
       };
     },
     methods: {

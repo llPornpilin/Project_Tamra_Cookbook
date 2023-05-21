@@ -28,8 +28,12 @@
 
                     <div class="field">
                         <div class="control has-icons-left">
-                            <input v-model="$v.password.$model" :class="{ 'is-danger': $v.password.$error }" class="input is-success input-info is-large" type="text"
-                                placeholder="Password">
+                            <input v-model="$v.password.$model" :class="{ 'is-danger': $v.password.$error }"
+                                class="input is-success input-info is-large" :type="showPassword ? 'text' : 'password'" placeholder="Password">
+                                <span @click="showPassword = !showPassword;"  style="position: absolute; top:18px; right: 20px; font-size: 20px;">
+                                    <i class="fa-solid fa-eye" v-if="showPassword == true"></i>
+                                    <i class="fa-solid fa-eye-slash" v-if="showPassword == false"></i>
+                                </span>
                             <span class="icon is-small is-left">
                                 <i class="fas fa-shield-alt"></i>
                             </span>
@@ -96,6 +100,7 @@ export default {
         username: '',
         password: '',
         error: '',
+        showPassword: false
     }
     },
     validations: {
