@@ -13,29 +13,27 @@
                 <!-- <li class="menu-item has-text-centered mb-5 ml-6" style="background-color: #f4eea9; width: 110%;">
                     <a href="/home" style="color: #064635;"><b>Home</b></a>
                 </li> -->
-                <li class="menu-item has-text-centered mb-5">
+                <li class="menu-item has-text-centered mb-5" :class="{ 'home-menu': $route.name === 'HomePage' }">
                     <a href="/" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>Home </b></a>
+                        onmouseout="this.style.color = '#f4eea9'" :class="{ 'home-text': $route.name === 'HomePage' }"><b>Home </b></a>
                 </li>
-                <li class="menu-item has-text-centered mb-5">
+                <li class="menu-item has-text-centered mb-5" :class="{ 'allmenu-menu': $route.name === 'AllMenu' }">
                     <a href="/allmenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>All Menu</b></a>
+                        onmouseout="this.style.color = '#f4eea9'" :class="{ 'allmenu-text': $route.name === 'AllMenu' }"><b>All Menu</b></a>
                 </li>
-                <li class="menu-item has-text-centered mb-5">
+                <li class="menu-item has-text-centered mb-5" :class="{ 'addmenu-menu': $route.name === 'addmenu' }">
                     <a href="/addmenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>Add My Menu</b></a>
+                        onmouseout="this.style.color = '#f4eea9'" :class="{ 'addmenu-text': $route.name === 'addmenu' }"><b>Add My Menu</b></a>
                 </li>
-                <li class="menu-item has-text-centered mb-5">
+                <li class="menu-item has-text-centered mb-5" :class="{ 'favorite-menu': $route.name === 'favorite' }">
                     <a href="/favorite" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>Favorite</b></a>
+                        onmouseout="this.style.color = '#f4eea9'" :class="{ 'favorite-text': $route.name === 'favorite' }"><b>Favorite</b></a>
                 </li>
-                <li class="menu-item has-text-centered mb-5">
+                <li class="menu-item has-text-centered mb-5" :class="{ 'mymenu-menu': $route.name === 'mymenu' }">
                     <a href="/mymenu" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>My Menu</b></a>
+                        onmouseout="this.style.color = '#f4eea9'" :class="{ 'mymenu-text': $route.name === 'mymenu' }"><b>My Menu</b></a>
                 </li><br>
                 <li class="menu-item has-text-centered mt-6" @click="logOut()">
-                    <!-- <a href="/user/signin" style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
-                        onmouseout="this.style.color = '#f4eea9'"><b>Log out</b></a> -->
                     <a style="color: #f4eea9;" onMouseOver="this.style.color = '#064635'"
                         onmouseout="this.style.color = '#f4eea9'"><b>Log out</b></a>
                 </li>
@@ -95,4 +93,56 @@ aside {
 .menu-item a:hover {
     background-color: var(--cream);
     border-radius: 70px;
-}</style>
+}
+
+.home-menu {
+    background-color: var(--cream) !important;
+    border: 3px solid var(--darkgreen);
+    width: 150%;
+  }
+  
+.home-text {
+color: var(--darkgreen) !important;
+}
+
+.allmenu-menu {
+    background-color: var(--cream) !important;
+    border: 3px solid var(--darkgreen);
+    width: 150%;
+  }
+  
+.allmenu-text {
+color: var(--darkgreen) !important;
+}
+.addmenu-menu {
+    background-color: var(--cream) !important;
+    border: 3px solid var(--darkgreen);
+    width: 150%;
+  }
+  
+.addmenu-text {
+color: var(--darkgreen) !important;
+}
+
+.favorite-menu {
+    background-color: var(--cream) !important;
+    border: 3px solid var(--darkgreen);
+    width: 150%;
+  }
+  
+.favorite-text {
+color: var(--darkgreen) !important;
+}
+.mymenu-menu {
+    background-color: var(--cream) !important;
+    border: 3px solid var(--darkgreen);
+    width: 150%;
+  }
+  
+.mymenu-text {
+color: var(--darkgreen) !important;
+}
+
+
+
+</style>
