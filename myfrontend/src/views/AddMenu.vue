@@ -19,7 +19,7 @@
                     <div class="container is-flex">
                         <input class="input mt-3 is-warning" type="text" placeholder="วัตถุดิบ" name="menuIngrediant"
                         id="menuIngrediant" v-model="$v.ingredient.$model" :class="{'is-danger': $v.ingredient.$error}">
-                        <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial">Add material</button>
+                        <button class="button mt-3 ml-5" @click.prevent="addMaterial" id="btnMaterial" style="border-radius:25px">Add material</button>
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วัตถุดิบ" id="showIngrediant" style="height: 310px">
                         <ol class="p-5">
@@ -33,7 +33,7 @@
                     <div class="container is-flex">
                         <input class="input mt-3 is-warning" type="text" placeholder="วิธีทำ" name="menuMethod"
                             id="menuMethod" v-model="howTo">
-                        <button class="button mt-3 ml-5" @click.prevent="addMethods" id="btnMethod">Add method</button>
+                        <button class="button mt-3 ml-5" @click.prevent="addMethods" id="btnMethod" style="border-radius:25px">Add method</button>
                     </div>
                     <div class="textarea mt-3 is-warning" placeholder="วิธีทำ" id="showMethod" style="height: 310px">
                         <ol class="p-5">
@@ -198,6 +198,7 @@ export default {
             console.log("click loadImg")
             this.images = event.target.files;
             console.log(this.images)
+            document.getElementById('aboutImg').style.display = 'none'
         },
         showSelectImage(images) {
             // for preview only
