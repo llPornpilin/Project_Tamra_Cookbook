@@ -207,8 +207,12 @@ export default {
         },
         addMenu() {
             console.log("click addMenu")
+            console.log("IMAGE ----------------> : ", this.images.length)
             if (this.materials.length === 0 || this.methods.length === 0){
                 confirm('Please full fill all data')
+            }
+            else if (this.images.length === 0){
+                confirm('Please browse image')
             }
             else{
                 let formData = new FormData();
