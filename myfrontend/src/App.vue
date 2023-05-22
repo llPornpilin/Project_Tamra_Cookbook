@@ -62,7 +62,7 @@ body {
     --font1: 'Lobster Two', cursive;
     --font2: 'Montserrat Alternates', sans-serif;
     background-color: var(--cream);
-    min-height: 100vh;
+    /* min-height: 100vh; */
     margin: 0;
     padding: 0;
     font-family: var(--font2);
@@ -77,6 +77,7 @@ body {
   color: var(--darkgreen);
   font-size: 18px;
 }
+
 
 /* ------test-modal-bulma-------------[START]-------------- */
 /* AllMenu.vue , LikeFavorite.vue , MyMENU.vue  ---> scroll-y comment*/

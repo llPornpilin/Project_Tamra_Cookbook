@@ -233,7 +233,7 @@ router.get("/showmenu/:id",isLoggedIn, async function (req, res, next) {
 
 
 // Delete menu
-router.delete("/showmenu/:id", async function (req, res, next) {
+router.delete("/showmenu/:id",isLoggedIn, async function (req, res, next) {
   // Your code here
   const conn = await pool.getConnection();
   // Begin transaction
@@ -263,7 +263,7 @@ router.delete("/showmenu/:id", async function (req, res, next) {
 });
 
 // Update Menu
-router.put("/showmenu/:id", async function (req, res, next) {
+router.put("/showmenu/:id",isLoggedIn, async function (req, res, next) {
   // Your code here
   const conn = await pool.getConnection();
   // Begin transaction
@@ -294,7 +294,7 @@ router.put("/showmenu/:id", async function (req, res, next) {
 
 // --------------------------------------Home Page------------------------------------------------
 // แสดงรายการ catgory ทั้งหมด หน้า Home Page
-router.get("/categorys", async function (req, res, next) {
+router.get("/categorys",isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection();
   // await conn.beginTransaction(); // เป็นการเริ่มให้ database เริ่มจำ
 
@@ -412,7 +412,7 @@ const checkDataUpdate = Joi.object({
 })
 
 // แก้ไขเมนูตัวเอง หน้า My Menu
-router.put('/updates', upload.single("image"), async function (req, res, next) {
+router.put('/updates',isLoggedIn, upload.single("image"), async function (req, res, next) {
 
   try {
     await checkDataUpdate.validateAsync(req.body,  { abortEarly: false })

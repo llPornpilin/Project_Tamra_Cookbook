@@ -51,7 +51,7 @@ router.post("/addComment", isLoggedIn, async function (req, res, next) {
 }
 );
 
-router.delete('/comment/:comment_id/:menu_id', async (req, res) => {
+router.delete('/comment/:comment_id/:menu_id',isLoggedIn, async (req, res) => {
     const comment_id = req.params.comment_id
     const menu_id = req.params.menu_id
     console.log("DELETE : /comment/:menu_id in comment.js --> ", comment_id)
