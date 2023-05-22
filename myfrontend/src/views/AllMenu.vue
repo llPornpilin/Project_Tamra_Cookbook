@@ -249,17 +249,17 @@ export default {
             console.log("in showSelectImage", this.images[0].name)
             this.e_image = this.images[0].name
         },
-        showSelectImage(images) {
-            // for preview only
-            console.log("show", images)
-            console.log("in showSelectImage", URL.createObjectURL(images))
-            return URL.createObjectURL(images);
-        },
-        editMenu(index, menu) {
-            this.editToggle = index
-            this.e_menu_name = menu.menu_name
-            this.e_image = menu.menu_image
-        },
+        // showSelectImage(images) {
+        //     // for preview only
+        //     console.log("show", images)
+        //     console.log("in showSelectImage", URL.createObjectURL(images))
+        //     return URL.createObjectURL(images);
+        // },
+        // editMenu(index, menu) {
+        //     this.editToggle = index
+        //     this.e_menu_name = menu.menu_name
+        //     this.e_image = menu.menu_image
+        // },
         //เมื่อclick เลือกเมนู จะโชว์รายละเอียดเมนู
         showMenu(id) {
             axios.get('http://localhost:3000/showmenu/' + id
@@ -422,6 +422,10 @@ export default {
             })
                 .then((response) => {
                     console.log('response.data - AllMenu.vue ', response.data);
+                    console.log("length search --------- ", response.data.length)
+                    if(response.data.length == 0){
+                        this.getSearch()
+                    }
                     this.menus = response.data
                 })
                 .catch((error) => {

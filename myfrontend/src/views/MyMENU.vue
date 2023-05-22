@@ -70,7 +70,7 @@
                                 <input class="input" type="text" id="menuName" v-model="$v.edit_name.$model"
                                 :class="{'is-danger': $v.edit_name.$error}">
                                 <template v-if="$v.edit_name.$error">
-                                    <p class="help is-danger" v-if="!$v.edit_name.minLength" style="text-align: left">This field is required</p>
+                                    <p class="help is-danger" v-if="!$v.edit_name.minLength" style="position: relative; text-align: left; left: 30px">This field is required</p>
                                 </template>
                                 <!-- edit image -->
                                 <label class="image is-2by1 container p-6" for="file" id="imageBox">
@@ -123,8 +123,8 @@
                                         <input class="input has-text-centered" type="number" id="hour"
                                         v-model="$v.hours.$model" :class="{'is-danger': $v.hours.$error}" name="menuHour">
                                         <label class="label is-size-6 has-text-centered" style="color: #064635">Hours</label>
-                                        <template v-if="$v.days.$error">
-                                            <p class="help is-danger" v-if="!$v.days.greaterThanZero" style="text-align: left">must greater than zero</p>
+                                        <template v-if="$v.hours.$error">
+                                            <p class="help is-danger" v-if="!$v.hours.greaterThanZero" style="text-align: left">must greater than zero</p>
                                         </template>
                                     </div>
                                     <div class="container ml-4 mr-6">
@@ -528,6 +528,7 @@ export default {
                     this.getMenuAgain(response.data.data[0].menu_id)
                 }).catch((error) => {
                     this.error = error.message;
+                    alert("can not save, please check data")
                 })
         },
         cancleEdit(){
@@ -623,6 +624,9 @@ export default {
             })
                 .then((response) => {
                     console.log('response.data - MyMenu.vue ', response.data);
+                    if(response.data.length == 0){
+                        this.getSearch()
+                    }
                     this.menus = response.data
                 })
                 .catch((error) => {

@@ -245,7 +245,8 @@ export default {
                 axios
                     .post("http://localhost:3000/addMenu/", formData)
                     .then(() => this.$router.push({ name: 'AllMenu' }))
-                    .catch((e) => console.log(e.response.data));
+                    .catch((e) => {console.log(e.response.data); 
+                                alert("can not save, please check data")});
                 console.log("axios")
             }
         },

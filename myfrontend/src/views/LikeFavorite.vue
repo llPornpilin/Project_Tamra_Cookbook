@@ -393,6 +393,9 @@ export default {
             })
             .then((response) => {
                 console.log('response.data - LikeFavorite.vue ', response.data);
+                if(response.data.length == 0){
+                        this.getSearch()
+                }
                 this.menus = response.data
             })
             .catch((error) => {
